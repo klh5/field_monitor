@@ -13,27 +13,27 @@
 /*
  * These variables relate to the radio. 
  */
-#define LOGGER_ID        2                     //The ID of this radio on the network. This needs to be unique for each logger!
-#define NETWORK_ID     202                   //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
-#define GATEWAY_ID     1                     //The ID of the gateway node, also known as the controller. Usually 1
-#define FREQUENCY     RF69_433MHZ           //The frequency of the radio
-#define ENCRYPTKEY    "as86HbM097Ljqd93"    //The 16-digit encyption key - must be the same on all radios that talk to each other!
-#define ENABLE_ATC                          //Enables automatic power adjustment - no need to change this
+#define LOGGER_ID       2                     //The ID of this radio on the network. This needs to be unique for each logger!
+#define NETWORK_ID      202                   //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
+#define GATEWAY_ID      1                     //The ID of the gateway node, also known as the controller. Usually 1
+#define FREQUENCY       RF69_433MHZ           //The frequency of the radio
+#define ENCRYPTKEY      "as86HbM097Ljqd93"    //The 16-digit encyption key - must be the same on all radios that talk to each other!
+#define ENABLE_ATC                            //Enables automatic power adjustment - no need to change this
 
-//Number of photodiodes - they will be read from in order, 0-N
-#define NUM_PHOTODIODES 8
+#define NUM_PHOTODIODES 8                     //Number of photodiodes - they will be read from in order, 0-N
 
-//Pin for enabling transistor
-#define TRANSISTOR_PIN  4
+#define TRANSISTOR_PIN  4                     //Pin for enabling transistor
 
 //Declare variables
 RFM69_ATC radio;      //Set up radio object
 bool init_logger;     //Tells the logger if it's initialized or not
 
+//Create a data structure to hold all of the readings
 typedef struct {
   float light_readings[NUM_PHOTODIODES];            //There are 8 analog pins, so maximum 8 photodiodes
 } data_packet;
 
+//Declare an empty structure that we can copy data into
 data_packet sensor_readings;
 
 /*

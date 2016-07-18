@@ -61,6 +61,7 @@ while(True):
 			file_writer = csv.writer(csv_file, delimiter = ",")
 			file_writer.writerow([date_time, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]])
 	
+	#"T" indicates a timestamp packet. The controller will only send this after data has been received from all loggers
 	elif "T" in packet:
 		
 		#Build camera image path	
@@ -68,13 +69,15 @@ while(True):
 
 		#Capture an image from the camera
 		camera.capture(camera_path)
+
+		#Shut down the Raspberry Pi to save power
+		os.system("sudo shutdown -h now")
 					
 	#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
 	else:
 		print "Received unknown packet: %s" % (packet),
 
-#Shut down the Raspberry Pi to save power
-os.system("sudo shutdown -h now")
+
 
 
 

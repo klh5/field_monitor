@@ -30,7 +30,7 @@
 #define READ_FREQ   5
 
 //Number of photodiodes - they will be read from in order, 0-N
-#define NUM_PHOTODIODES 8
+#define NUM_PHOTODIODES   8
 
 /***************************************************************************************************************************/
 
@@ -95,7 +95,7 @@ void loop() {
     if(minute(curr_time) == READ_FREQ) {                        //Check if the minute is the same as READ_FREQ
       Serial.println("Telling nodes to send readings...");
       digitalWrite(PI_PIN, HIGH);                               //Turn on Raspberry Pi so that it can boot
-      radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read comman
+      radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read command
       waitForReadings();                                        //Wait for readings to come back from loggers
       radio.sleep();                                            //Sleep the radio to save power
       send_pi_time();
@@ -127,12 +127,15 @@ void waitForReadings() {
   //Loop for the amount of time stated by WAIT_TIME
   while(millis() - start_time < WAIT_TIME) {
 
+    //Check if a packet has been received
     if(radio.receiveDone()) {
 
+      //If a packet has been received, check that it's the right size
       if (radio.DATALEN != sizeof(data_in)) {
         Serial.println("INVALID PACKET");
       }
-      
+
+      //Copy the data into memory, and then print it. Data is copied first in case more data arrives while we are printing
       else {
         data_in = *(data_packet*)radio.DATA;
         byte sender_id = radio.SENDERID;
@@ -144,7 +147,8 @@ void waitForReadings() {
         for(i=0; i<NUM_PHOTODIODES; i++) {
           Serial.print(data_in.light_readings[i]); Serial.print(" ");
         }
-        
+
+        //End with a newline character, so that the Python script knows that we are done printing this data
         Serial.println(sender_rssi);
       }
     }

@@ -15,23 +15,26 @@ August 2016
 \tableofcontents
 \newpage
 
-\section{Introduction}
-
+\section{INTRODUCTION}
 This document describes how to set up and use the field monitoring system based on a Raspberry Pi base station and Moteino/Arduino based loggers. It provides a 
-description of the hardware used and how to set up specific parameters in software, such as logging frequency.
+description of the hardware used and how to set up specific parameters in software, such as logging frequency. \break
 
-\section{What you need}
+In this document, the term ``controller'' refers to the Moteino which is attached to the Raspberry Pi. It receives data from ``loggers'', which are the independent
+Moteinos with photodiodes attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination
+of Raspberry Pi and Controller, because they work together.
+
+\subsection{What you need}
 Arduino IDE
 
-\section{Description of hardware}
+\section{HARDWARE}
 
-\subsection{Base station (Raspberry Pi)}
+\subsection{Base station}
 
-\subsection{Logger (Moteino)}
+\subsection{Logger}
 
-\section{Using the software}
+\section{SOFTWARE}
 
-\subsection{Base station (Raspberry Pi)}
+\subsection{Raspberry Pi}
 The SD card image provided has everything already set up, but there are some more details here if you need to change anything. If you just want to set up a new Pi with the
 provided image, go to \textbf{Setting up the Pi: Simple}. \break
 
@@ -42,15 +45,19 @@ by the controller; it turns the Pi on, waits for it to complete its tasks, then 
 
 \subsubsection{Setting up the Pi: Simple}
 
-\subsection{Logger (Moteino)}
+\subsubsection{Setting up the Pi: Complicated}
+
+\subsection{Controller}
+
+\subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 2 x AA batteries and has a low power radio to send data back to the controller. The controller
-that the logger is sending data back to must have the same \textbf{NETWORK\_ID} as the logger, or they can't communicate. \break
+that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate. \break
 
 When setting up a new logger, there are a few things that you need to change, and a few things that you can change if you want to. As a minimum, you need to:
 
 \begin{itemize}
  \item Check that the logger is on the right network, so that it can communicate with the right controller
- \item Check that the logger's \textbf{LOGGER\_ID} is unique on it's network
+ \item Check that the logger's \textit{LOGGER\_ID} is unique on it's network
  \item Check that the logging frequency is correct
 \end{itemize}
 
@@ -58,9 +65,22 @@ When setting up a new logger, there are a few things that you need to change, an
 \subsubsection{Radio parameters}
 
 \paragraph{LOGGER\_ID}
-The \textbf{LOGGER\_ID} is the unique number of the logger.
+The \textit{LOGGER\_ID} is the unique number of the logger. All loggers with the same \textit{NETWORK\_ID} need to have different \textit{LOGGER\_ID}'s. This is partly so 
+that when you look at the resulting data, you will know what logger it came from. It also allows the radios to identify each other, and to prevent clashes between 
+loggers. \break
+
+The logger ID is transmitted to the controller along with the data from the logger. Because there is a limit to how much data can be transmitted at once, there is a limit
+to how big the \textit{LOGGER\_ID} can be, because it is only allowed to take up one byte, or eight bits. The highest number you can represent with eight bits is 255. So,
+including zero, we can have up to 256 unique \textit{LOGGER\_ID}'s on one network (networks work the same way). One of these numbers (the number 1) is actually taken by
+the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255. \break
+
+So, when you are setting up a new logger, set the logger ID to soemthing greater than 1 and less than 255, and make sure that no other loggers with the same 
+\textit{NETWORK\_ID} have the same \textit{LOGGER\_ID}. 
 
 \paragraph{NETWORK\_ID}
+The \textit{NETWORK\_ID} is used to identify which loggers are on the same network, i.e. which loggers can talk to each other. If you have a Raspberry Pi set up in one
+field, with a controller with a \textit{NETWORK\_ID} of 100, all of the loggers that need to talk to that controller must also have a \textit{NETWORK\_ID} of 100. If you 
+set up another base station in a different field nearby, you probably don't want the loggers in the first field to also be transmitting to that controller.
 
 \paragraph{GATEWAY\_ID}
 
@@ -73,5 +93,6 @@ The \textbf{LOGGER\_ID} is the unique number of the logger.
 \subsubsection{Logging parameters}
 
 \paragraph{NUM\_PHOTODIODES}
+
 
 \end{document}

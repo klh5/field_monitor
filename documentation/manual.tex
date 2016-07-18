@@ -15,23 +15,26 @@ August 2016
 \tableofcontents
 \newpage
 
-\section{Introduction}
-
+\section{INTRODUCTION}
 This document describes how to set up and use the field monitoring system based on a Raspberry Pi base station and Moteino/Arduino based loggers. It provides a 
-description of the hardware used and how to set up specific parameters in software, such as logging frequency.
+description of the hardware used and how to set up specific parameters in software, such as logging frequency. \break
 
-\section{What you need}
+In this document, the term ``controller'' refers to the Moteino which is attached to the Raspberry Pi. It receives data from ``loggers'', which are the independent
+Moteinos with photodiodes attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination
+of Raspberry Pi and Controller, because they work together.
+
+\subsection{What you need}
 Arduino IDE
 
-\section{Description of hardware}
+\section{HARDWARE}
 
-\subsection{Base station (Raspberry Pi)}
+\subsection{Base station}
 
-\subsection{Logger (Moteino)}
+\subsection{Logger}
 
-\section{Using the software}
+\section{SOFTWARE}
 
-\subsection{Base station (Raspberry Pi)}
+\subsection{Raspberry Pi}
 The SD card image provided has everything already set up, but there are some more details here if you need to change anything. If you just want to set up a new Pi with the
 provided image, go to \textbf{Setting up the Pi: Simple}. \break
 
@@ -44,7 +47,9 @@ by the controller; it turns the Pi on, waits for it to complete its tasks, then 
 
 \subsubsection{Setting up the Pi: Complicated}
 
-\subsection{Logger (Moteino)}
+\subsection{Controller}
+
+\subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 2 x AA batteries and has a low power radio to send data back to the controller. The controller
 that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate. \break
 
@@ -70,9 +75,15 @@ including zero, we can have up to 256 unique \textit{LOGGER\_ID}'s on one networ
 the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255. \break
 
 So, when you are setting up a new logger, set the logger ID to soemthing greater than 1 and less than 255, and make sure that no other loggers with the same 
-\textit{NETWORK\_ID} have the same \textit{LOGGER\_ID}.
+\textit{NETWORK\_ID} have the same \textit{LOGGER\_ID}. 
 
 \paragraph{NETWORK\_ID}
+The \textit{NETWORK\_ID} is used to identify which loggers are on the same network, i.e. which loggers can talk to each other. If you have a Raspberry Pi set up in one
+field, with a controller with a \textit{NETWORK\_ID} of 100, all of the loggers that need to talk to that controller must also have a \textit{NETWORK\_ID} of 100. If you 
+set up another base station in a different field nearby, you probably don't want the loggers in the first field to also be transmitting to that controller.
+
+So, each controller has a unique \textit{NETWORK\_ID} (like \textit{LOGGER\_ID}'s, these must be greater than 1 and less than 255), and all loggers that send data to
+that controller have the same \textit{NETWORK\_ID}.
 
 \paragraph{GATEWAY\_ID}
 
@@ -85,5 +96,6 @@ So, when you are setting up a new logger, set the logger ID to soemthing greater
 \subsubsection{Logging parameters}
 
 \paragraph{NUM\_PHOTODIODES}
+
 
 \end{document}
