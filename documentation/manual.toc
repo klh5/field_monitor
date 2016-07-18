@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {2}Description of hardware}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Base station (Raspberry Pi)}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Logger (Moteino)}{3}{subsection.2.2}
+\contentsline {section}{\numberline {3}Using the software}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Base station (Raspberry Pi)}{3}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Logger (Moteino)}{3}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Radio parameters}{3}{subsubsection.3.2.1}
+\contentsline {paragraph}{NODEID}{3}{section*.2}
+\contentsline {paragraph}{NETWORKID}{3}{section*.3}
+\contentsline {paragraph}{GATEWAYID}{3}{section*.4}
+\contentsline {paragraph}{FREQUENCY}{3}{section*.5}
+\contentsline {paragraph}{ENCRYPTKEY}{3}{section*.6}
+\contentsline {paragraph}{ENABLE\_ATC}{3}{section*.7}
+\contentsline {subsubsection}{\numberline {3.2.2}Logging parameters}{3}{subsubsection.3.2.2}
+\contentsline {paragraph}{NUM\_PHOTODIODES}{3}{section*.8}
