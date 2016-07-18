@@ -13,9 +13,9 @@
 /*
  * These variables relate to the radio. 
  */
-#define NODEID        2                     //The ID of this radio on the network. This needs to be unique for each logger!
-#define NETWORKID     202                   //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
-#define GATEWAYID     1                     //The ID of the gateway node, also known as the controller. Usually 1
+#define LOGGER_ID        2                     //The ID of this radio on the network. This needs to be unique for each logger!
+#define NETWORK_ID     202                   //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
+#define GATEWAY_ID     1                     //The ID of the gateway node, also known as the controller. Usually 1
 #define FREQUENCY     RF69_433MHZ           //The frequency of the radio
 #define ENCRYPTKEY    "as86HbM097Ljqd93"    //The 16-digit encyption key - must be the same on all radios that talk to each other!
 #define ENABLE_ATC                          //Enables automatic power adjustment - no need to change this
@@ -51,7 +51,7 @@ void setup() {
   init_logger = false;
 
   //Setup radio
-  radio.initialize(FREQUENCY, NODEID, NETWORKID);   //Initialize the radio with the above settings
+  radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
   radio.encrypt(ENCRYPTKEY);                        //Encrypt transmissions
   radio.enableAutoPower(-70);                       //Set auto power level
 }
@@ -165,14 +165,14 @@ logger 4 sleeps for 240ms, and so on. This gives every logger in the network a 1
 void send_packet() {
 
   byte i;
-  int num_sleeps = 254 - NODEID;
+  int num_sleeps = 254 - LOGGER_ID;
 
   //Max number of sleeps is 252, or 30240ms
-  for(i=2; i<NODEID; i++) {
+  for(i=2; i<LOGGER_ID; i++) {
     LowPower.powerDown(SLEEP_120MS, ADC_OFF, BOD_ON);
   }
   
-  radio.send(GATEWAYID, (const void*)(&sensor_readings), sizeof(sensor_readings));
+  radio.send(GATEWAY_ID, (const void*)(&sensor_readings), sizeof(sensor_readings));
   radio.sleep();
 
   //Sleep for up to another 30240 seconds. This is how long it would take for all of the loggers to send on a full network of 254 loggers

@@ -20,8 +20,8 @@
 /*
  * These variables relate to the radio. 
  */
-#define NODEID        1                   //The ID of this radio on the network. The controller acts as a gateway, so it's always 1
-#define NETWORKID     202                 //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
+#define LOGGER_ID     1                   //The ID of this radio on the network. The controller acts as a gateway, so it's always 1
+#define NETWORK_ID    202                 //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
 #define FREQUENCY     RF69_433MHZ         //The frequency of the radio
 #define ENCRYPTKEY    "as86HbM097Ljqd93"  //The 16-digit encyption key - must be the same on all radios that talk to each other!
 #define ENABLE_ATC                        //Enables automatic power adjustment - no need to change this
@@ -64,7 +64,7 @@ void setup() {
   digitalWrite(PI_PIN, LOW);
 
   //Setup radio
-  radio.initialize(FREQUENCY, NODEID, NETWORKID);   //Initialize the radio with the above settings
+  radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
   radio.encrypt(ENCRYPTKEY);                        //Encrypt transmissions
   radio.enableAutoPower(-70);                       //Set auto power level
   radio.promiscuous(false);
@@ -139,7 +139,7 @@ void waitForReadings() {
         int sender_rssi = radio.readRSSI();
       
         Serial.print(sender_id); Serial.print(" ");
-        Serial.print(NETWORKID); Serial.print(" ");
+        Serial.print(NETWORK_ID); Serial.print(" ");
 
         for(i=0; i<NUM_PHOTODIODES; i++) {
           Serial.print(data_in.light_readings[i]); Serial.print(" ");

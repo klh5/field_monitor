@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  15 JUL 2016 10:24
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  18 JUL 2016 12:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -246,39 +246,78 @@ LaTeX Info: Redefining \nameref on input line 6.
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./manual.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 3.
+(Font)              <7> on input line 4.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 3.
+(Font)              <5> on input line 4.
 )
 \tf@toc=\write4
 \openout4 = `manual.toc'.
 
  [2]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 53.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 53.
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+\OT1/cmr/m/it/10 WORK[]ID \OT1/cmr/m/n/10 as the log-ger, or they can't com-mu-
+ni-cate. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+
+ []
+
+[3]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 54.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 54.
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--66
+\OT1/cmr/m/n/10 be-tween log-gers. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--66
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--71
+
+ []
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 89.
+[4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 89.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 53.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 53.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 89.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 89.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 68CFC6602BA7D607A527219423A506DE;600.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 53.
+(rerunfilecheck)             Checksum: 8426A45B5D0E482AC3AE921A8FA14D0C;824.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 89.
  ) 
 Here is how much of TeX's memory you used:
- 5123 strings out of 493304
- 76122 string characters out of 6139870
- 159524 words of memory out of 5000000
- 8549 multiletter control sequences out of 15000+600000
- 5158 words of font info for 19 fonts, out of 8000000 for 9000
+ 5149 strings out of 493304
+ 76541 string characters out of 6139870
+ 160524 words of memory out of 5000000
+ 8567 multiletter control sequences out of 15000+600000
+ 5504 words of font info for 20 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  29i,4n,28p,239b,319s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on manual.pdf (3 pages, 52833 bytes).
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on manual.pdf (4 pages, 81847 bytes).
 PDF statistics:
- 91 PDF objects out of 1000 (max. 8388607)
- 82 compressed objects within 1 object stream
- 21 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 120 PDF objects out of 1000 (max. 8388607)
+ 107 compressed objects within 2 object streams
+ 25 named destinations out of 1000 (max. 500000)
+ 97 words of extra memory for PDF output out of 10000 (max. 10000000)
 
