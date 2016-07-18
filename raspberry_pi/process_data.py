@@ -8,9 +8,9 @@ import picamera
 import os
 
 """
-process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the output from the receiver and saves it to a file 				for analysis later on.
+process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the output from the receiver and saves it to a file for 		analysis later on.
 
-			It also captures an image from the camera and saves it.
+									It also captures an image from the camera and saves it.
 """
 
 #This is the name of the data output file. Change this to change where data gets saved to. It needs to be the full path to the file, including the file name.
