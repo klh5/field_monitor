@@ -31,33 +31,39 @@ parameters so that the right loggers are talking to the right controller. These 
 The Raspberry Pi acts as a data logger and camera operator. At each logging interval (which must be a multiple of 5 minutes) it is woken by the controller. The controller
 sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down.
 
-\subsection{What you need}
+\subsection{On Your Computer}
 \subsubsection{IDE}
 For uploading code to the controller and loggers, you can use the Arduino IDE (Integrated Development Environment). This is a cross platform IDE (you can download it for
 Windows as well as Mac and Linux) which can be found at \url{https://www.arduino.cc/en/Main/Software}. 
 
-\subsubsection{Libraries}
-
-\section{HARDWARE}
-
-\subsection{Base station}
-
-\subsection{Logger}
-
-\section{SOFTWARE}
+\section{SETUP}
 
 \subsection{Raspberry Pi}
 The SD card image provided has everything already set up, but there are some more details here if you need to change anything. If you just want to set up a new Pi with the
-provided image, go to \textbf{Setting up the Pi: Simple}. \break
+provided image, go to \textbf{Setting up the Pi: The Easy Way}. \break
 
 The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image
 using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local}
 run as the ``root'' user (similar to Administrators in Windows). You can look at this file by typing \textit{cat /etc/rc.local}. The Raspberry Pi is turned off and off
 by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off.
 
-\subsubsection{Setting up the Pi: Simple}
+\subsubsection{Setting up the Pi: The Easy Way}
 
-\subsubsection{Setting up the Pi: Complicated}
+Connect camera
+
+Use provided image - make sure to put this somewhere safe!
+
+Connect power
+
+\subsubsection{Setting up the Pi: The Harder Way}
+
+Enable camera
+
+Flash SD card (class 10)
+
+Set up networking (static IP)
+
+Install python packages - apt-get or manually
 
 \subsection{Controller}
 

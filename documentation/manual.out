@@ -1,15 +1,11 @@
 \BOOKMARK [1][-]{section.1}{INTRODUCTION}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{What you need}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.1}{On Your Computer}{section.1}% 2
 \BOOKMARK [3][-]{subsubsection.1.1.1}{IDE}{subsection.1.1}% 3
-\BOOKMARK [3][-]{subsubsection.1.1.2}{Libraries}{subsection.1.1}% 4
-\BOOKMARK [1][-]{section.2}{HARDWARE}{}% 5
-\BOOKMARK [2][-]{subsection.2.1}{Base station}{section.2}% 6
-\BOOKMARK [2][-]{subsection.2.2}{Logger}{section.2}% 7
-\BOOKMARK [1][-]{section.3}{SOFTWARE}{}% 8
-\BOOKMARK [2][-]{subsection.3.1}{Raspberry Pi}{section.3}% 9
-\BOOKMARK [3][-]{subsubsection.3.1.1}{Setting up the Pi: Simple}{subsection.3.1}% 10
-\BOOKMARK [3][-]{subsubsection.3.1.2}{Setting up the Pi: Complicated}{subsection.3.1}% 11
-\BOOKMARK [2][-]{subsection.3.2}{Controller}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.3}{Logger}{section.3}% 13
-\BOOKMARK [3][-]{subsubsection.3.3.1}{Radio parameters}{subsection.3.3}% 14
-\BOOKMARK [3][-]{subsubsection.3.3.2}{Logging parameters}{subsection.3.3}% 15
+\BOOKMARK [1][-]{section.2}{SETUP}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{Raspberry Pi}{section.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Setting up the Pi: The Easy Way}{subsection.2.1}% 6
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Setting up the Pi: The Harder Way}{subsection.2.1}% 7
+\BOOKMARK [2][-]{subsection.2.2}{Controller}{section.2}% 8
+\BOOKMARK [2][-]{subsection.2.3}{Logger}{section.2}% 9
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Radio parameters}{subsection.2.3}% 10
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Logging parameters}{subsection.2.3}% 11
