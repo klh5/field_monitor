@@ -10,6 +10,7 @@
 #include <RFM69_ATC.h>
 #include <LowPower.h>
 
+/*******************************Things you might want to change*************************************************************/
 /*
  * These variables relate to the radio. 
  */
@@ -20,7 +21,10 @@
 #define ENCRYPTKEY      "as86HbM097Ljqd93"    //The 16-digit encyption key - must be the same on all radios that talk to each other!
 #define ENABLE_ATC                            //Enables automatic power adjustment - no need to change this
 
+//Number of photodiodes - they will be read from in order, 0-N
 #define NUM_PHOTODIODES 8                     //Number of photodiodes - they will be read from in order, 0-N
+
+/***************************************************************************************************************************/
 
 #define TRANSISTOR_PIN  4                     //Pin for enabling transistor
 

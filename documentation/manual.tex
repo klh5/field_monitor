@@ -21,7 +21,15 @@ description of the hardware used and how to set up specific parameters in softwa
 
 In this document, the term ``controller'' refers to the Moteino which is attached to the Raspberry Pi. It receives data from ``loggers'', which are the independent
 Moteinos with photodiodes attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination
-of Raspberry Pi and Controller, because they work together.
+of Raspberry Pi and Controller, because they work together. \break
+
+The network operates on a star topology, with individual battery powered loggers reporting back to a base station. Loggers read from their photodiode arrays only when
+they are told to by the controller. The controller tells the loggers when to read from their sensors, and also turns the Raspberry Pi on and off. Turning the Pi off when
+it's not needed results in a dramatic power saving. Like the loggers, the controller is a Moteino microcontroller with a radio attached. It's necessary to set up radio
+parameters so that the right loggers are talking to the right controller. These parameters are set out and explained in this document. \break
+
+The Raspberry Pi acts as a data logger and camera operator. At each logging interval (which must be a multiple of 5 minutes) it is woken by the controller. The controller
+sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down.
 
 \subsection{What you need}
 Arduino IDE

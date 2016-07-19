@@ -29,8 +29,8 @@
 //Set the frequency of readings. This needs to be a 5 minute interval, so 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, or 00 for every hour.
 #define READ_FREQ   5
 
-//Number of photodiodes - they will be read from in order, 0-N
-#define NUM_PHOTODIODES   8
+//The maximum number of photodiodes that a logger on this network has
+#define MAX_PHOTODIODES   8
 
 /***************************************************************************************************************************/
 
@@ -47,7 +47,7 @@ char init_nodes[2] = "I";
 char sleep_nodes[2] = "S";
 
 typedef struct {
-  float light_readings[NUM_PHOTODIODES];            //There are 8 analog pins, so maximum 8 photodiodes
+  float light_readings[MAX_PHOTODIODES];       
 } data_packet;
 
 /*
@@ -94,11 +94,10 @@ void loop() {
   if(second(curr_time) == 0) {                                  //Check if second is 0             
     if(minute(curr_time) == READ_FREQ) {                        //Check if the minute is the same as READ_FREQ
       Serial.println("Telling nodes to send readings...");
-      digitalWrite(PI_PIN, HIGH);                               //Turn on Raspberry Pi so that it can boot
       radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read command
       waitForReadings();                                        //Wait for readings to come back from loggers
       radio.sleep();                                            //Sleep the radio to save power
-      send_pi_time();
+      shut_down_pi();
       for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power. The Moteino can only sleep for 8 seconds at a time
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
@@ -107,9 +106,14 @@ void loop() {
       Serial.println("Telling nodes to keep sleeping...");
       radio.send(255, sleep_nodes, strlen(sleep_nodes));
       radio.sleep();
-      for(i=0; i<30; i++) {                                     //Sleep for 4 minutes to save power
+      for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
+    }
+  }
+  else if(second(curr_time) == 30) {
+    if(minute(curr_time) == READ_FREQ-1) {                      //Check if we are 30 seconds before readings need to be taken
+      digitalWrite(PI_PIN, HIGH);                               //Turn on Raspberry Pi so that it has time to boot
     }
   }
 }
@@ -144,7 +148,7 @@ void waitForReadings() {
         Serial.print(sender_id); Serial.print(" ");
         Serial.print(NETWORK_ID); Serial.print(" ");
 
-        for(i=0; i<NUM_PHOTODIODES; i++) {
+        for(i=0; i<MAX_PHOTODIODES; i++) {
           Serial.print(data_in.light_readings[i]); Serial.print(" ");
         }
 
@@ -158,12 +162,18 @@ void waitForReadings() {
 /*
  * Send a timestamp over serial port to the Raspberry Pi, so that images have the correct timestamp.
  */
-void send_pi_time() {
+void shut_down_pi() {
 
+  byte i;
   time_t timestamp = now();
-  Serial.print("T");              //RPi looks for the "T" to know that it's a timestamp
-  Serial.println(timestamp);      //RPi reads until end of line, so print the timestamp straight after the "T", followed by a new line
+  Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
+  Serial.println(timestamp);                        //RPi reads until end of line, so print the timestamp straight after the "T", followed by a new line
+
+  for(i=0; i<4; i++) {
+    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow 32 seconds for the Pi to take a picture and shut down
+  }
   
+  digitalWrite(PI_PIN, LOW);                        //Turn off the Raspberry Pi
 }
 
 /*

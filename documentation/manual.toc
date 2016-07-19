@@ -11,7 +11,7 @@
 \contentsline {subsection}{\numberline {3.3}Logger}{4}{subsection.3.3}
 \contentsline {subsubsection}{\numberline {3.3.1}Radio parameters}{4}{subsubsection.3.3.1}
 \contentsline {paragraph}{LOGGER\_ID}{4}{section*.2}
-\contentsline {paragraph}{NETWORK\_ID}{4}{section*.3}
+\contentsline {paragraph}{NETWORK\_ID}{5}{section*.3}
 \contentsline {paragraph}{GATEWAY\_ID}{5}{section*.4}
 \contentsline {paragraph}{FREQUENCY}{5}{section*.5}
 \contentsline {paragraph}{ENCRYPTKEY}{5}{section*.6}

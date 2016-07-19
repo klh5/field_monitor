@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  18 JUL 2016 14:02
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  19 JUL 2016 10:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -264,53 +264,67 @@ Underfull \hbox (badness 10000) in paragraph at lines 19--21
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--40
+Underfull \hbox (badness 10000) in paragraph at lines 22--25
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 53--55
+Underfull \hbox (badness 10000) in paragraph at lines 26--30
+\OT1/cmr/m/n/10 ment. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--30
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--48
+
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 61--63
 \OT1/cmr/m/it/10 WORK[]ID \OT1/cmr/m/n/10 as the log-ger, or they can't com-mu-
 ni-cate. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 53--55
+Underfull \hbox (badness 10000) in paragraph at lines 61--63
 
  []
 
-[3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 59.
- (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 67.
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 59.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 67.
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--71
+Underfull \hbox (badness 10000) in paragraph at lines 76--79
 \OT1/cmr/m/n/10 be-tween log-gers. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--71
+Underfull \hbox (badness 10000) in paragraph at lines 76--79
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--76
+Underfull \hbox (badness 10000) in paragraph at lines 80--84
 
  []
 
 [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 101.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 109.
  [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 101.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 109.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 101.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 101.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 109.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 109.
 Package rerunfilecheck Info: File `manual.out' has not changed.
 (rerunfilecheck)             Checksum: BAA8C33E31DD5C61803E5ED5C009286E;815.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 101.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 109.
  ) 
 Here is how much of TeX's memory you used:
  5152 strings out of 493304
@@ -319,13 +333,13 @@ Here is how much of TeX's memory you used:
  8568 multiletter control sequences out of 15000+600000
  5504 words of font info for 20 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,4n,28p,239b,319s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,5n,28p,239b,319s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on manual.pdf (5 pages, 83036 bytes).
+Output written on manual.pdf (5 pages, 83850 bytes).
 PDF statistics:
  129 PDF objects out of 1000 (max. 8388607)
  115 compressed objects within 2 object streams
