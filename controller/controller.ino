@@ -73,7 +73,7 @@ void setup() {
   fetch_time();
 
   while(true) {
-    if(minute() == READ_FREQ && second() == 0) {
+    if(second() == 30 && minute() == (READ_FREQ-1)) {
       break;
     }
   }

@@ -6,6 +6,7 @@ import sys
 import csv
 import picamera
 import os
+import netifaces
 
 """
 process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the output from the receiver and saves it to a file for 		analysis later on.
@@ -69,9 +70,15 @@ while(True):
 
 		#Capture an image from the camera
 		camera.capture(camera_path)
+	
+		#Check for an ethernet connection
+		addr = netifaces.ifaddresses("eth0")
 
-		#Shut down the Raspberry Pi to save power
-		os.system("sudo shutdown -h now")
+		#If the ethernet connection has an IP address assigned, the Pi is communicating with the computer, so don't shut down
+    if not netifaces.AF_INET in addr:
+
+			#Shut down the Raspberry Pi to save power
+			os.system("sudo shutdown -h now")
 					
 	#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
 	else:

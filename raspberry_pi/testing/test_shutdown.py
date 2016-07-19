@@ -1,6 +1,7 @@
 import os
 import picamera
 import time
+import netifaces
 
 output_file = open("/home/pi/scripts/output.txt", "ab") 
 
@@ -20,9 +21,16 @@ try:
 
 	output_file.write("Shutting down now...\n")
 
-	os.system("sudo shutdown -h now")
+	#Check for an ethernet connection
+	addr = netifaces.ifaddresses("eth0")
 
-except PiCameraError:
+	#If the ethernet connection has an IP address assigned, the Pi is communicating with the computer, so don't shut down
+	if not netifaces.AF_INET in addr:
+
+		#Shut down the Raspberry Pi to save power
+		os.system("sudo shutdown -h now")
+
+except picamera.PiCameraError:
 	print "ERROR: Something went wrong with the camera\n"
 
 
