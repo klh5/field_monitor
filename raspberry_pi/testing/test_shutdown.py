@@ -3,7 +3,7 @@ import picamera
 import time
 import netifaces
 
-output_file = open("/home/pi/scripts/output.txt", "ab") 
+output_file = open("/home/pi/data/log.txt", "ab") 
 
 output_file.write("Booted\n")
 output_file.write("Setting up camera...\n")
@@ -15,7 +15,7 @@ try:
 
 	timestamp = time.strftime("%Y-%m-%d_%H:%M:%S")
 	
-	image_file_name = "/home/pi/scripts/" + timestamp + ".jpg"
+	image_file_name = "/home/pi/data/images/" + timestamp + ".jpg"
 
 	camera.capture(image_file_name)
 

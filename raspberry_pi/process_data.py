@@ -15,10 +15,10 @@ process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the
 """
 
 #This is the name of the data output file. Change this to change where data gets saved to. It needs to be the full path to the file, including the file name.
-data_file_name = "/home/pi/field_sensors/data_out.txt"
+data_file_name = "/home/pi/data/data.csv"
 
 #This is the path where images should be saved. Images are automatically named with a timestamp, but you need to provide the path to where they should be saved. As with the data file this should be the full path.
-image_file_name = "/home/pi/field_sensors/images"
+image_file_name = "/home/pi/data/images/"
 
 #Packets are in this format:
 #SENDER_ID NETWORK_ID VOLTAGE LIGHT_1...LIGHT_8 RSSI
