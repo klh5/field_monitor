@@ -1,18 +1,21 @@
 \contentsline {section}{\numberline {1}INTRODUCTION}{3}{section.1}
 \contentsline {subsection}{\numberline {1.1}On Your Computer}{3}{subsection.1.1}
-\contentsline {subsubsection}{\numberline {1.1.1}IDE}{3}{subsubsection.1.1.1}
-\contentsline {section}{\numberline {2}SETUP}{3}{section.2}
-\contentsline {subsection}{\numberline {2.1}Raspberry Pi}{3}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {1.1.1}Development Environment}{3}{subsubsection.1.1.1}
+\contentsline {section}{\numberline {2}SETUP}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Raspberry Pi}{4}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Setting up the Pi: The Easy Way}{4}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}Setting up the Pi: The Harder Way}{4}{subsubsection.2.1.2}
-\contentsline {subsection}{\numberline {2.2}Controller}{4}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Logger}{4}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Radio parameters}{4}{subsubsection.2.3.1}
-\contentsline {paragraph}{LOGGER\_ID}{4}{section*.2}
-\contentsline {paragraph}{NETWORK\_ID}{5}{section*.3}
-\contentsline {paragraph}{GATEWAY\_ID}{5}{section*.4}
-\contentsline {paragraph}{FREQUENCY}{5}{section*.5}
-\contentsline {paragraph}{ENCRYPTKEY}{5}{section*.6}
-\contentsline {paragraph}{ENABLE\_ATC}{5}{section*.7}
-\contentsline {subsubsection}{\numberline {2.3.2}Logging parameters}{5}{subsubsection.2.3.2}
-\contentsline {paragraph}{NUM\_PHOTODIODES}{5}{section*.8}
+\contentsline {subsubsection}{\numberline {2.1.2}Setting up the Pi: The Harder Way}{5}{subsubsection.2.1.2}
+\contentsline {subsection}{\numberline {2.2}Controller}{5}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Logger}{5}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Radio parameters}{5}{subsubsection.2.3.1}
+\contentsline {paragraph}{LOGGER\_ID}{5}{section*.2}
+\contentsline {paragraph}{NETWORK\_ID}{6}{section*.3}
+\contentsline {paragraph}{GATEWAY\_ID}{6}{section*.4}
+\contentsline {paragraph}{FREQUENCY}{6}{section*.5}
+\contentsline {paragraph}{ENCRYPTKEY}{6}{section*.6}
+\contentsline {paragraph}{ENABLE\_ATC}{6}{section*.7}
+\contentsline {subsubsection}{\numberline {2.3.2}Logging parameters}{6}{subsubsection.2.3.2}
+\contentsline {paragraph}{NUM\_PHOTODIODES}{6}{section*.8}
+\contentsline {subsubsection}{\numberline {2.3.3}Powering the base station}{6}{subsubsection.2.3.3}
+\contentsline {subsubsection}{\numberline {2.3.4}Powering the logger}{6}{subsubsection.2.3.4}
+\contentsline {subsection}{\numberline {2.4}Putting everything together}{6}{subsection.2.4}

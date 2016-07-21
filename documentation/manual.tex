@@ -32,9 +32,34 @@ The Raspberry Pi acts as a data logger and camera operator. At each logging inte
 sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down.
 
 \subsection{On Your Computer}
-\subsubsection{IDE}
+
+\subsubsection{Development Environment}
 For uploading code to the controller and loggers, you can use the Arduino IDE (Integrated Development Environment). This is a cross platform IDE (you can download it for
-Windows as well as Mac and Linux) which can be found at \url{https://www.arduino.cc/en/Main/Software}. 
+Windows as well as Mac and Linux) which can be found at \url{https://www.arduino.cc/en/Main/Software}. There is a good overview of how to use the Arduino IDE at
+\url{https://www.arduino.cc/en/Guide/Environment}.
+
+When you have Arduino installed, there are a couple of things you need to do before you can upload code. There are some extra bits of code, called libraries, that the
+field logging system uses. You can download these, but they are included with the files for this project in \textit{field\_monitor/arduino\_libraries}. These need to
+go in a specific place for the Arduino IDE to find them. For windows, you should have a directory called \textit{My Documents/Arduino/libraries}. Place all of the folders
+inside \textit{field\_monitor/arduino\_libraries} into this directory. For Linux, they need to go in \textit{~/sketchbook/libraries}. 
+
+You need to restart the Arduino IDE for it to find the libraries.
+
+You also need to make sure you have the right board selected. The Moteino is very similar to the Arduino Uno, so we can use that as our upload target:
+
+\begin{itemize}
+ \item Open Arduino IDE 
+ \item Go to Tools - Board
+ \item Select ``Arduino Uno''
+\end{itemize}
+
+You also need to select the right port:
+
+\begin{itemize}
+ \item Open Arduino IDE 
+ \item Go to Tools - Port
+ \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
+\end{itemize}
 
 \section{SETUP}
 
@@ -49,13 +74,23 @@ by the controller; it turns the Pi on, waits for it to complete its tasks, then 
 
 \subsubsection{Setting up the Pi: The Easy Way}
 
-Connect camera
+All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10), and the camera module.
 
-Use provided image - make sure to put this somewhere safe!
+There is a file called \textit{pi\_logger.iso} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
+running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup.
 
-Connect power
+In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}.
+
+In Windows, follow the instruction from the Raspberry Pi Foundation at \url{https://www.raspberrypi.org/documentation/installation/installing-images/windows.md}. It's
+not as hard as it looks! You just need to install a program called Win32DiskImager, which will allow you to write to the SD card.
+
+Once you have the SD card flashed, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
+\url{https://www.raspberrypi.org/documentation/usage/camera/} (just the ``Connecting the Camera'' part - the rest is already set up on the SD card).
 
 \subsubsection{Setting up the Pi: The Harder Way}
+
+If you're familiar with Linux and the command line, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
+even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section).
 
 Enable camera
 
@@ -64,6 +99,10 @@ Flash SD card (class 10)
 Set up networking (static IP)
 
 Install python packages - apt-get or manually
+
+Upload scripts
+
+Run scripts from rc.local
 
 \subsection{Controller}
 
@@ -115,5 +154,10 @@ that controller have the same \textit{NETWORK\_ID}.
 
 \paragraph{NUM\_PHOTODIODES}
 
+\subsubsection{Powering the base station}
+
+\subsubsection{Powering the logger}
+
+\subsection{Putting everything together}
 
 \end{document}

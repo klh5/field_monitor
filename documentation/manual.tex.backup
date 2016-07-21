@@ -21,31 +21,88 @@ description of the hardware used and how to set up specific parameters in softwa
 
 In this document, the term ``controller'' refers to the Moteino which is attached to the Raspberry Pi. It receives data from ``loggers'', which are the independent
 Moteinos with photodiodes attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination
-of Raspberry Pi and Controller, because they work together.
+of Raspberry Pi and Controller, because they work together. \break
 
-\subsection{What you need}
-Arduino IDE
+The network operates on a star topology, with individual battery powered loggers reporting back to a base station. Loggers read from their photodiode arrays only when
+they are told to by the controller. The controller tells the loggers when to read from their sensors, and also turns the Raspberry Pi on and off. Turning the Pi off when
+it's not needed results in a dramatic power saving. Like the loggers, the controller is a Moteino microcontroller with a radio attached. It's necessary to set up radio
+parameters so that the right loggers are talking to the right controller. These parameters are set out and explained in this document. \break
 
-\section{HARDWARE}
+The Raspberry Pi acts as a data logger and camera operator. At each logging interval (which must be a multiple of 5 minutes) it is woken by the controller. The controller
+sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down.
 
-\subsection{Base station}
+\subsection{On Your Computer}
 
-\subsection{Logger}
+\subsubsection{Development Environment}
+For uploading code to the controller and loggers, you can use the Arduino IDE (Integrated Development Environment). This is a cross platform IDE (you can download it for
+Windows as well as Mac and Linux) which can be found at \url{https://www.arduino.cc/en/Main/Software}. There is a good overview of how to use the Arduino IDE at
+\url{https://www.arduino.cc/en/Guide/Environment}.
 
-\section{SOFTWARE}
+When you have Arduino installed, there are a couple of things you need to do before you can upload code. There are some extra bits of code, called libraries, that the
+field logging system uses. You can download these, but they are included with the files for this project in \textit{field\_monitor/arduino\_libraries}. These need to
+go in a specific place for the Arduino IDE to find them. For windows, you should have a directory called \textit{My Documents/Arduino/libraries}. Place all of the folders
+inside \textit{field\_monitor/arduino\_libraries} into this directory. For Linux, they need to go in \textit{~/sketchbook/libraries}. 
+
+You need to restart the Arduino IDE for it to find the libraries.
+
+You also need to make sure you have the right board selected. The Moteino is very similar to the Arduino Uno, so we can use that as our upload target:
+
+\begin{itemize}
+ \item Open Arduino IDE 
+ \item Go to Tools - Board
+ \item Select ``Arduino Uno''
+\end{itemize}
+
+You also need to select the right port:
+
+\begin{itemize}
+ \item Open Arduino IDE 
+ \item Go to Tools - Port
+ \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
+\end{itemize}
+
+\section{SETUP}
 
 \subsection{Raspberry Pi}
 The SD card image provided has everything already set up, but there are some more details here if you need to change anything. If you just want to set up a new Pi with the
-provided image, go to \textbf{Setting up the Pi: Simple}. \break
+provided image, go to \textbf{Setting up the Pi: The Easy Way}. \break
 
 The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image
 using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local}
 run as the ``root'' user (similar to Administrators in Windows). You can look at this file by typing \textit{cat /etc/rc.local}. The Raspberry Pi is turned off and off
 by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off.
 
-\subsubsection{Setting up the Pi: Simple}
+\subsubsection{Setting up the Pi: The Easy Way}
 
-\subsubsection{Setting up the Pi: Complicated}
+All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10), and the camera module.
+
+There is a file called \textit{pi\_logger.iso} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
+running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup.
+
+In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}.
+
+In Windows, follow the instruction from the Raspberry Pi Foundation at \url{https://www.raspberrypi.org/documentation/installation/installing-images/windows.md}. It's
+not as hard as it looks! You just need to install a program called Win32DiskImager, which will allow you to write to the SD card.
+
+Once you have the SD card flashed, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
+\url{https://www.raspberrypi.org/documentation/usage/camera/} (just the ``Connecting the Camera'' part - the rest is already set up on the SD card).
+
+\subsubsection{Setting up the Pi: The Harder Way}
+
+If you're familiar with Linux and the command line, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
+even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section).
+
+Enable camera
+
+Flash SD card (class 10)
+
+Set up networking (static IP)
+
+Install python packages - apt-get or manually
+
+Upload scripts
+
+Run scripts from rc.local
 
 \subsection{Controller}
 
@@ -82,6 +139,9 @@ The \textit{NETWORK\_ID} is used to identify which loggers are on the same netwo
 field, with a controller with a \textit{NETWORK\_ID} of 100, all of the loggers that need to talk to that controller must also have a \textit{NETWORK\_ID} of 100. If you 
 set up another base station in a different field nearby, you probably don't want the loggers in the first field to also be transmitting to that controller.
 
+So, each controller has a unique \textit{NETWORK\_ID} (like \textit{LOGGER\_ID}'s, these must be greater than 1 and less than 255), and all loggers that send data to
+that controller have the same \textit{NETWORK\_ID}.
+
 \paragraph{GATEWAY\_ID}
 
 \paragraph{FREQUENCY}
@@ -94,5 +154,6 @@ set up another base station in a different field nearby, you probably don't want
 
 \paragraph{NUM\_PHOTODIODES}
 
+\subsection{Putting everything together}
 
 \end{document}
