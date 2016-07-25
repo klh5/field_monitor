@@ -17,16 +17,17 @@ August 2016
 
 \section{INTRODUCTION}
 This document describes how to set up and use the field monitoring system based on a Raspberry Pi base station and Moteino/Arduino based loggers. It provides a 
-description of the hardware used and how to set up specific parameters in software, such as logging frequency. \break
+description of the hardware used and how to set up specific parameters in software, such as logging frequency.
+
 
 In this document, the term ``controller'' refers to the Moteino which is attached to the Raspberry Pi. It receives data from ``loggers'', which are the independent
 Moteinos with photodiodes attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination
-of Raspberry Pi and Controller, because they work together. \break
+of Raspberry Pi and Controller, because they work together.
 
 The network operates on a star topology, with individual battery powered loggers reporting back to a base station. Loggers read from their photodiode arrays only when
 they are told to by the controller. The controller tells the loggers when to read from their sensors, and also turns the Raspberry Pi on and off. Turning the Pi off when
 it's not needed results in a dramatic power saving. Like the loggers, the controller is a Moteino microcontroller with a radio attached. It's necessary to set up radio
-parameters so that the right loggers are talking to the right controller. These parameters are set out and explained in this document. \break
+parameters so that the right loggers are talking to the right controller. These parameters are set out and explained in this document.
 
 The Raspberry Pi acts as a data logger and camera operator. At each logging interval (which must be a multiple of 5 minutes) it is woken by the controller. The controller
 sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down.
@@ -36,7 +37,7 @@ sends any data received from the loggers to the Raspberry Pi. Once this data has
 \subsubsection{Development Environment}
 For uploading code to the controller and loggers, you can use the Arduino IDE (Integrated Development Environment). This is a cross platform IDE (you can download it for
 Windows as well as Mac and Linux) which can be found at \url{https://www.arduino.cc/en/Main/Software}. There is a good overview of how to use the Arduino IDE at
-\url{https://www.arduino.cc/en/Guide/Environment}.
+\url{https://www.arduino.cc/en/Guide/Environment}. 
 
 When you have Arduino installed, there are a couple of things you need to do before you can upload code. There are some extra bits of code, called libraries, that the
 field logging system uses. You can download these, but they are included with the files for this project in \textit{field\_monitor/arduino\_libraries}. These need to
@@ -61,11 +62,20 @@ You also need to select the right port:
  \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
 \end{itemize}
 
+\subsection{Additional hardware}
+
+You will need an SD card reader and a computer that either has an SD card port or a USB adapter (Google ``usb sd card adapter'').
+
+To connect the Moteino to your computer so that you can program it, you will need an FTDI cable like this one
+\url{http://uk.rs-online.com/web/p/interface-development-kits/0429307/}. The cable \textbf{must} have 5V power and 3.3V logic. The Moteino is designed to run at 3.3V,
+so 5V logic is too high (the power input can be 5V, because this goes through a regulator which lowers it to 3.3V). This connects to the 6-pin header on the Moteino. Make
+sure that when you plug it in, the black wire (ground) on the cable connects to the \textit{GND} pin of the header.
+
 \section{SETUP}
 
 \subsection{Raspberry Pi}
 The SD card image provided has everything already set up, but there are some more details here if you need to change anything. If you just want to set up a new Pi with the
-provided image, go to \textbf{Setting up the Pi: The Easy Way}. \break
+provided image, go to \textbf{Setting up the Pi: The Easy Way}.
 
 The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image
 using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local}
@@ -74,12 +84,12 @@ by the controller; it turns the Pi on, waits for it to complete its tasks, then 
 
 \subsubsection{Setting up the Pi: The Easy Way}
 
-All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10), and the camera module.
+All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, and the camera module.
 
 There is a file called \textit{pi\_logger.iso} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
-running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup.
+running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup. 
 
-In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}.
+In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}. 
 
 In Windows, follow the instruction from the Raspberry Pi Foundation at \url{https://www.raspberrypi.org/documentation/installation/installing-images/windows.md}. It's
 not as hard as it looks! You just need to install a program called Win32DiskImager, which will allow you to write to the SD card.
@@ -89,16 +99,91 @@ Once you have the SD card flashed, install it in the Raspberry Pi, and connect t
 
 \subsubsection{Setting up the Pi: The Harder Way}
 
-If you're familiar with Linux and the command line, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
-even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section).
+If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
+even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section). This section assumes that you already
+have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system. 
 
-Enable camera
+The first thing to do is to set up the Ethernet connection so that your machine can communicate directly to the Pi. If your Pi is already connected to the internet, this
+isn't really necessary, but it does provide another avenue of data collection when the Pi is located remotely. To connect to the Pi this way, your machine and the Pi 
+need to be within the same subnet. The easiest way to do this is to set up static IP adresses on the Pi and on your machine.
 
-Flash SD card (class 10)
+To set a static IP on the Pi , you need to mount the SD card in your machine and edit \textit{/etc/dhcpcd.conf}. Insert the following at the bottom of the file (you can 
+replace the IP address with whatever you prefer):
 
-Set up networking (static IP)
+\begin{verbatim}
+interface eth0
 
-Install python packages - apt-get or manually
+static ip_address=192.168.1.10/24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.1
+\end{verbatim}
+
+Now, set up a new ethernet connection on your machine with an IP address within the same subnet. In Ubuntu, this is done as follows (assuming the Pi has the IP address
+given above):
+
+\begin{itemize}
+ \item Click on the network icon in the menu bar
+ \item Go to \textit{Edit Connections}
+ \item Click on \textit{Add}
+ \item Select the ``Ethernet'' option
+ \item Give the connection a useful name, like ``Pi connect''
+ \item Go to \textit{IPv4 settings}
+ \item Change the \textit{Method} to ``Manual''
+ \item Add an address - \textit{Address:} 192.168.1.100, \textit{Netmask:} 255.255.255.0, \textit{Gateway:} 192.168.1.1
+\end{itemize}
+
+You can of course alter these to suit your requirements.
+
+Now you should be able to plug in an Ethernet cable between the Pi and your machine, and use SSH to access the Pi on the IP address you provided. In this case, that 
+would be 192.168.1.10.
+
+Once you are logged in, check that the camera is enabled. Type:
+
+\begin{verbatim}
+ sudo raspi-config
+\end{verbatim}
+
+Select the ``camera'' option. Select ``finish'' to set the option and reboot. It's also a good idea to change from the default password if you haven't already - 
+use the \textit{passwd} command. 
+
+Next, we need to set up the required Python packages. If you have an internet connection, you can just install these via \textit{apt-get} - the following applies if 
+you only have a direct connection to the Pi, via SD card or Ethernet.
+
+There are seven packages located in \textit{field\_monitor/raspberry\_pi/packages}. To get them onto the Pi, you can just mount the SD card
+and copy them into a suitable directory to install from (such as ~), or you can copy them over the Ethernet connection using Secure Copy (SCP). To use SCP, the 
+command is:
+
+\begin{verbatim}
+scp path/to/file/being/copied pi@192.168.1.10:/home/pi
+\end{verbatim}
+
+The packages need to be installed in the right order, as some depend on others. The command to install the \textit{.deb} packages is:
+
+\begin{verbatim}
+ sudo dpkg -i <package name>
+\end{verbatim}
+
+For the others, navigate into the package directory, e.g.:
+
+\begin{verbatim}
+ cd netifaces-0.10.4
+\end{verbatim}
+
+Then install using Python:
+
+\begin{verbatim}
+ sudo python setup.py install
+\end{verbatim}
+
+
+The installation order is:
+
+\begin{itemize}
+ \item libpython2.7-dev
+ \item libpython-dev 
+ \item python
+\end{itemize}
+
 
 Upload scripts
 
@@ -108,7 +193,7 @@ Run scripts from rc.local
 
 \subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 2 x AA batteries and has a low power radio to send data back to the controller. The controller
-that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate. \break
+that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate.
 
 When setting up a new logger, there are a few things that you need to change, and a few things that you can change if you want to. As a minimum, you need to:
 
@@ -124,12 +209,12 @@ When setting up a new logger, there are a few things that you need to change, an
 \paragraph{LOGGER\_ID}
 The \textit{LOGGER\_ID} is the unique number of the logger. All loggers with the same \textit{NETWORK\_ID} need to have different \textit{LOGGER\_ID}'s. This is partly so 
 that when you look at the resulting data, you will know what logger it came from. It also allows the radios to identify each other, and to prevent clashes between 
-loggers. \break
+loggers. 
 
 The logger ID is transmitted to the controller along with the data from the logger. Because there is a limit to how much data can be transmitted at once, there is a limit
 to how big the \textit{LOGGER\_ID} can be, because it is only allowed to take up one byte, or eight bits. The highest number you can represent with eight bits is 255. So,
 including zero, we can have up to 256 unique \textit{LOGGER\_ID}'s on one network (networks work the same way). One of these numbers (the number 1) is actually taken by
-the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255. \break
+the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255. 
 
 So, when you are setting up a new logger, set the logger ID to soemthing greater than 1 and less than 255, and make sure that no other loggers with the same 
 \textit{NETWORK\_ID} have the same \textit{LOGGER\_ID}. 
@@ -153,6 +238,10 @@ that controller have the same \textit{NETWORK\_ID}.
 \subsubsection{Logging parameters}
 
 \paragraph{NUM\_PHOTODIODES}
+
+\subsubsection{Powering the base station}
+
+\subsubsection{Powering the logger}
 
 \subsection{Putting everything together}
 

@@ -7,7 +7,7 @@
  * Additional libraries that we need - don't worry about these.
  */
 #include <SPI.h>
-#include <RFM69_ATC.h>
+#include <RFM69.h>
 #include <LowPower.h>
 
 /*******************************Things you might want to change*************************************************************/
@@ -19,7 +19,6 @@
 #define GATEWAY_ID      1                     //The ID of the gateway node, also known as the controller. Usually 1
 #define FREQUENCY       RF69_433MHZ           //The frequency of the radio
 #define ENCRYPTKEY      "as86HbM097Ljqd93"    //The 16-digit encyption key - must be the same on all radios that talk to each other!
-#define ENABLE_ATC                            //Enables automatic power adjustment - no need to change this
 
 //Number of photodiodes - they will be read from in order, 0-N
 #define NUM_PHOTODIODES 8                     //Number of photodiodes - they will be read from in order, 0-N
@@ -29,7 +28,7 @@
 #define TRANSISTOR_PIN  4                     //Pin for enabling transistor
 
 //Declare variables
-RFM69_ATC radio;      //Set up radio object
+RFM69 radio;      //Set up radio object
 bool init_logger;     //Tells the logger if it's initialized or not
 
 //Create a data structure to hold all of the readings
@@ -57,7 +56,6 @@ void setup() {
   //Setup radio
   radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
   radio.encrypt(ENCRYPTKEY);                        //Encrypt transmissions
-  radio.enableAutoPower(-70);                       //Set auto power level
 }
 
 /*

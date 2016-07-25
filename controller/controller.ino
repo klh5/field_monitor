@@ -9,7 +9,7 @@
  * Additional libraries that we need - don't worry about these.
  */
 #include <SPI.h>
-#include <RFM69_ATC.h>
+#include <RFM69.h>
 #include <TimeLib.h>
 #include <LowPower.h>
 #include <Wire.h>
@@ -24,7 +24,6 @@
 #define NETWORK_ID    202                 //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
 #define FREQUENCY     RF69_433MHZ         //The frequency of the radio
 #define ENCRYPTKEY    "as86HbM097Ljqd93"  //The 16-digit encyption key - must be the same on all radios that talk to each other!
-#define ENABLE_ATC                        //Enables automatic power adjustment - no need to change this
 
 //Set the frequency of readings. This needs to be a 5 minute interval, so 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, or 00 for every hour.
 #define READ_FREQ   5
@@ -41,7 +40,7 @@
 #define WAIT_TIME 35000                  
 
 //Declare variables
-RFM69_ATC radio;
+RFM69 radio;
 char take_reading[2] = "R";
 char init_nodes[2] = "I";
 char sleep_nodes[2] = "S";
@@ -66,7 +65,6 @@ void setup() {
   //Setup radio
   radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
   radio.encrypt(ENCRYPTKEY);                        //Encrypt transmissions
-  radio.enableAutoPower(-70);                       //Set auto power level
   radio.promiscuous(false);
   radio.sleep();                                    //Sleep the radio to save power
 
