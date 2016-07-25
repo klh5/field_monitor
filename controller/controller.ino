@@ -91,6 +91,7 @@ void loop() {
 
   if(second(curr_time) == 0) {                                  //Check if second is 0             
     if(minute(curr_time) == READ_FREQ) {                        //Check if the minute is the same as READ_FREQ
+      send_timestamp();
       Serial.println("Telling nodes to send readings...");
       radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read command
       waitForReadings();                                        //Wait for readings to come back from loggers
@@ -158,20 +159,29 @@ void waitForReadings() {
 }
 
 /*
- * Send a timestamp over serial port to the Raspberry Pi, so that images have the correct timestamp.
+ * Sends an "E" to tell the Pi that loggers have finished sending, then turns off the Pi.
  */
 void shut_down_pi() {
 
   byte i;
-  time_t timestamp = now();
-  Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
-  Serial.println(timestamp);                        //RPi reads until end of line, so print the timestamp straight after the "T", followed by a new line
 
+  Serial.println("E");
+  
   for(i=0; i<4; i++) {
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow 32 seconds for the Pi to take a picture and shut down
   }
   
   digitalWrite(PI_PIN, LOW);                        //Turn off the Raspberry Pi
+}
+
+/*
+ * Send a timestamp over serial port to the Raspberry Pi, so that images and data have the correct timestamp.
+ */
+void send_timestamp() {
+
+  time_t timestamp = now();
+  Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
+  Serial.println(timestamp);                        //RPi reads until end of line, so print the timestamp straight after the "T", followed by a new line
 }
 
 /*

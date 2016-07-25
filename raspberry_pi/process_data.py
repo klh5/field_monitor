@@ -83,7 +83,7 @@ try:
 				#Close the camera object
 				camera.close()
 
-			break
+				break
 
 		#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
 		else:
