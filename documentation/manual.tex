@@ -275,4 +275,18 @@ else can pick up packets being sent on your network.
 
 \subsection{Putting everything together}
 
+\subsubsection{Connecting the controller to the Raspberry Pi}
+
+To enable the controller and the Pi to communicate, you need to connect the TX and RX pins of the Moteino to the TX and RX pins of the Pi as follows:
+
+\begin{itemize}
+ \item Find the pin on the Moteino labelled ``TX''
+ \item Locate the ``RX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fifth pin down from the top of the right hand header
+ \item Connect the ``TX'' pin of the Moteino to the ``RX'' pin of the Pi
+ \item Find the pin on the Moteino labelled ``RX''
+ \item Locate the ``TX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fourth pin down from the top of the right hand header
+ \item Connect the ``RX'' pin of the Moteino to the ``TX'' pin of the Pi
+\end{itemize}
+
+
 \end{document}

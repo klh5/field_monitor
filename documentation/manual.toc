@@ -19,3 +19,4 @@
 \contentsline {subsubsection}{\numberline {2.3.3}Powering the base station}{9}{subsubsection.2.3.3}
 \contentsline {subsubsection}{\numberline {2.3.4}Powering the logger}{9}{subsubsection.2.3.4}
 \contentsline {subsection}{\numberline {2.4}Putting everything together}{9}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Connecting the controller to the Raspberry Pi}{9}{subsubsection.2.4.1}

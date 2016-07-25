@@ -20,69 +20,84 @@ data_file_name = "/home/pi/data/data.csv"
 #This is the path where images should be saved. Images are automatically named with a timestamp, but you need to provide the path to where they should be saved. As with the data file this should be the full path.
 image_file_name = "/home/pi/data/images/"
 
+#This is the path to the log file. Change this to change where general output and errors are logged to.
+log_file = open("/home/pi/data/log.txt", "ab") 
+
 #Packets are in this format:
 #SENDER_ID NETWORK_ID VOLTAGE LIGHT_1...LIGHT_8 RSSI
 
 #Expected length of packet, once it has been split into seperate readings
 len_packet = 12 		
 
-#Create a camera object
-try:
-	camera = picamera.PiCamera()
-except PiCameraError:
-	print "ERROR: Something went wrong with the camera"
+#Check for an ethernet connection
+addr = netifaces.ifaddresses("eth0")
 
-	
-#The receiver should be attached to a serial port. This code tries to open the port so that it can speak to the receiver
 try:
+
+	#Try and set up the serial connection to the controller.
 	serial_conn = serial.Serial("/dev/ttyAMA0", 115200)
-except OSError as e:
-	print "ERROR: Could not open serial port: %s" % (e)
-	sys.exit(1)	
 
-while(True):
+	while(True):
 	
-	#Read data from the serial port
-	packet = serial_conn.readline()
+		#Read data from the serial port
+		packet = serial_conn.readline()
 
-	#Split the packet up by whitespace
-	data = packet.split()
+		#Split the packet up by whitespace
+		data = packet.split()
 			
-	#If the packet is a data packet, process it
-	if len(data) == len_packet:
+		#If the packet is a data packet, process it
+		if len(data) == len_packet:
 		
-		#Fetch the time			
-		date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+			#Fetch the time			
+			date_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
-		#Print the time and the packet, for logging purposes
-		print date_time +  " " + packet,
+			#Print the time and the packet, for logging purposes
+			print date_time +  " " + packet,
 		
-		#Write to the file name stored in file_name
-		with open(file_name, "ab") as csv_file:
-			file_writer = csv.writer(csv_file, delimiter = ",")
-			file_writer.writerow([date_time, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]])
+			#Write to the file name stored in file_name
+			with open(data_file_name, "ab") as csv_file:
+				file_writer = csv.writer(csv_file, delimiter = ",")
+				file_writer.writerow([date_time, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]])
 	
-	#"T" indicates a timestamp packet. The controller will only send this after data has been received from all loggers
-	elif "T" in packet:
+		#"T" indicates a timestamp packet. The controller will only send this after data has been received from all loggers
+		elif "T" in packet:
+
+			#Try and create a camera object
+			camera = picamera.PiCamera()
 		
-		#Build camera image path	
-		camera_path = image_file_name + "/" + packet + ".jpg"
+			#Build camera image path	
+			camera_path = image_file_name + "/" + packet.rstrip() + ".jpg"
 
-		#Capture an image from the camera
-		camera.capture(camera_path)
-	
-		#Check for an ethernet connection
-		addr = netifaces.ifaddresses("eth0")
+			#Capture an image from the camera
+			camera.capture(camera_path)
 
-		#If the ethernet connection has an IP address assigned, the Pi is communicating with the computer, so don't shut down
-    if not netifaces.AF_INET in addr:
+			camera.close()
 
-			#Shut down the Raspberry Pi to save power
-			os.system("sudo shutdown -h now")
+			break
 					
-	#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
-	else:
-		print "Received unknown packet: %s" % (packet),
+		#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
+		else:
+			log_unknown = "Received unknown packet: " + packet + "\n"
+			log_file.write(log_unknown)
+
+#No serial connection was made
+except OSError:
+
+	log_file.write("Could not open serial connection.\n")
+
+#The camera couldn't be set up
+except picamera.PiCameraError:
+
+	log_file.write("Could not set up camera.\n")
+
+#This happens whether anything goes wrong or not
+finally:
+
+	#If the ethernet connection has an IP address assigned, the Pi is communicating with the computer, so don't shut down
+	if not netifaces.AF_INET in addr:
+
+		#Shut down the Raspberry Pi to save power
+		os.system("sudo shutdown -h now")
 
 
 
