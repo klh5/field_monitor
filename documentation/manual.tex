@@ -98,7 +98,7 @@ Once you have the SD card flashed, install it in the Raspberry Pi, and connect t
 \subsubsection{Setting up the Pi: The Harder Way}
 If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
 even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section). This section assumes that you already
-have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system. 
+have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system, and that you have root access. 
 
 The first thing to do is to set up the Ethernet connection so that your machine can communicate directly to the Pi. If your Pi is already connected to the internet, this
 isn't really necessary, but it does provide another avenue of data collection when the Pi is located remotely. To connect to the Pi this way, your machine and the Pi 
@@ -198,6 +198,21 @@ image, and shuts itself down. We can do this by running \textit{process\_data.py
  python /home/pi/scripts/process_data.py &
 \end{verbatim}
 
+Finally, there are a couple of things we need to do to allow the Pi to communicate with the controller over serial GPIO. First, edit \textit{/boot/cmdline.txt} and remove
+the following:
+
+\begin{verbatim}
+ console=ttyAMA0,115200 kgdboc=ttyAMA0,115200
+\end{verbatim}
+
+This will prevent the Pi from sending data over serial when it's booting. Next, we need to disable the console on the serial port. While logged in to the Raspberry Pi,
+type:
+
+\begin{verbatim}
+ sudo systemctl disable serial-getty@ttyAMA0.service
+\end{verbatim}
+
+That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
 \subsection{Controller}
 
