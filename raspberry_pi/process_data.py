@@ -14,6 +14,9 @@ process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the
 									It also captures an image from the camera and saves it.
 """
 
+#Packets are in this format:
+#SENDER_ID NETWORK_ID VOLTAGE LIGHT_1...LIGHT_8 RSSI
+
 #This is the name of the data output file. Change this to change where data gets saved to. It needs to be the full path to the file, including the file name.
 data_file_name = "/home/pi/data/data.csv"
 
@@ -23,8 +26,8 @@ image_file_name = "/home/pi/data/images/"
 #This is the path to the log file. Change this to change where general output and errors are logged to.
 log_file = open("/home/pi/data/log.txt", "ab") 
 
-#Packets are in this format:
-#SENDER_ID NETWORK_ID VOLTAGE LIGHT_1...LIGHT_8 RSSI
+#Set up a timestamp variable. The controller will send a timestamp before data packets start arriving. If no timestamp is received, data wont be recorded.
+timestamp = None
 
 #Expected length of packet, once it has been split into seperate readings
 len_packet = 12 		
@@ -47,34 +50,41 @@ try:
 			
 		#If the packet is a data packet, process it
 		if len(data) == len_packet:
-		
-			#Fetch the time			
-			date_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
-			#Print the time and the packet, for logging purposes
-			print date_time +  " " + packet,
+			#Only record data to CSV file if there is a time to stamp it with
+			if timestamp is not None:
 		
-			#Write to the file name stored in file_name
-			with open(data_file_name, "ab") as csv_file:
-				file_writer = csv.writer(csv_file, delimiter = ",")
-				file_writer.writerow([date_time, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]])
+				#Write to the file name stored in file_name
+				with open(data_file_name, "ab") as csv_file:
+					file_writer = csv.writer(csv_file, delimiter = ",")
+					file_writer.writerow([timestamp, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]])
 	
-		#"T" indicates a timestamp packet. The controller will only send this after data has been received from all loggers
+		#"T" indicates a timestamp packet. 
 		elif "T" in packet:
+			
+			#Tidy up the timestamp and save it (we don't need to keep the "T" in file names)
+			timestamp = packet.rstrip().replace("T", "")
 
-			#Try and create a camera object
-			camera = picamera.PiCamera()
+		#"E" indicates the end of data transmission. The controller will only send this after data has been received from all loggers
+		elif "E" in packet:
 		
-			#Build camera image path	
-			camera_path = image_file_name + "/" + packet.rstrip() + ".jpg"
+			#Only record an image if there is a time to stamp it with
+			if timestamp is not None:
 
-			#Capture an image from the camera
-			camera.capture(camera_path)
+				#Try and create a camera object
+				camera = picamera.PiCamera()
+		
+				#Build camera image path	
+				camera_path = image_file_name + "/" + timestamp + ".jpg"
 
-			camera.close()
+				#Capture an image from the camera
+				camera.capture(camera_path)
+
+				#Close the camera object
+				camera.close()
 
 			break
-					
+
 		#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
 		else:
 			log_unknown = "Received unknown packet: " + packet + "\n"
