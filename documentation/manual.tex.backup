@@ -63,7 +63,6 @@ You also need to select the right port:
 \end{itemize}
 
 \subsection{Additional hardware}
-
 You will need an SD card reader and a computer that either has an SD card port or a USB adapter (Google ``usb sd card adapter'').
 
 To connect the Moteino to your computer so that you can program it, you will need an FTDI cable like this one
@@ -83,10 +82,9 @@ run as the ``root'' user (similar to Administrators in Windows). You can look at
 by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off.
 
 \subsubsection{Setting up the Pi: The Easy Way}
-
 All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, and the camera module.
 
-There is a file called \textit{pi\_logger.iso} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
+There is a file called \textit{pi\_logger.img} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
 running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup. 
 
 In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}. 
@@ -94,14 +92,24 @@ In Linux, use the \textit{dd} tool to flash the new SD card. The command is \tex
 In Windows, follow the instruction from the Raspberry Pi Foundation at \url{https://www.raspberrypi.org/documentation/installation/installing-images/windows.md}. It's
 not as hard as it looks! You just need to install a program called Win32DiskImager, which will allow you to write to the SD card.
 
+If you use an SD card with a capacity greater than 8GB, you will still only have 8GB of storage unless you expand the partition so that the Pi can
+access the extra room. To do this, you will need to access the Pi over Ethernet. The image file is already set up to allow you to do this, but you will need to
+do some setting up on your own computer as well. If you're using Linux, there are instructions in section 2.1.2. If you are using Windows, here's what you need
+to do (for Windows 7):
+
+\begin{itemize}
+ \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}
+ \item 
+\end{itemize}
+
+
 Once you have the SD card flashed, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
 \url{https://www.raspberrypi.org/documentation/usage/camera/} (just the ``Connecting the Camera'' part - the rest is already set up on the SD card).
 
 \subsubsection{Setting up the Pi: The Harder Way}
-
 If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
 even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section). This section assumes that you already
-have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system. 
+have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system, and that you have root access. 
 
 The first thing to do is to set up the Ethernet connection so that your machine can communicate directly to the Pi. If your Pi is already connected to the internet, this
 isn't really necessary, but it does provide another avenue of data collection when the Pi is located remotely. To connect to the Pi this way, your machine and the Pi 
@@ -175,19 +183,76 @@ Then install using Python:
  sudo python setup.py install
 \end{verbatim}
 
-
 The installation order is:
 
 \begin{itemize}
  \item libpython2.7-dev
  \item libpython-dev 
- \item python
+ \item python2.7-dev 
+ \item python-dev 
+ \item netifaces
+ \item picamera
+ \item piserial
+\end{itemize}
+
+Once all of the packages are installed, you need to upload a Python script to the Raspberry Pi. The script is located at
+\textit{field\_monitor/raspberry\_pi/process\_data.py} and controls everything relevant to the Pi's field monitoring. As with the packages, you can upload this by
+mounting the SD card or by using SCP. It's recommended to place it in a directory called \textit{/home/pi/scripts}. You also need to create a directory called
+\textit{/home/pi/data} for the CSV files to be stored, and another called \textit{/home/pi/data/images} for the images captured by the camera. If you have a different
+setup, change the \textit{data\_file\_name} and \textit{image\_file\_name} variables in \textit{process\_data.py} to the paths that you want to use.
+
+The \textit{process\_data.py} script needs execute permissions, so make sure to run:
+
+\begin{verbatim}
+ chmod +x process_data.py
+\end{verbatim}
+
+We need the Python script to run at boot, so that when the controller turns on the Pi, the Pi automatically picks up data from the controller, captures an
+image, and shuts itself down. We can do this by running \textit{process\_data.py} from \textit{/etc/rc.local}. Add the following line to \textit{/etc/rc.local} before
+\textit{exit 0} (remember to change the file path, if it's not in \textit{/home/pi/scripts}):
+
+\begin{verbatim}
+ python /home/pi/scripts/process_data.py &
+\end{verbatim}
+
+Next there are a couple of things we need to do to allow the Pi to communicate with the controller over serial GPIO. First, edit \textit{/boot/cmdline.txt} and remove
+the following:
+
+\begin{verbatim}
+ console=ttyAMA0,115200 kgdboc=ttyAMA0,115200
+\end{verbatim}
+
+This will prevent the Pi from sending data over serial when it's booting. Next, we need to disable the console on the serial port. While logged in to the Raspberry Pi,
+type:
+
+\begin{verbatim}
+ sudo systemctl disable serial-getty@ttyAMA0.service
+\end{verbatim}
+
+Finally, even though we have disabled serial output at boot, there is still a line that prints when the kernel is being uncompressed. To get rid of this, we can 
+get Raspbian to boot from an uncompressed image. This is a little tricky, and you can find the original instructions here 
+\url{http://raspberrypi.stackexchange.com/questions/24583/ttyama0-disabled-but-still-shows-one-boot-message}. Otherwise, you can follow these instructions:
+
+\begin{itemize}
+ \item SSH into the Pi
+ \item Type the following command:
+	\begin{verbatim}
+	 od -A d -t x1 /boot/kernel.img | grep '1f 8b 08 00'
+	\end{verbatim}
+  \item You should see a line that looks like this (example 1):
+	\begin{verbatim}
+	 0017360 1f 8b 08 00 00 00 00 00 02 03 e4 fd 0b 7c 54 d5
+	\end{verbatim}
+	Or like this (example 2). Notice the extra \textbf{08} at the end:
+	\begin{verbatim}
+	 0017360 00 00 00 00 00 00 00 00 1f 8b 08 00 00 00 00 00
+	\end{verbatim}
+  \item If your output looks like example 1, the \textbf{offset} is 17360
+  \item If your output looks like example 2, the \textbf{offset} is 17360 + 08, or 17368
 \end{itemize}
 
 
-Upload scripts
-
-Run scripts from rc.local
+That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
 \subsection{Controller}
 
@@ -228,12 +293,17 @@ So, each controller has a unique \textit{NETWORK\_ID} (like \textit{LOGGER\_ID}'
 that controller have the same \textit{NETWORK\_ID}.
 
 \paragraph{GATEWAY\_ID}
+The \textit{GATEWAY\_ID} is used to identify the controller, which acts as a ``gateway'' to the Raspberry Pi. So, it's the \textit{LOGGER\_ID} of the controller. Make
+sure that you put the right textit{GATEWAY\_ID} for the controller that the logger is sending to.
 
 \paragraph{FREQUENCY}
+This is just the frequency of the radio chip - 433MHz is within the Industry, Scientific and Medical frequency band, which means it is a legal frequency for low power
+radio communications. Don't change this unless you know what you are doing.
 
 \paragraph{ENCRYPTKEY}
-
-\paragraph{ENABLE\_ATC}
+This is an encryption key - only loggers with the same key can undertsand each other's transmissions. For this reason, like the \textit{NETWORK\_ID}, all loggers that
+talk to each other (including the controller) must have the same \textit{ENCRYPTKEY}. It \textbf{must} be 16 characters long. This encryption also means that no one
+else can pick up packets being sent on your network.
 
 \subsubsection{Logging parameters}
 
@@ -244,5 +314,19 @@ that controller have the same \textit{NETWORK\_ID}.
 \subsubsection{Powering the logger}
 
 \subsection{Putting everything together}
+
+\subsubsection{Connecting the controller to the Raspberry Pi}
+
+To enable the controller and the Pi to communicate, you need to connect the TX and RX pins of the Moteino to the TX and RX pins of the Pi as follows:
+
+\begin{itemize}
+ \item Find the pin on the Moteino labelled ``TX''
+ \item Locate the ``RX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fifth pin down from the top of the right hand header
+ \item Connect the ``TX'' pin of the Moteino to the ``RX'' pin of the Pi
+ \item Find the pin on the Moteino labelled ``RX''
+ \item Locate the ``TX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fourth pin down from the top of the right hand header
+ \item Connect the ``RX'' pin of the Moteino to the ``TX'' pin of the Pi
+\end{itemize}
+
 
 \end{document}

@@ -84,13 +84,24 @@ by the controller; it turns the Pi on, waits for it to complete its tasks, then 
 \subsubsection{Setting up the Pi: The Easy Way}
 All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, and the camera module.
 
-There is a file called \textit{pi\_logger.iso} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
+There is a file called \textit{pi\_logger.img} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
 running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup. 
 
 In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}. 
 
 In Windows, follow the instruction from the Raspberry Pi Foundation at \url{https://www.raspberrypi.org/documentation/installation/installing-images/windows.md}. It's
 not as hard as it looks! You just need to install a program called Win32DiskImager, which will allow you to write to the SD card.
+
+If you use an SD card with a capacity greater than 8GB, you will still only have 8GB of storage unless you expand the partition so that the Pi can
+access the extra room. To do this, you will need to access the Pi over Ethernet. The image file is already set up to allow you to do this, but you will need to
+do some setting up on your own computer as well. If you're using Linux, there are instructions in section 2.1.2. If you are using Windows, here's what you need
+to do (for Windows 7):
+
+\begin{itemize}
+ \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}
+ \item 
+\end{itemize}
+
 
 Once you have the SD card flashed, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
 \url{https://www.raspberrypi.org/documentation/usage/camera/} (just the ``Connecting the Camera'' part - the rest is already set up on the SD card).
@@ -190,7 +201,13 @@ mounting the SD card or by using SCP. It's recommended to place it in a director
 \textit{/home/pi/data} for the CSV files to be stored, and another called \textit{/home/pi/data/images} for the images captured by the camera. If you have a different
 setup, change the \textit{data\_file\_name} and \textit{image\_file\_name} variables in \textit{process\_data.py} to the paths that you want to use.
 
-Finally, we need the Python script to run at boot, so that when the controller turns on the Pi, the Pi automatically picks up data from the controller, captures an
+The \textit{process\_data.py} script needs execute permissions, so make sure to run:
+
+\begin{verbatim}
+ chmod +x process_data.py
+\end{verbatim}
+
+We need the Python script to run at boot, so that when the controller turns on the Pi, the Pi automatically picks up data from the controller, captures an
 image, and shuts itself down. We can do this by running \textit{process\_data.py} from \textit{/etc/rc.local}. Add the following line to \textit{/etc/rc.local} before
 \textit{exit 0} (remember to change the file path, if it's not in \textit{/home/pi/scripts}):
 
@@ -198,7 +215,7 @@ image, and shuts itself down. We can do this by running \textit{process\_data.py
  python /home/pi/scripts/process_data.py &
 \end{verbatim}
 
-Finally, there are a couple of things we need to do to allow the Pi to communicate with the controller over serial GPIO. First, edit \textit{/boot/cmdline.txt} and remove
+Next there are a couple of things we need to do to allow the Pi to communicate with the controller over serial GPIO. First, edit \textit{/boot/cmdline.txt} and remove
 the following:
 
 \begin{verbatim}
@@ -211,6 +228,47 @@ type:
 \begin{verbatim}
  sudo systemctl disable serial-getty@ttyAMA0.service
 \end{verbatim}
+
+Finally, even though we have disabled serial output at boot, there is still a line that prints when the kernel is being uncompressed. To get rid of this, we can 
+get Raspbian to boot from an uncompressed image. This is a little tricky, and you can find the original instructions here 
+\url{http://raspberrypi.stackexchange.com/questions/24583/ttyama0-disabled-but-still-shows-one-boot-message}. Otherwise, you can follow these instructions:
+
+\begin{itemize}
+ \item SSH into the Pi
+ \item Type the following command (\textbf{Note:} If you're using an older Raspberry Pi (less than Model 2), replace \textit{kernel7} with \textit{kernel}):
+	\begin{verbatim}
+	 od -A d -t x1 /boot/kernel7.img | grep '1f 8b 08 00'
+	\end{verbatim}
+  \item You should see a line that looks like this (example 1):
+	\begin{verbatim}
+	 0017360 1f 8b 08 00 00 00 00 00 02 03 e4 fd 0b 7c 54 d5
+	\end{verbatim}
+	Or like this (example 2). Notice the extra \textbf{08} at the end:
+	\begin{verbatim}
+	 0017360 00 00 00 00 00 00 00 00 1f 8b 08 00 00 00 00 00
+	\end{verbatim}
+  \item If your output looks like example 1, the \textbf{offset} is 17360
+  \item If your output looks like example 2, the \textbf{offset} is 17360 + 08, or 17368
+  \item Type:
+	\begin{verbatim}
+	 sudo -i
+	\end{verbatim}
+	To get an interactive root shell
+  \item Type the following command to create an uncompressed copy of the kernel, replacing the word \textit{OFFSET} with the \textbf{offset} number
+	you found above:
+	\begin{verbatim}
+	 dd if=/boot/kernel.img skip=1 bs=OFFSET | gzip -d >/boot/kernel_uncompressed.img
+	\end{verbatim}
+  \item Now run the following commands to back up the current compressed kernel, and replace it with the uncompressed version:
+	\begin{verbatim}
+	 cd /boot
+	 cp kernel.img kernel_compressed.img
+	 cp kernel_uncompressed.img kernel.img
+	 reboot
+	\end{verbatim}
+  \item If your Pi boots successfully, it has worked
+\end{itemize}
+
 
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
