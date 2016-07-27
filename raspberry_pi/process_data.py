@@ -24,16 +24,13 @@ data_file_name = "/home/pi/data/data.csv"
 image_file_name = "/home/pi/data/images/"
 
 #This is the path to the log file. Change this to change where general output and errors are logged to.
-log_file = open("/home/pi/data/log.txt", "ab") 
+log_file = open("/home/pi/data/log.txt", "ab", 0) 
 
 #Set up a timestamp variable. The controller will send a timestamp before data packets start arriving. If no timestamp is received, data wont be recorded.
 timestamp = None
 
 #Expected length of packet, once it has been split into seperate readings
 len_packet = 12 		
-
-#Check for an ethernet connection
-addr = netifaces.ifaddresses("eth0")
 
 try:
 
@@ -67,27 +64,24 @@ try:
 
 		#"E" indicates the end of data transmission. The controller will only send this after data has been received from all loggers
 		elif "E" in packet:
-		
+	
 			#Only record an image if there is a time to stamp it with
 			if timestamp is not None:
-
+	
 				#Try and create a camera object
 				camera = picamera.PiCamera()
 		
 				#Build camera image path	
-				camera_path = image_file_name + "/" + timestamp + ".jpg"
+				camera_path = image_file_name + timestamp + ".jpg"
 
 				#Capture an image from the camera
 				camera.capture(camera_path)
-
-				#Close the camera object
-				camera.close()
 
 				break
 
 		#If the packet is not recognisable, just print it. Unrecognised packets should still be logged in case there is any garbled data
 		else:
-			log_unknown = "Received unknown packet: " + packet + "\n"
+			log_unknown = "\nReceived unknown packet: " + packet + "\n"
 			log_file.write(log_unknown)
 
 #No serial connection was made
@@ -102,6 +96,9 @@ except picamera.PiCameraError:
 
 #This happens whether anything goes wrong or not
 finally:
+	
+	#Check for an ethernet connection
+	addr = netifaces.ifaddresses("eth0")
 
 	#If the ethernet connection has an IP address assigned, the Pi is communicating with the computer, so don't shut down
 	if not netifaces.AF_INET in addr:
