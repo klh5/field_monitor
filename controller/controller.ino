@@ -16,7 +16,10 @@
 #include <DS1307RTC.h>
 
 /*******************************Things you might want to change*************************************************************/
- 
+
+ //Set the frequency of readings. This needs to be a 5 minute interval, so 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, or 00 for every hour.
+#define READ_FREQ   5
+
 /*
  * These variables relate to the radio. 
  */
@@ -24,9 +27,6 @@
 #define NETWORK_ID    202                 //The ID of the network that all related radios are on. This needs to be the same for all radios that talk to each other
 #define FREQUENCY     RF69_433MHZ         //The frequency of the radio
 #define ENCRYPTKEY    "as86HbM097Ljqd93"  //The 16-digit encyption key - must be the same on all radios that talk to each other!
-
-//Set the frequency of readings. This needs to be a 5 minute interval, so 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, or 00 for every hour.
-#define READ_FREQ   5
 
 //The maximum number of photodiodes that a logger on this network has
 #define MAX_PHOTODIODES   8

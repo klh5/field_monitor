@@ -272,8 +272,6 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
-\subsection{Controller}
-
 \subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 2 x AA batteries and has a low power radio to send data back to the controller. The controller
 that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate.
@@ -282,10 +280,10 @@ When setting up a new logger, there are a few things that you need to change, an
 
 \begin{itemize}
  \item Check that the logger is on the right network, so that it can communicate with the right controller
+ \item Check that the logger has the right \textit{CONTROLLER\_ID} - this is the \textit{LOGGER\_ID} of the controller it's sending data back to
  \item Check that the logger's \textit{LOGGER\_ID} is unique on it's network
  \item Check that the logging frequency is correct
 \end{itemize}
-
 
 \subsubsection{Radio parameters}
 
@@ -310,9 +308,9 @@ set up another base station in a different field nearby, you probably don't want
 So, each controller has a unique \textit{NETWORK\_ID} (like \textit{LOGGER\_ID}'s, these must be greater than 1 and less than 255), and all loggers that send data to
 that controller have the same \textit{NETWORK\_ID}.
 
-\paragraph{GATEWAY\_ID}
-The \textit{GATEWAY\_ID} is used to identify the controller, which acts as a ``gateway'' to the Raspberry Pi. So, it's the \textit{LOGGER\_ID} of the controller. Make
-sure that you put the right textit{GATEWAY\_ID} for the controller that the logger is sending to.
+\paragraph{CONTROLLER\_ID}
+The \textit{CONTROLLER\_ID} is used to identify the controller, which acts as a ``gateway'' to the Raspberry Pi. So, it's the \textit{LOGGER\_ID} of the controller. Make
+sure that you put the right textit{CONTROLLER\_ID} for the controller that the logger is sending to.
 
 \paragraph{FREQUENCY}
 This is just the frequency of the radio chip - 433MHz is within the Industry, Scientific and Medical frequency band, which means it is a legal frequency for low power
@@ -326,12 +324,33 @@ else can pick up packets being sent on your network.
 \subsubsection{Logging parameters}
 
 \paragraph{NUM\_PHOTODIODES}
+This is the number of photodiodes attached to the logger. They will be read from in order, from analog pin 0 to \textit{NUM\_PHOTODIODES}-1. Moteinos only have eight analog pins (A0 to A7), so this number should never be greater than 8, but it can be less, for example, if you need to use an analog pin for a different sensor. If you don't use all of them for the photodiodes, then always pick the highest number analog pin for the other sensor. So, if you want to use a temperature sensor, put it on A7, and then change \textit{NUM\_PHOTODIODES} to 7.
 
-\subsubsection{Powering the base station}
+\subsection{Controller}
+The controller is the Moteino attached to the Raspberry Pi. Most of the parameters for the controller are the same as for the logger. The controller's \textit{LOGGER\_ID} is the logger's \textit{CONTROLLER\_ID}. 
 
-\subsubsection{Powering the logger}
+\subsubsection{Logging parameters}
+
+\paragraph{READ\_FREQ}
+This is the frequency at which readings should be taken. It can be any multiple of five minutes up to an hour. So, the options are: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55. 
+
+The controller constantly fetches the time from the RTC. When it sees that the correct logging interval has been reached, it turns the Raspberry Pi on, tells all the loggers to take readings, collects the readings, and sends them to the Pi. The Pi also receives a special flag that tells it when all of the data has been sent. After it receives this flag, it takes a picture, then shuts down. Everything can then sleep until the next logging interval.
+
+\paragraph{MAX\_PHOTODIODES}
+The logger has a \textit{MAX\_PHOTODIODES} as well. It is used to limit the maximum size of the data structure that holds the photodiode readings. This data structure needs to be the same size for both the logger and controller, or data won't be received by the controller. Even if the logger is using less than eight photodiodes, this number still needs to be 8 for both the logger and the controller.
 
 \subsection{Putting everything together}
+
+\subsection{Connecting the RTC to the controller}
+The controller has no way of knowing the time by itself. The Raspberry Pi can keep track of time to some extent, but it drifts very quickly when it's not attached to a proper time source that it can update itself with. Timekeeping will also stop every time we turn the Pi off, so it will very quickly become out of date.
+
+To solve this problem, the controller uses a Real Time Clock chip called the DS1307. This ticks away on its own 3V battery most of the time, and can last years on one coin cell. This allows us to shut down the Pi, and still keep time. The controller just sends the time to the Pi before it sends any data, so that the Pi can store data with the right timestamp. We are using a breakout board from Adafruit which allows easy interfacing with the controller. \newline
+
+\textbf{Note: The DS1307 needs 5V to wake it up from sleeping so that it can communicate with the controller. But the controller is a 3.3V device, and 5V would fry its I/O pins. When soldering the breakout board. leave out the two 2.2k resistors. This forces the board to communicate using 3.3V instead of 5V.} \newline
+
+Once the board is soldered, it needs to be connected to the controller. This is straighforward. Connect the \textit{SDA} pin of the board to pin A4 of the Moteino, and connect the \textit{SCL} pin to pin A5 of the Moteino. Connect the \textit{GND} pin to to the Moteino's \textit{GND}, or to circuit ground. The \textit{5V} pin needs to be connected to the same power input as the Moteino and Raspberry Pi - this is the 5V output from the PowerBoost, outlined below.
+
+For the full tutorial on soldering the RTC breakout, see \url{https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/wiring-the-rtc}.
 
 \subsubsection{Connecting the controller to the Raspberry Pi}
 
@@ -345,6 +364,21 @@ To enable the controller and the Pi to communicate, you need to connect the TX a
  \item Locate the ``TX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fourth pin down from the top of the right hand header
  \item Connect the ``RX'' pin of the Moteino to the ``TX'' pin of the Pi
 \end{itemize}
+
+\subsubsection{Powering the base station}
+The base station utilises a 3.7V Lithium Ion battery for power storage. This is topped up by two 6V solar panels wired in parallel. They are in parallel so that the amount of current they produce is doubled, but their output voltage is still 6V. You can add more solar panels to this array if the battery is failing to keep up with the power requirements of the project.
+
+An Adafruit solar charger breakout (MCP73871) is used to control battery charging. This will maintain maximum current draw from the solar panels and will automatically stop charging when the battery is full. The solar charger is fairly straighforward: The solar panel output goes to \textit{DCIN}, the battery goes to \textit{BATT}, and the load (the Raspberry Pi/Moteino circuit) goes to \textit{B+} (Not \textit{L+} or \textit{LOAD}. This is so that it only sees the battery voltage, not the solar panel voltage. 6V would be too much for the PowerBoost). If you are soldering one of these from scratch, you will also need to solder in the capacitor.
+
+Because the battery is only 3.7V, it needs to be boosted up to 5V to power the Raspberry Pi and Moteino. The PowerBoost 500 does this. The output from the solar charger goes to \textit{Bat}, and the load is connected to \textit{5V}. There is a switch on the \textit{5V} output so that you can turn off the base station entirely if you need to. This is an optional addition if you are building from scratch, but it's useful.
+
+Both the Moteino and the Pi are connected to the \textit{5V} output of the PowerBoost. However, to save power, the Moteino can turn off the Raspberry Pi. To achieve this, an N-channel MOSFET connects the Pi to ground only when its gate is activated by digital pin 4 of the Moteino. The Moteino can therefore turn the Pi on and off by setting pin 4 to \textit{OUTPUT}, then setting it \textit{HIGH} or \textit{LOW}.
+
+There is information on the solar charger at \url{https://www.adafruit.com/product/390} and information on the PowerBoost 500 at \url{https://www.adafruit.com/product/1944}.
+
+\subsubsection{Powering the logger}
+
+The logger is powered by 4 x AA LSD (Low Self Discharge) batteries.
 
 
 \end{document}

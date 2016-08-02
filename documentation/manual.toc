@@ -6,17 +6,21 @@
 \contentsline {subsection}{\numberline {2.1}Raspberry Pi}{4}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Setting up the Pi: The Easy Way}{5}{subsubsection.2.1.1}
 \contentsline {subsubsection}{\numberline {2.1.2}Setting up the Pi: The Harder Way}{5}{subsubsection.2.1.2}
-\contentsline {subsection}{\numberline {2.2}Controller}{9}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Logger}{9}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Radio parameters}{9}{subsubsection.2.3.1}
+\contentsline {subsection}{\numberline {2.2}Logger}{9}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Radio parameters}{9}{subsubsection.2.2.1}
 \contentsline {paragraph}{LOGGER\_ID}{9}{section*.2}
 \contentsline {paragraph}{NETWORK\_ID}{10}{section*.3}
-\contentsline {paragraph}{GATEWAY\_ID}{10}{section*.4}
+\contentsline {paragraph}{CONTROLLER\_ID}{10}{section*.4}
 \contentsline {paragraph}{FREQUENCY}{10}{section*.5}
 \contentsline {paragraph}{ENCRYPTKEY}{10}{section*.6}
-\contentsline {subsubsection}{\numberline {2.3.2}Logging parameters}{10}{subsubsection.2.3.2}
+\contentsline {subsubsection}{\numberline {2.2.2}Logging parameters}{10}{subsubsection.2.2.2}
 \contentsline {paragraph}{NUM\_PHOTODIODES}{10}{section*.7}
-\contentsline {subsubsection}{\numberline {2.3.3}Powering the base station}{10}{subsubsection.2.3.3}
-\contentsline {subsubsection}{\numberline {2.3.4}Powering the logger}{10}{subsubsection.2.3.4}
-\contentsline {subsection}{\numberline {2.4}Putting everything together}{10}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Connecting the controller to the Raspberry Pi}{10}{subsubsection.2.4.1}
+\contentsline {subsection}{\numberline {2.3}Controller}{11}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Logging parameters}{11}{subsubsection.2.3.1}
+\contentsline {paragraph}{READ\_FREQ}{11}{section*.8}
+\contentsline {paragraph}{MAX\_PHOTODIODES}{11}{section*.9}
+\contentsline {subsection}{\numberline {2.4}Putting everything together}{11}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Connecting the RTC to the controller}{11}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Connecting the controller to the Raspberry Pi}{12}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Powering the base station}{12}{subsubsection.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}Powering the logger}{13}{subsubsection.2.5.3}
