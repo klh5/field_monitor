@@ -55,7 +55,14 @@ void setup() {
 
   //Setup radio
   radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
-  radio.encrypt(ENCRYPTKEY);                        //Encrypt transmissions
+  radio.encrypt(ENCRYPTKEY);                            //Encrypt transmissions
+
+  if((MAX_PHOTODIODES - NUM_PHOTODIODES) < 0 || NUM_PHOTODIODES > 8) {         //Check that the number of photodiodes is reasonable
+    radio.sleep();                                                             //If not, sleep the radio and then the logger
+    while(1) {
+        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
+    }
+  }
 }
 
 /*
