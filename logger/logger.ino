@@ -44,11 +44,47 @@ Setup only runs once, when the logger starts up
 */
 void setup() {
 
-  //Set TRANSISTOR_PIN to output so we can use it to control power to the photodiodes
-  pinMode(TRANSISTOR_PIN, OUTPUT);
+  byte i;
 
-  //Set TRANSISTOR_PIN to LOW (0V) so that the NPN transistor is not saturated
-  digitalWrite(TRANSISTOR_PIN, LOW);
+  //Set unused digital pins to OUTPUT and LOW, so that they don't float
+  for(i=3; i<=9; i++) {
+    pinMode(i, OUTPUT);
+    digitalWrite(i, LOW);
+  }
+
+  /*
+   * These checks result in LED flashes if they fail. The LED will flash a different number of times depending on the problem. In all cases, the LED will flash rapidly several
+   * times followed by a one second gap.
+   * 
+   * 2 flashes - the number of photodiodes is too high (more than 8) or too low (less than 0)
+   * 3 flashes - the network ID is too high (more than 253) or too low (less than 1)
+   * 4 flashes - the logger ID is too high (more than 253) or too low (less than 2)
+   * 5 flashes - the maximum number of photodiodes has been changed, and does not equal 8
+   */
+  if(NUM_PHOTODIODES < 0 || NUM_PHOTODIODES > 8) {                             //Check that the number of photodiodes is reasonable 
+    while(1) {
+        flash_led(2);
+        LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
+  else if(NETWORK_ID < 1 || NETWORK_ID > 254) {                                //Check that the network ID is reasonable
+    while(1) {
+      flash_led(3);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
+  else if(LOGGER_ID < 2 || LOGGER_ID > 254) {                                  //Check that the logger ID is reasonable
+    while(1) {
+      flash_led(4);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
+  else if(MAX_PHOTODIODES != 8) {                                             //Check that MAX_PHOTODIODES is 8
+    while(1) {
+      flash_led(5);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
 
   //All loggers start off uninitialized
   init_logger = false;
@@ -56,13 +92,6 @@ void setup() {
   //Setup radio
   radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
   radio.encrypt(ENCRYPTKEY);                            //Encrypt transmissions
-
-  if((MAX_PHOTODIODES - NUM_PHOTODIODES) < 0 || NUM_PHOTODIODES > 8) {         //Check that the number of photodiodes is reasonable
-    radio.sleep();                                                             //If not, sleep the radio and then the logger
-    while(1) {
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
-    }
-  }
 }
 
 /*
@@ -155,9 +184,11 @@ void read_light_sensors() {
   //Cycle through the photodiodes. For each one, take readings over 1 second, and average them
   for(i=0; i<NUM_PHOTODIODES; i++) {
     start_time = millis();
+    
     while(millis() - start_time < 1000) {
         total += analogRead(i);
     }
+    
     curr_reading = total / num_readings;
     sensor_readings.light_readings[i] = curr_reading;
     total = 0.0;
@@ -204,5 +235,19 @@ void reset_data() {
 
   for(i=0; i<NUM_PHOTODIODES; i++) {
     sensor_readings.light_readings[i] = 0.0;
+  }
+}
+
+/*
+ * Flash the onboard LED num_flashes amount of times. Different numbers of flashes indicate different problems.
+ */
+void flash_led(int num_flashes)
+{
+  byte i;
+
+  for(i=0; i<num_flashes; i++) {
+    digitalWrite(9, HIGH);
+    delay(50);
+    digitalWrite(9, LOW);
   }
 }

@@ -53,20 +53,47 @@ typedef struct {
 Setup only runs once, when the logger starts up
 */
 void setup() {
+  
+  byte i;
+  
+  //Set unused digital pins to OUTPUT and LOW, so that they don't float
+  for(i=3; i<=9; i++) {
+    pinMode(i, OUTPUT);
+    digitalWrite(i, LOW);
+  }
 
-  Serial.begin(115200);
-
-  //Set PI_PIN to output so that we can control the MOSFET
-  pinMode(PI_PIN, OUTPUT);
-
-  //Pull PI_PIN low to turn the MOSFET off so that the Pi isn't switched on yet
-  digitalWrite(PI_PIN, LOW);
+  /*
+   * These checks result in LED flashes if they fail. The LED will flash a different number of times depending on the problem. In all cases, the LED will flash rapidly several
+   * times followed by a one second gap.
+   * 
+   * 3 flashes - the network ID is too high (more than 253) or too low (less than 1)
+   * 4 flashes - the logger ID is too high (more than 253) or too low (less than 2)
+   * 5 flashes - the maximum number of photodiodes has been changed, and does not equal 8
+   */
+  if(NETWORK_ID < 1 || NETWORK_ID > 254) {                                //Check that the network ID is reasonable
+    while(1) {
+      flash_led(3);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
+  else if(LOGGER_ID < 2 || LOGGER_ID > 254) {                                  //Check that the logger ID is reasonable
+    while(1) {
+      flash_led(4);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
+  else if(MAX_PHOTODIODES != 8) {                                             //Check that MAX_PHOTODIODES is 8
+    while(1) {
+      flash_led(5);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
 
   //Setup radio
   radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
-  radio.encrypt(ENCRYPTKEY);                        //Encrypt transmissions
+  radio.encrypt(ENCRYPTKEY);                            //Encrypt transmissions
   radio.promiscuous(false);
-  radio.sleep();                                    //Sleep the radio to save power
+  radio.sleep();                                        //Sleep the radio to save power
 
   fetch_time();
 
@@ -76,7 +103,6 @@ void setup() {
     }
   }
 
-  Serial.println("Resetting nodes");
   radio.send(255, init_nodes, strlen(init_nodes));  //Tell all of the loggers to reset
 }
 
@@ -92,7 +118,6 @@ void loop() {
   if(second(curr_time) == 0) {                                  //Check if second is 0             
     if(minute(curr_time) == READ_FREQ) {                        //Check if the minute is the same as READ_FREQ
       send_timestamp();
-      Serial.println("Telling nodes to send readings...");
       radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read command
       waitForReadings();                                        //Wait for readings to come back from loggers
       radio.sleep();                                            //Sleep the radio to save power
@@ -102,7 +127,6 @@ void loop() {
       }
     }
     else if((minute(curr_time)+5) % 5 == 0) {                   //Check if the minute is a multiple of 5 - loggers wake up every five minutes, and need to be told to sleep again
-      Serial.println("Telling nodes to keep sleeping...");
       radio.send(255, sleep_nodes, strlen(sleep_nodes));
       radio.sleep();
       for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power
@@ -134,12 +158,9 @@ void waitForReadings() {
     if(radio.receiveDone()) {
 
       //If a packet has been received, check that it's the right size
-      if (radio.DATALEN != sizeof(data_in)) {
-        Serial.println("INVALID PACKET");
-      }
+      if (radio.DATALEN == sizeof(data_in)) {
 
-      //Copy the data into memory, and then print it. Data is copied first in case more data arrives while we are printing
-      else {
+        //Copy the data into memory, and then print it. Data is copied first in case more data arrives while we are printing
         data_in = *(data_packet*)radio.DATA;
         byte sender_id = radio.SENDERID;
         int sender_rssi = radio.readRSSI();
@@ -194,6 +215,18 @@ void fetch_time() {
   }
 }
 
+/*
+ * Flash the onboard LED num_flashes amount of times. Different numbers of flashes indicate different problems.
+ */
+void flash_led(int num_flashes)
+{
+  byte i;
 
+  for(i=0; i<num_flashes; i++) {
+    digitalWrite(9, HIGH);
+    delay(50);
+    digitalWrite(9, LOW);
+  }
+}
 
 

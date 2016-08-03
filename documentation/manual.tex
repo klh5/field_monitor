@@ -285,6 +285,15 @@ When setting up a new logger, there are a few things that you need to change, an
  \item Check that the logging frequency is correct
 \end{itemize}
 
+When you apply power to the logger, you shouldn't see any activity on the LED. If the LED flashes, you have problem. The logger automatically checks some of its parameters to make sure that they aren't outside the limits. You will see several flashes in quick succession, followed by a two second gap. The number of flashes you see indicates the problem:
+
+\begin{itemize}
+ \item \textbf{Two flashes}	- the number of photodiodes is too high (more than 8) or too low (less than 0)
+ \item \textbf{Three flashes}	- the network ID is too high (more than 253) or too low (less than 0)
+ \item \textbf{Four flashes}	- the logger ID is too high (more than 253) or too low (less than 2)
+ \item \textbf{Five flashes}	- the maximum number of photodiodes has been changed, and does not equal 8
+\end{itemize}
+   
 \subsubsection{Radio parameters}
 
 \paragraph{LOGGER\_ID}
@@ -295,9 +304,9 @@ loggers.
 The logger ID is transmitted to the controller along with the data from the logger. Because there is a limit to how much data can be transmitted at once, there is a limit
 to how big the \textit{LOGGER\_ID} can be, because it is only allowed to take up one byte, or eight bits. The highest number you can represent with eight bits is 255. So,
 including zero, we can have up to 256 unique \textit{LOGGER\_ID}'s on one network (networks work the same way). One of these numbers (the number 1) is actually taken by
-the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255. 
+the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255.
 
-So, when you are setting up a new logger, set the logger ID to soemthing greater than 1 and less than 255, and make sure that no other loggers with the same 
+So, when you are setting up a new logger, set the logger ID to something greater than 1 and less than 255, and make sure that no other loggers with the same 
 \textit{NETWORK\_ID} have the same \textit{LOGGER\_ID}. 
 
 \paragraph{NETWORK\_ID}
@@ -305,8 +314,7 @@ The \textit{NETWORK\_ID} is used to identify which loggers are on the same netwo
 field, with a controller with a \textit{NETWORK\_ID} of 100, all of the loggers that need to talk to that controller must also have a \textit{NETWORK\_ID} of 100. If you 
 set up another base station in a different field nearby, you probably don't want the loggers in the first field to also be transmitting to that controller.
 
-So, each controller has a unique \textit{NETWORK\_ID} (like \textit{LOGGER\_ID}'s, these must be greater than 1 and less than 255), and all loggers that send data to
-that controller have the same \textit{NETWORK\_ID}.
+So, each controller has a unique \textit{NETWORK\_ID}. Like \textit{LOGGER\_ID}'s, \textit{NETWORK\_ID}'s are limited. So the \textit{NETWORK\_ID} needs to be between 1 and 254, and all loggers that send data to that controller have the same \textit{NETWORK\_ID} as it.
 
 \paragraph{CONTROLLER\_ID}
 The \textit{CONTROLLER\_ID} is used to identify the controller, which acts as a ``gateway'' to the Raspberry Pi. So, it's the \textit{LOGGER\_ID} of the controller. Make
@@ -329,19 +337,27 @@ This is the number of photodiodes attached to the logger. They will be read from
 \subsection{Controller}
 The controller is the Moteino attached to the Raspberry Pi. Most of the parameters for the controller are the same as for the logger. The controller's \textit{LOGGER\_ID} is the logger's \textit{CONTROLLER\_ID}. 
 
+Like the logger, the controller will flash to indicate any problems:
+
+\begin{itemize}
+ \item \textbf{Three flashes}	- the network ID is too high (more than 253) or too low (less than 0)
+ \item \textbf{Three flashes}	- the logger ID is too high (more than 253) or too low (less than 2)
+ \item \textbf{Four flashes}	- the maximum number of photodiodes has been changed, and does not equal 8
+\end{itemize}
+
 \subsubsection{Logging parameters}
 
 \paragraph{READ\_FREQ}
-This is the frequency at which readings should be taken. It can be any multiple of five minutes up to an hour. So, the options are: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55. 
+This is the frequency at which readings should be taken. It can be any multiple of five minutes up to an hour. So, the options are: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55. The logger has no real concept of time - it just wakes up every five minutes to check for any radio packets sent by the controller. So, the logging frequency is only set on the controller.
 
 The controller constantly fetches the time from the RTC. When it sees that the correct logging interval has been reached, it turns the Raspberry Pi on, tells all the loggers to take readings, collects the readings, and sends them to the Pi. The Pi also receives a special flag that tells it when all of the data has been sent. After it receives this flag, it takes a picture, then shuts down. Everything can then sleep until the next logging interval.
 
 \paragraph{MAX\_PHOTODIODES}
-The logger has a \textit{MAX\_PHOTODIODES} as well. It is used to limit the maximum size of the data structure that holds the photodiode readings. This data structure needs to be the same size for both the logger and controller, or data won't be received by the controller. Even if the logger is using less than eight photodiodes, this number still needs to be 8 for both the logger and the controller.
+The logger has a \textit{MAX\_PHOTODIODES} as well. It is used to limit the maximum size of the data structure that holds the photodiode readings. This data structure needs to be the same size for both the logger and controller, or data won't be received by the controller. Even if the logger is using less than eight photodiodes, this number still needs to be eight for both the logger and the controller. Don't worry if you are using less than eight photodiodes - the number you are actually using is defined by \textit{NUM\_PHOTODIODES}.
 
 \subsection{Putting everything together}
 
-\subsection{Connecting the RTC to the controller}
+\subsubsection{Connecting the RTC to the controller}
 The controller has no way of knowing the time by itself. The Raspberry Pi can keep track of time to some extent, but it drifts very quickly when it's not attached to a proper time source that it can update itself with. Timekeeping will also stop every time we turn the Pi off, so it will very quickly become out of date.
 
 To solve this problem, the controller uses a Real Time Clock chip called the DS1307. This ticks away on its own 3V battery most of the time, and can last years on one coin cell. This allows us to shut down the Pi, and still keep time. The controller just sends the time to the Pi before it sends any data, so that the Pi can store data with the right timestamp. We are using a breakout board from Adafruit which allows easy interfacing with the controller. \newline
