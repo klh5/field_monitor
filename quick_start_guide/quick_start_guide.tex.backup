@@ -1,0 +1,89 @@
+\documentclass[10pt]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\graphicspath{ {images/} }
+\begin{document}
+
+\begin{center}
+\textbf{Quick start guide for Raspberry Pi based field monitor}
+
+August 2016
+\end{center}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This document is intended to give you a very quick set up of the field sensor system. It assumes that you don't really need to know any of the complicated details, and only want to change a few of the parameters. If you are interested in a more in-depth explanation, take a look at \textit{field\_monitor/documentation/documentation.pdf}. 
+
+\textbf{The Raspberry Pi image provided will run without any modfications. So, this document only explains how to modify parameters on the logger and controller.}
+
+\subsection{What you need}
+
+There are a couple of things that you need to upload code to the logger and controller:
+
+\begin{itemize}
+ \item The Arduino IDE - get it at \url{https://www.arduino.cc/en/Main/Software}
+ \item The software - since you're looking at this guide, I'll assume that you have everything already
+ \item An FTDI cable to upload code. This has a USB port on one end, and a six pin header on the other. The six wires should be green, yellow, orange, red, brown and black, in that order. It must have 5V power and 3.3V logic. If you're not sure, grab a multimeter. Plug in the cable and test the voltage between the red wire and the black wire - it should be around 5V. Now test the voltage between the yellow wire and ground. It should be around 3.3V
+\end{itemize}
+
+\section{Installing the libraries}
+
+The field monitor makes use of some external libraries. These can be found in \textit{field\_monitor/arduino\_libraries}. There are four of them, and they need to go in the right place, or your code won't work. For windows, you should have a directory called \textit{My Documents/Arduino/libraries}. Place all of the folders inside \textit{field\_monitor/arduino\_libraries} into this directory. For Linux, they need to go in \textit{~/sketchbook/libraries}. 
+
+You need to restart the Arduino IDE for it to find the libraries.
+
+\section{Plugging in a Moteino}
+
+Since we are using an FTDI cable, it's not as simple as just plugging in a USB socket, because it's possible to plug it in the wrong way around. It's a good idea to plug the cable into the Moteino first, then double check that it's the right way around before plugging the cable into the computer.
+
+It's pretty straightforward:
+
+\begin{itemize}
+ \item Pick up the cable and the Moteino
+ \item Have a look at the 6-pin header on the Moteino. You can see that at one end, a pin is labelled \textbf{GND}, and at the other, a pin is labelled \textbf{DTR}
+ \item Line up the FTDI header so that the black wire is lined up with \textbf{GND}, and the green wire is lined up with \textbf{DTR}
+ \item Plug it in
+\end{itemize}
+
+\section{Setting up the IDE}
+
+You need to select the right board to upload to. The Moteino is very similar to the Arduino Uno, so we can use that:
+
+\begin{itemize}
+ \item Open Arduino IDE 
+ \item Go to Tools - Board
+ \item Select ``Arduino Uno''
+\end{itemize}
+
+You also need to select the right port:
+
+\begin{itemize}
+ \item Open Arduino IDE 
+ \item Go to Tools - Port
+ \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
+\end{itemize}
+
+\section{Setting up the controller}
+
+So, the controller is plugged in, the libraries are in the right place, and the IDE is set up. You are ready to modify some code! The first thing to do is to open the script that runs on the controller, and check that it works:
+
+\begin{itemize}
+ \item Go to File - Open
+ \item Find the file called \textit{controller.ino}, and open it. It's in \textit{field\_monitor/controller}
+ \item A new window will open, with some code in it
+ \item To test if everything is working, click the big tick icon just under the ``File'' menu option
+ \item A loading bar will appear in the bottom left hand corner
+ \item After a few seconds, you should get a message in the black console, which says something like this:
+\begin{verbatim}
+Sketch uses 10,974 bytes (35%) of program storage space. Maximum is 30,720 bytes.
+Global variables use 581 bytes (28%) of dynamic memory, leaving 1,467 bytes for local variables. Maximum is 2,048 bytes.
+\end{verbatim}
+
+\end{itemize}
+
+\end{document}
