@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  3 AUG 2016 17:00
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  3 AUG 2016 17:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -272,22 +272,27 @@ Overfull \hbox (3.66397pt too wide) in paragraph at lines 29--30
 www . arduino . cc / en / Main / Software$[] 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--43
+
+ []
+
 [3]
-Overfull \hbox (10.15187pt too wide) in paragraph at lines 77--78
+Overfull \hbox (10.15187pt too wide) in paragraph at lines 79--80
 []\OT1/cmr/m/n/10 Find the file called \OT1/cmr/m/it/10 con-troller.ino\OT1/cmr
 /m/n/10 , and open it. It's in \OT1/cmr/m/it/10 field[]monitor/controller 
  []
 
 [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 86.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 88.
  [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 86.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 88.
  (./quick_start_guide.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 86.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 86.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 88.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 88.
 Package rerunfilecheck Info: File `quick_start_guide.out' has not changed.
 (rerunfilecheck)             Checksum: 72BF584CFE73997BE84314FA9C4071DA;337.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 86.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 88.
  ) 
 Here is how much of TeX's memory you used:
  5133 strings out of 493304
@@ -296,14 +301,14 @@ Here is how much of TeX's memory you used:
  8562 multiletter control sequences out of 15000+600000
  5672 words of font info for 21 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,4n,28p,501b,383s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,4n,28p,501b,319s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on quick_start_guide.pdf (5 pages, 91452 bytes).
+Output written on quick_start_guide.pdf (5 pages, 92864 bytes).
 PDF statistics:
  89 PDF objects out of 1000 (max. 8388607)
  75 compressed objects within 1 object stream
