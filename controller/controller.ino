@@ -55,8 +55,6 @@ Setup only runs once, when the logger starts up
 */
 void setup() {
   
-  byte i;
-  
   //Set unused digital pins to OUTPUT and LOW, so that they don't float
   for(i=3; i<=9; i++) {
     pinMode(i, OUTPUT);

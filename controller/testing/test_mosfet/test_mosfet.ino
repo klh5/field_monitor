@@ -42,7 +42,9 @@ void loop() {
   Serial.println(test_time);
 
   Serial.println("a b c d e f g h");
+  LowPower.powerDown(SLEEP_120MS, ADC_OFF, BOD_ON);
   Serial.println("28 200 4.5 100 200 300 400 500 600 700 800 -24");
+  LowPower.powerDown(SLEEP_120MS, ADC_OFF, BOD_ON);
   Serial.println("29 200 4.7 100 200 300 400 500 600 700 800 -56");
 
   //Send End flag
