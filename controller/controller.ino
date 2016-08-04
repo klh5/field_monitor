@@ -221,8 +221,9 @@ void flash_led(int num_flashes)
 
   for(i=0; i<num_flashes; i++) {
     digitalWrite(9, HIGH);
-    delay(50);
+    delay(200);
     digitalWrite(9, LOW);
+    delay(200);
   }
 }
 
