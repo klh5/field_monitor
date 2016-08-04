@@ -54,29 +54,15 @@ void loop() {
   }
 
   //Turn off power to the pi
-  digitalWrite(PI_PIN, HIGH);   
+  digitalWrite(PI_PIN, LOW);   
 
   //Turn off the LED
-  digitalWrite(LED_PIN, HIGH);
+  digitalWrite(LED_PIN, LOW);
 
   //Sleep to simulate gap between readings
   for(i=0; i<10; i++) {
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
   }
   
-}
-
-/*
- * Flash the onboard LED num_flashes amount of times. Different numbers of flashes indicate different problems.
- */
-void flash_led(int num_flashes)
-{
-  byte i;
-
-  for(i=0; i<num_flashes; i++) {
-    digitalWrite(9, HIGH);
-    delay(50);
-    digitalWrite(9, LOW);
-  }
 }
 
