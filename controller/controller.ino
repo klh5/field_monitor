@@ -44,6 +44,7 @@ RFM69 radio;
 char take_reading[2] = "R";
 char init_nodes[2] = "I";
 char sleep_nodes[2] = "S";
+byte i;
 
 typedef struct {
   float light_readings[MAX_PHOTODIODES];       
@@ -111,9 +112,8 @@ Loop() runs over and over again forever.
 */
 void loop() {
 
-  byte i;
-  fetch_time();               //Get an up to date time stamp from the Pi
-  time_t curr_time = now();   //Create variable curr_time to hold time so that it doesn't change during loop execution
+  fetch_time();                                                 //Get an up to date time stamp from the Pi
+  time_t curr_time = now();                                     //Create variable curr_time to hold time so that it doesn't change during loop execution
 
   if(second(curr_time) == 0) {                                  //Check if second is 0             
     if(minute(curr_time) == READ_FREQ) {                        //Check if the minute is the same as READ_FREQ
@@ -122,14 +122,14 @@ void loop() {
       waitForReadings();                                        //Wait for readings to come back from loggers
       radio.sleep();                                            //Sleep the radio to save power
       shut_down_pi();
-      for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power. The Moteino can only sleep for 8 seconds at a time
+      for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power. ~1 minute is already used waiting for data packets and the Pi
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
     }
     else if((minute(curr_time)+5) % 5 == 0) {                   //Check if the minute is a multiple of 5 - loggers wake up every five minutes, and need to be told to sleep again
       radio.send(255, sleep_nodes, strlen(sleep_nodes));
       radio.sleep();
-      for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power
+      for(i=0; i<33; i++) {                                     //Sleep for ~4 minutes to save power - need to wake at least 30 seconds before next 5 minute interval
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
     }
@@ -137,6 +137,9 @@ void loop() {
   else if(second(curr_time) == 30) {
     if(minute(curr_time) == READ_FREQ-1) {                      //Check if we are 30 seconds before readings need to be taken
       digitalWrite(PI_PIN, HIGH);                               //Turn on Raspberry Pi so that it has time to boot
+    }
+    for(i=0; i<3; i++) {                                        //Save power by sleeping for about 24 seconds
+      LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
     }
   }
 }
@@ -147,7 +150,6 @@ void loop() {
  */
 void waitForReadings() {
   
-  byte i;
   unsigned long start_time = millis();
   data_packet data_in;
 
@@ -184,12 +186,10 @@ void waitForReadings() {
  */
 void shut_down_pi() {
 
-  byte i;
-
   Serial.println("E");
   
-  for(i=0; i<4; i++) {
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow 32 seconds for the Pi to take a picture and shut down
+  for(i=0; i<3; i++) {
+    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow ~24 seconds for the Pi to take a picture and shut down
   }
   
   digitalWrite(PI_PIN, LOW);                        //Turn off the Raspberry Pi
@@ -220,7 +220,6 @@ void fetch_time() {
  */
 void flash_led(int num_flashes)
 {
-  byte i;
 
   for(i=0; i<num_flashes; i++) {
     digitalWrite(9, HIGH);
