@@ -2,10 +2,10 @@
 \contentsline {subsection}{\numberline {1.1}On Your Computer}{3}{subsection.1.1}
 \contentsline {subsubsection}{\numberline {1.1.1}Development Environment}{3}{subsubsection.1.1.1}
 \contentsline {subsection}{\numberline {1.2}Additional hardware}{4}{subsection.1.2}
-\contentsline {section}{\numberline {2}SETUP}{4}{section.2}
-\contentsline {subsection}{\numberline {2.1}Raspberry Pi}{4}{subsection.2.1}
+\contentsline {section}{\numberline {2}SETUP}{5}{section.2}
+\contentsline {subsection}{\numberline {2.1}Raspberry Pi}{5}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Setting up the Pi: The Easy Way}{5}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}Setting up the Pi: The Harder Way}{5}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.2}Setting up the Pi: The Harder Way}{6}{subsubsection.2.1.2}
 \contentsline {subsection}{\numberline {2.2}Logger}{9}{subsection.2.2}
 \contentsline {subsubsection}{\numberline {2.2.1}Radio parameters}{10}{subsubsection.2.2.1}
 \contentsline {paragraph}{LOGGER\_ID}{10}{section*.2}

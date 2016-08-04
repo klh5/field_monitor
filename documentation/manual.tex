@@ -62,13 +62,19 @@ You also need to select the right port:
  \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
 \end{itemize}
 
+Once these are set up, you can use \textit{File - Open} to open the sketch you want to edit (in this case, \textit{field\_monitor/controller.ino} or \textit{field\_monitor/logger.ino}. The big tick at the top of the screen is used to \textbf{compile} to code; it should compile without errors. The arrow is used to upload the code to the target board.
+
+When you upload to the Moteino, its onboard LED will flash a few times when uploading, then stop. If it carries on flashing, check out the error codes in section 2.2 to find out why.
+
 \subsection{Additional hardware}
 You will need an SD card reader and a computer that either has an SD card port or a USB adapter (Google ``usb sd card adapter'').
 
 To connect the Moteino to your computer so that you can program it, you will need an FTDI cable like this one
 \url{http://uk.rs-online.com/web/p/interface-development-kits/0429307/}. The cable \textbf{must} have 5V power and 3.3V logic. The Moteino is designed to run at 3.3V,
 so 5V logic is too high (the power input can be 5V, because this goes through a regulator which lowers it to 3.3V). This connects to the 6-pin header on the Moteino. Make
-sure that when you plug it in, the black wire (ground) on the cable connects to the \textit{GND} pin of the header.
+sure that when you plug it in, the black wire (ground) on the cable connects to the \textit{GND} pin of the header. \newline
+
+\textbf{Before plugging in the Moteino, it's a good idea to turn off power from any other sources. You'll probably get away with not doing this, but it's good practice.} \newline
 
 It's pretty straightforward:
 
