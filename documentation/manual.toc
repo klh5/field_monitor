@@ -11,16 +11,16 @@
 \contentsline {paragraph}{LOGGER\_ID}{10}{section*.2}
 \contentsline {paragraph}{NETWORK\_ID}{10}{section*.3}
 \contentsline {paragraph}{CONTROLLER\_ID}{10}{section*.4}
-\contentsline {paragraph}{FREQUENCY}{10}{section*.5}
-\contentsline {paragraph}{ENCRYPTKEY}{10}{section*.6}
+\contentsline {paragraph}{FREQUENCY}{11}{section*.5}
+\contentsline {paragraph}{ENCRYPTKEY}{11}{section*.6}
 \contentsline {subsubsection}{\numberline {2.2.2}Logging parameters}{11}{subsubsection.2.2.2}
 \contentsline {paragraph}{NUM\_PHOTODIODES}{11}{section*.7}
 \contentsline {subsection}{\numberline {2.3}Controller}{11}{subsection.2.3}
 \contentsline {subsubsection}{\numberline {2.3.1}Logging parameters}{11}{subsubsection.2.3.1}
 \contentsline {paragraph}{READ\_FREQ}{11}{section*.8}
-\contentsline {paragraph}{MAX\_PHOTODIODES}{11}{section*.9}
+\contentsline {paragraph}{MAX\_PHOTODIODES}{12}{section*.9}
 \contentsline {subsection}{\numberline {2.4}Putting everything together}{12}{subsection.2.4}
 \contentsline {subsubsection}{\numberline {2.4.1}Connecting the RTC to the controller}{12}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}Connecting the controller to the Raspberry Pi}{12}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.2}Connecting the controller to the Raspberry Pi}{13}{subsubsection.2.4.2}
 \contentsline {subsubsection}{\numberline {2.4.3}Powering the base station}{13}{subsubsection.2.4.3}
-\contentsline {subsubsection}{\numberline {2.4.4}Powering the logger}{13}{subsubsection.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.4}Powering the logger}{14}{subsubsection.2.4.4}
