@@ -24,16 +24,16 @@
 
 /***************************************************************************************************************************/
 
-#define TRANSISTOR_PIN  4                     //Pin for enabling transistor that allows power to the photodiodes
+#define PHOTO_PIN  4                          //Pin that powers the photodiodes. They need very little current so it's safe to power them from a digital pin
 #define MAX_PHOTODIODES 8                     //The maximum number of photodiodes we can have - 8
 
 //Declare variables
-RFM69 radio;          //Set up radio object
-bool init_logger;     //Tells the logger if it's initialized or not
+RFM69 radio;                                  //Set up radio object
+bool init_logger;                             //Tells the logger if it's initialized or not
 
 //Create a data structure to hold all of the readings
 typedef struct {
-  float light_readings[MAX_PHOTODIODES];            //There are 8 analog pins, so maximum 8 photodiodes
+  float light_readings[MAX_PHOTODIODES];      //There are 8 analog pins, so maximum 8 photodiodes
 } data_packet;
 
 //Declare an empty structure that we can copy data into
@@ -178,8 +178,8 @@ void read_light_sensors() {
   float num_readings;
   float curr_reading;
 
-  //Set TRANSISTOR_PIN to high to saturate the transistor and allow voltage across the photodiodes
-  digitalWrite(TRANSISTOR_PIN, HIGH);
+  //Set PHOTO_PIN to allow power to the photodiodes
+  digitalWrite(PHOTO_PIN, HIGH);
 
   //Cycle through the photodiodes. For each one, take readings over 1 second, and average them
   for(i=0; i<NUM_PHOTODIODES; i++) {
@@ -195,7 +195,7 @@ void read_light_sensors() {
   }
 
   //Set TRANSISTOR_PIN back to low to save power
-  digitalWrite(TRANSISTOR_PIN, LOW);
+  digitalWrite(PHOTO_PIN, LOW);
 }
 
 /*
