@@ -1,3 +1,0 @@
-[submodule "arduino_libraries/Low-Power"]
-	path = arduino_libraries/Low-Power
-	url = https://github.com/rocketscream/Low-Power
