@@ -2235,7 +2235,6 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="POWER_SWITCH" library="SparkFun-Electromechanical" deviceset="SWITCH-SPDT" device="PTH"/>
 <part name="RASPBERRY_PI_HEADER" library="SparkFun-Boards" deviceset="RASPBERRYPI-40-PIN-GPIO" device=""/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="SUPPLY2" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
 <part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="RTC" library="SparkFun-Connectors" deviceset="M05" device="PTH"/>
@@ -2253,7 +2252,6 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="POWER_SWITCH" gate="1" x="13.97" y="80.01"/>
 <instance part="RASPBERRY_PI_HEADER" gate="G$1" x="157.48" y="45.72"/>
 <instance part="GND1" gate="1" x="34.29" y="22.86" rot="R180"/>
-<instance part="SUPPLY2" gate="G$1" x="25.4" y="82.55"/>
 <instance part="GND2" gate="1" x="124.46" y="11.43"/>
 <instance part="GND3" gate="1" x="110.49" y="8.89"/>
 <instance part="RTC" gate="G$1" x="7.62" y="53.34"/>
@@ -2291,16 +2289,6 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </net>
 <net name="5V" class="0">
 <segment>
-<pinref part="POWER_SWITCH" gate="1" pin="O"/>
-<pinref part="SUPPLY2" gate="G$1" pin="5V"/>
-<wire x1="19.05" y1="82.55" x2="25.4" y2="82.55" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="CONTROLLER" gate="G$1" pin="PWR"/>
-<wire x1="45.72" y1="68.58" x2="38.1" y2="68.58" width="0.1524" layer="91"/>
-<label x="38.1" y="68.58" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="RASPBERRY_PI_HEADER" gate="G$1" pin="5V@2"/>
 <wire x1="142.24" y1="71.12" x2="134.62" y2="71.12" width="0.1524" layer="91"/>
 <label x="134.62" y="71.12" size="1.778" layer="95"/>
@@ -2309,6 +2297,14 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="RTC" gate="G$1" pin="4"/>
 <wire x1="15.24" y1="55.88" x2="22.86" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="SUPPLY3" gate="G$1" pin="5V"/>
+</segment>
+<segment>
+<pinref part="POWER_SWITCH" gate="1" pin="O"/>
+<pinref part="CONTROLLER" gate="G$1" pin="PWR"/>
+<wire x1="45.72" y1="68.58" x2="36.83" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="36.83" y1="68.58" x2="36.83" y2="82.55" width="0.1524" layer="91"/>
+<wire x1="36.83" y1="82.55" x2="19.05" y2="82.55" width="0.1524" layer="91"/>
+<label x="34.29" y="82.55" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="GND" class="0">
