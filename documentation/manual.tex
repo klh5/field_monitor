@@ -113,11 +113,16 @@ to do (for Windows 7):
 \begin{itemize}
  \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}
  \item 
+ \item The default IP address is 178.122.1.200. The password is \textit{gogerddan}
+ \item Type \begin{verbatim}
+             sudo raspi-config
+            \end{verbatim}
+ \item Select the second option in the dialog box, labelled ``Expand root partition to fill SD card''
 \end{itemize}
 
 
 Once you have the SD card flashed, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
-\url{https://www.raspberrypi.org/documentation/usage/camera/} (just the ``Connecting the Camera'' part - the rest is already set up on the SD card).
+\url{https://www.raspberrypi.org/documentation/usage/camera/} (just the physical ``Connecting the Camera'' part - the rest is already set up on the SD card). 
 
 \subsubsection{Setting up the Pi: The Harder Way}
 If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
@@ -286,7 +291,7 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
 \subsection{Logger}
-The logger is the Moteino with the light sensor array attached. It runs from 2 x AA batteries and has a low power radio to send data back to the controller. The controller
+The logger is the Moteino with the light sensor array attached. It runs from 4 x AA batteries and has a low power radio to send data back to the controller. The controller
 that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate.
 
 When setting up a new logger, there are a few things that you need to change, and a few things that you can change if you want to. As a minimum, you need to:
@@ -383,15 +388,21 @@ For the full tutorial on soldering the RTC breakout, see \url{https://learn.adaf
 
 \subsubsection{Connecting the controller to the Raspberry Pi}
 
-To enable the controller and the Pi to communicate, you need to connect the TX and RX pins of the Moteino to the TX and RX pins of the Pi as follows:
+To enable the controller and the Pi to communicate, you need to connect the four jumper leads coming from the controller board as follows:
 
 \begin{itemize}
- \item Find the pin on the Moteino labelled ``TX''
+ \item Find the yellow jumper lead coming from the controller board
  \item Locate the ``RX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fifth pin down from the top of the right hand header
- \item Connect the ``TX'' pin of the Moteino to the ``RX'' pin of the Pi
- \item Find the pin on the Moteino labelled ``RX''
+ \item Connect the yellow jumper to the ``RX'' pin of the Pi
+ \item Find the orange jumper lead coming from the controller board
  \item Locate the ``TX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fourth pin down from the top of the right hand header
- \item Connect the ``RX'' pin of the Moteino to the ``TX'' pin of the Pi
+ \item Connect the orange jumper to the ``TX'' pin of the Pi
+ \item Find the red jumper lead coming from the controller board
+ \item Find the ``5V'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the first pin on the top of the right hand header
+ \item Connect the red jumper to the ``5V'' pin of the Pi
+ \item Find the grey jumper lead coming from the controller board
+ \item Find the ``GND'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the third pin down from the top of the right hand header
+ \item Connect the grey jumper to the ``GND'' pin of the Pi
 \end{itemize}
 
 \subsubsection{Powering the base station}
@@ -407,7 +418,62 @@ There is information on the solar charger at \url{https://www.adafruit.com/produ
 
 \subsubsection{Powering the logger}
 
-The logger is powered by 4 x AA LSD (Low Self Discharge) batteries.
+The logger is powered by 4 x AA LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
 
+The battery pack should last from one to six months depending on the logging frequency. You can add a 6V, 0.6W solar panel in parallel with the battery pack to charge the batteries (remember to use a diode so that current doesn't leak back into the solar panel during the night). This solar panel is small enough that it should trickle charge the batteries without overcharging them.
+
+\subsection{Connecting the photodiodes}
+
+The logger is part of a board which contains eight terminal blocks. Simply attached the positive and negative leads of the photodiodes to the right sides of the blocks (they are labelled). All of the circuitry needed to read from the photodiodes is on the board - don't worry if you plug them in the wrong way around by accident, they will be fine.
+
+For the Hammamatsu G1115 photodiode, the positive leg can be identified as being the one closest to the little tab that sticks out horizontally from the bottom of the housing. There's also a black mark on that side if you look at the top of the photodiode.
+
+\section{RETRIEVING DATA}
+
+At some point you will want to see the data that the Pi has been collecting. It's a good idea to do this at least once during setup, to check that everything is working properly (i.e. if you want to log every 15 minutes, check after 15 minutes that at least one set of data has been recorded). There are two ways to fetch the data from the Pi. The first is simpler, but involves turning the whole system off. The second is more complicated, but allows the system to keep running and logging.
+
+\subsection{Copying from the SD card}
+
+The easiest way to retrieve the data is just to take out the Raspberry Pi's SD card and copy the data from it:
+
+\begin{itemize}
+ \item Wait until the Pi is off - when it's not logging, none of its LED's will be lit 
+ \item Use the slide switch to turn off power to the controller and Pi - we don't want it turning on without an SD card
+ \item Remove the micro SD card from the Pi. It's located on the opposite side to the USB/Ethernet ports. If you depress it once (gently) it will pop out
+ \item Insert the micro SD card into an SD card adapter or micro SD to USB (like this one \url{https://www.amazon.co.uk/Memwah-Micro-SD-Card-Reader/dp/B004WFT762}
+ \item Plug the adapter into your computer/laptop
+ \item The SD card will be mounted like a normal USB stick or external drive. It will probably appear as two drives - pick the largest one
+ \item Find the directory called \textit{/home/pi/data}
+ \item Copy the directory to your computer
+\end{itemize}
+
+The second method is similar to the process in section 2.1.1. You will need to have the connection already set up so that you can SSH into the Pi. If you are on Linux, you can copy the right directory using SCP:
+
+\begin{verbatim}
+  scp -rp /home/pi/data user@your-computer:/home/user/destination
+\end{verbatim}
+
+For Windows 7, do the following:
+
+\begin{itemize}
+ \item Download WinSCP from \url{https://winscp.net/eng/download.php}
+ \item
+ \item
+ \item
+\end{itemize}
+
+\subsection{Understanding the data}
+
+In the \textit{/home/pi/data} directory, you will see another directory called \textit{images}, as well as two files, \textit{log.txt} and \textit{data.csv}. The \textit{images} directory contains all of the images captured by the Raspberry Pi. They are named with the timestamp of when they were taken, so you can easily identify their correct order. The \textit{log.txt} file is a log produced by the Python script. It will contain some basic information about any errors the script encountered; so take a look at this if there have been any problems with the logging. 
+
+The third item, \textit{data.csv}, is a CSV file of all of the data from the loggers. The data is recorded in the following format: 
+
+\begin{verbatim}
+SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5 LIGHT_6 LIGHT_7 LIGHT_8 RSSI
+\end{verbatim}
+
+The \textit{SENDER\_ID} identifies which logger the data is from - it's the ID you would have set in the code when you uploaded \textit{logger.txt} to the logger. The \textit{NETWORK\_ID} identifies which network the logger is on. This is followed by the eight light readings: The photodiodes are read from in order, from pin A0 to pin A7. So, the reading from the photodiode attached to pin A7 will be at \textit{LIGHT\_8}. 
+
+The final value, \textit{RSSI}, is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25).
 
 \end{document}

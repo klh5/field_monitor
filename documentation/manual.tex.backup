@@ -62,13 +62,26 @@ You also need to select the right port:
  \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
 \end{itemize}
 
+Once these are set up, you can use \textit{File - Open} to open the sketch you want to edit (in this case, \textit{field\_monitor/controller.ino} or \textit{field\_monitor/logger.ino}. The big tick at the top of the screen is used to \textbf{compile} to code; it should compile without errors. The arrow is used to upload the code to the target board.
+
+When you upload to the Moteino, its onboard LED will flash a few times when uploading, then stop. If it carries on flashing, check out the error codes in section 2.2 to find out why.
+
 \subsection{Additional hardware}
 You will need an SD card reader and a computer that either has an SD card port or a USB adapter (Google ``usb sd card adapter'').
 
 To connect the Moteino to your computer so that you can program it, you will need an FTDI cable like this one
 \url{http://uk.rs-online.com/web/p/interface-development-kits/0429307/}. The cable \textbf{must} have 5V power and 3.3V logic. The Moteino is designed to run at 3.3V,
 so 5V logic is too high (the power input can be 5V, because this goes through a regulator which lowers it to 3.3V). This connects to the 6-pin header on the Moteino. Make
-sure that when you plug it in, the black wire (ground) on the cable connects to the \textit{GND} pin of the header.
+sure that when you plug it in, the black wire (ground) on the cable connects to the \textit{GND} pin of the header. \newline
+
+\textbf{Before plugging in the Moteino, it's a good idea to turn off power from any other sources. You'll probably get away with not doing this, but it's good practice.} \newline
+
+\begin{itemize}
+ \item Pick up the cable and the Moteino
+ \item Have a look at the 6-pin header on the Moteino. You can see that at one end, a pin is labelled \textbf{GND}, and at the other, a pin is labelled \textbf{DTR}
+ \item Line up the FTDI header so that the black wire is lined up with \textbf{GND}, and the green wire is lined up with \textbf{DTR}
+ \item Plug it in! Depending on what code the Moteino is already running, the LED might blink
+\end{itemize}
 
 \section{SETUP}
 
@@ -100,11 +113,16 @@ to do (for Windows 7):
 \begin{itemize}
  \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}
  \item 
+ \item The default IP address is 178.122.1.200. The password is \textit{gogerddan}
+ \item Type \begin{verbatim}
+             sudo raspi-config
+            \end{verbatim}
+ \item Select the second option in the dialog box, labelled ``Expand root partition to fill SD card''
 \end{itemize}
 
 
 Once you have the SD card flashed, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
-\url{https://www.raspberrypi.org/documentation/usage/camera/} (just the ``Connecting the Camera'' part - the rest is already set up on the SD card).
+\url{https://www.raspberrypi.org/documentation/usage/camera/} (just the physical ``Connecting the Camera'' part - the rest is already set up on the SD card). 
 
 \subsubsection{Setting up the Pi: The Harder Way}
 If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
@@ -273,18 +291,27 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
 \subsection{Logger}
-The logger is the Moteino with the light sensor array attached. It runs from 2 x AA batteries and has a low power radio to send data back to the controller. The controller
+The logger is the Moteino with the light sensor array attached. It runs from 4 x AA batteries and has a low power radio to send data back to the controller. The controller
 that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate.
 
 When setting up a new logger, there are a few things that you need to change, and a few things that you can change if you want to. As a minimum, you need to:
 
 \begin{itemize}
  \item Check that the logger is on the right network, so that it can communicate with the right controller
+ \item Check that the logger has the right \textit{CONTROLLER\_ID} - this is the \textit{LOGGER\_ID} of the controller it's sending data back to
  \item Check that the logger's \textit{LOGGER\_ID} is unique on it's network
  \item Check that the logging frequency is correct
 \end{itemize}
 
+When you apply power to the logger, you shouldn't see any activity on the LED. If the LED flashes, you have problem. The logger automatically checks some of its parameters to make sure that they aren't outside the limits. You will see several flashes in quick succession, followed by a two second gap. The number of flashes you see indicates the problem:
 
+\begin{itemize}
+ \item \textbf{Two flashes}	- the number of photodiodes is too high (more than 8) or too low (less than 0)
+ \item \textbf{Three flashes}	- the network ID is too high (more than 253) or too low (less than 0)
+ \item \textbf{Four flashes}	- the logger ID is too high (more than 253) or too low (less than 2)
+ \item \textbf{Five flashes}	- the maximum number of photodiodes has been changed, and does not equal 8
+\end{itemize}
+   
 \subsubsection{Radio parameters}
 
 \paragraph{LOGGER\_ID}
@@ -295,9 +322,9 @@ loggers.
 The logger ID is transmitted to the controller along with the data from the logger. Because there is a limit to how much data can be transmitted at once, there is a limit
 to how big the \textit{LOGGER\_ID} can be, because it is only allowed to take up one byte, or eight bits. The highest number you can represent with eight bits is 255. So,
 including zero, we can have up to 256 unique \textit{LOGGER\_ID}'s on one network (networks work the same way). One of these numbers (the number 1) is actually taken by
-the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255. 
+the controller, and the number 255 is used as a ``broadcast'', meaning that all loggers on the network can see data transmitted to 255.
 
-So, when you are setting up a new logger, set the logger ID to soemthing greater than 1 and less than 255, and make sure that no other loggers with the same 
+So, when you are setting up a new logger, set the logger ID to something greater than 1 and less than 255, and make sure that no other loggers with the same 
 \textit{NETWORK\_ID} have the same \textit{LOGGER\_ID}. 
 
 \paragraph{NETWORK\_ID}
@@ -305,8 +332,7 @@ The \textit{NETWORK\_ID} is used to identify which loggers are on the same netwo
 field, with a controller with a \textit{NETWORK\_ID} of 100, all of the loggers that need to talk to that controller must also have a \textit{NETWORK\_ID} of 100. If you 
 set up another base station in a different field nearby, you probably don't want the loggers in the first field to also be transmitting to that controller.
 
-So, each controller has a unique \textit{NETWORK\_ID} (like \textit{LOGGER\_ID}'s, these must be greater than 1 and less than 255), and all loggers that send data to
-that controller have the same \textit{NETWORK\_ID}.
+So, each controller has a unique \textit{NETWORK\_ID}. Like \textit{LOGGER\_ID}'s, \textit{NETWORK\_ID}'s are limited. So the \textit{NETWORK\_ID} needs to be between 1 and 254, and all loggers that send data to that controller have the same \textit{NETWORK\_ID} as it.
 
 \paragraph{CONTROLLER\_ID}
 The \textit{CONTROLLER\_ID} is used to identify the controller, which acts as a ``gateway'' to the Raspberry Pi. So, it's the \textit{LOGGER\_ID} of the controller. Make
@@ -327,11 +353,29 @@ else can pick up packets being sent on your network.
 This is the number of photodiodes attached to the logger. They will be read from in order, from analog pin 0 to \textit{NUM\_PHOTODIODES}-1. Moteinos only have eight analog pins (A0 to A7), so this number should never be greater than 8, but it can be less, for example, if you need to use an analog pin for a different sensor. If you don't use all of them for the photodiodes, then always pick the highest number analog pin for the other sensor. So, if you want to use a temperature sensor, put it on A7, and then change \textit{NUM\_PHOTODIODES} to 7.
 
 \subsection{Controller}
-The controller is the Moteino attached to the Raspberry Pi. Many of the parameters for the controller are the same as for the logger. The controller doesn't have a \textit{GATEWAY\_ID}, because it is the gateway.
+The controller is the Moteino attached to the Raspberry Pi. Most of the parameters for the controller are the same as for the logger. The controller's \textit{LOGGER\_ID} is the logger's \textit{CONTROLLER\_ID}. 
+
+Like the logger, the controller will flash to indicate any problems:
+
+\begin{itemize}
+ \item \textbf{Three flashes}	- the network ID is too high (more than 253) or too low (less than 0)
+ \item \textbf{Three flashes}	- the logger ID is too high (more than 253) or too low (less than 2)
+ \item \textbf{Four flashes}	- the maximum number of photodiodes has been changed, and does not equal 8
+\end{itemize}
+
+\subsubsection{Logging parameters}
+
+\paragraph{READ\_FREQ}
+This is the frequency at which readings should be taken. It can be any multiple of five minutes up to an hour. So, the options are: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55. The logger has no real concept of time - it just wakes up every five minutes to check for any radio packets sent by the controller. So, the logging frequency is only set on the controller.
+
+The controller constantly fetches the time from the RTC. When it sees that the correct logging interval has been reached, it turns the Raspberry Pi on, tells all the loggers to take readings, collects the readings, and sends them to the Pi. The Pi also receives a special flag that tells it when all of the data has been sent. After it receives this flag, it takes a picture, then shuts down. Everything can then sleep until the next logging interval.
+
+\paragraph{MAX\_PHOTODIODES}
+The logger has a \textit{MAX\_PHOTODIODES} as well. It is used to limit the maximum size of the data structure that holds the photodiode readings. This data structure needs to be the same size for both the logger and controller, or data won't be received by the controller. Even if the logger is using less than eight photodiodes, this number still needs to be eight for both the logger and the controller. Don't worry if you are using less than eight photodiodes - the number you are actually using is defined by \textit{NUM\_PHOTODIODES}.
 
 \subsection{Putting everything together}
 
-\subsection{Connecting the RTC to the controller}
+\subsubsection{Connecting the RTC to the controller}
 The controller has no way of knowing the time by itself. The Raspberry Pi can keep track of time to some extent, but it drifts very quickly when it's not attached to a proper time source that it can update itself with. Timekeeping will also stop every time we turn the Pi off, so it will very quickly become out of date.
 
 To solve this problem, the controller uses a Real Time Clock chip called the DS1307. This ticks away on its own 3V battery most of the time, and can last years on one coin cell. This allows us to shut down the Pi, and still keep time. The controller just sends the time to the Pi before it sends any data, so that the Pi can store data with the right timestamp. We are using a breakout board from Adafruit which allows easy interfacing with the controller. \newline
@@ -344,15 +388,21 @@ For the full tutorial on soldering the RTC breakout, see \url{https://learn.adaf
 
 \subsubsection{Connecting the controller to the Raspberry Pi}
 
-To enable the controller and the Pi to communicate, you need to connect the TX and RX pins of the Moteino to the TX and RX pins of the Pi as follows:
+To enable the controller and the Pi to communicate, you need to connect the four jumper leads coming from the controller board as follows:
 
 \begin{itemize}
- \item Find the pin on the Moteino labelled ``TX''
+ \item Find the yellow jumper lead coming from the controller board
  \item Locate the ``RX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fifth pin down from the top of the right hand header
- \item Connect the ``TX'' pin of the Moteino to the ``RX'' pin of the Pi
- \item Find the pin on the Moteino labelled ``RX''
+ \item Connect the yellow jumper to the ``RX'' pin of the Pi
+ \item Find the orange jumper lead coming from the controller board
  \item Locate the ``TX'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the fourth pin down from the top of the right hand header
- \item Connect the ``RX'' pin of the Moteino to the ``TX'' pin of the Pi
+ \item Connect the orange jumper to the ``TX'' pin of the Pi
+ \item Find the red jumper lead coming from the controller board
+ \item Find the ``5V'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the first pin on the top of the right hand header
+ \item Connect the red jumper to the ``5V'' pin of the Pi
+ \item Find the grey jumper lead coming from the controller board
+ \item Find the ``GND'' pin of the Pi. If you are looking at the Pi with the USB ports closest to you, this is the third pin down from the top of the right hand header
+ \item Connect the grey jumper to the ``GND'' pin of the Pi
 \end{itemize}
 
 \subsubsection{Powering the base station}
@@ -368,7 +418,56 @@ There is information on the solar charger at \url{https://www.adafruit.com/produ
 
 \subsubsection{Powering the logger}
 
-The logger is powered by 4 x AA LSD (Low Self Discharge) batteries.
+The logger is powered by 4 x AA LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
 
+The battery pack should last from one to six months depending on the logging frequency. You can add a 6V, 0.6W solar panel in parallel with the battery pack to charge the batteries (remember to use a diode so that current doesn't leak back into the solar panel during the night). This solar panel is small enough that it should trickle charge the batteries without overcharging them. 
+
+\section{RETRIEVING DATA}
+
+At some point you will want to see the data that the Pi has been collecting. It's a good idea to do this at least once during setup, to check that everything is working properly (i.e. if you want to log every 15 minutes, check after 15 minutes that at least one set of data has been recorded). There are two ways to fetch the data from the Pi. The first is simpler, but involves turning the whole system off. The second is more complicated, but allows the system to keep running and logging.
+
+\subsection{Copying from the SD card}
+
+The easiest way to retrieve the data is just to take out the Raspberry Pi's SD card and copy the data from it:
+
+\begin{itemize}
+ \item Wait until the Pi is off - when it's not logging, none of its LED's will be lit 
+ \item Use the slide switch to turn off power to the controller and Pi - we don't want it turning on without an SD card
+ \item Remove the micro SD card from the Pi. It's located on the opposite side to the USB/Ethernet ports. If you depress it once (gently) it will pop out
+ \item Insert the micro SD card into an SD card adapter or micro SD to USB (like this one \url{https://www.amazon.co.uk/Memwah-Micro-SD-Card-Reader/dp/B004WFT762}
+ \item Plug the adapter into your computer/laptop
+ \item The SD card will be mounted like a normal USB stick or external drive. It will probably appear as two drives - pick the largest one
+ \item Find the directory called \textit{/home/pi/data}
+ \item Copy the directory to your computer
+\end{itemize}
+
+The second method is similar to the process in section 2.1.1. You will need to have the connection already set up so that you can SSH into the Pi. If you are on Linux, you can copy the right directory using SCP:
+
+\begin{verbatim}
+  scp -rp /home/pi/data user@your-computer:/home/user/destination
+\end{verbatim}
+
+For Windows 7, do the following:
+
+\begin{itemize}
+ \item Download WinSCP from \url{https://winscp.net/eng/download.php}
+ \item
+ \item
+ \item
+\end{itemize}
+
+\subsection{Understanding the data}
+
+In the \textit{/home/pi/data} directory, you will see another directory called \textit{images}, as well as two files, \textit{log.txt} and \textit{data.csv}. The \textit{images} directory contains all of the images captured by the Raspberry Pi. They are named with the timestamp of when they were taken, so you can easily identify their correct order. The \textit{log.txt} file is a log produced by the Python script. It will contain some basic information about any errors the script encountered; so take a look at this if there have been any problems with the logging. 
+
+The third item, \textit{data.csv}, is a CSV file of all of the data from the loggers. The data is recorded in the following format: 
+
+\begin{verbatim}
+SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5 LIGHT_6 LIGHT_7 LIGHT_8 RSSI
+\end{verbatim}
+
+The \textit{SENDER\_ID} identifies which logger the data is from - it's the ID you would have set in the code when you uploaded \textit{logger.txt} to the logger. The \textit{NETWORK\_ID} identifies which network the logger is on. This is followed by the eight light readings: The photodiodes are read from in order, from pin A0 to pin A7. So, the reading from the photodiode attached to pin A7 will be at \textit{LIGHT\_8}. 
+
+The final value, \textit{RSSI}, is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25).
 
 \end{document}

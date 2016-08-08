@@ -10,7 +10,7 @@ void setup() {
   Serial.println(test_time);
 
   Serial.println("ad jh tg ak pa");
-  Serial.println("25 200 4.5 100 200 300 400 500 600 700 800 -34");
+  Serial.println("25 200 100 200 300 400 500 600 700 800 -34");
   
   delay(10000);
 

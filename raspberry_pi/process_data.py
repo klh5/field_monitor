@@ -15,7 +15,7 @@ process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the
 """
 
 #Packets are in this format:
-#SENDER_ID NETWORK_ID VOLTAGE LIGHT_1...LIGHT_8 RSSI
+#SENDER_ID NETWORK_ID LIGHT_1...LIGHT_8 RSSI
 
 #This is the name of the data output file. Change this to change where data gets saved to. It needs to be the full path to the file, including the file name.
 data_file_name = "/home/pi/data/data.csv"
@@ -26,11 +26,11 @@ image_file_name = "/home/pi/data/images/"
 #This is the path to the log file. Change this to change where general output and errors are logged to.
 log_file = open("/home/pi/data/log.txt", "ab", 0) 
 
-#Set up a timestamp variable. The controller will send a timestamp before data packets start arriving. If no timestamp is received, data wont be recorded.
+#Set up a timestamp variable. The controller will send a timestamp before data packets start arriving. If no timestamp is received, data won't be recorded.
 timestamp = None
 
 #Expected length of packet, once it has been split into seperate readings
-len_packet = 12 		
+len_packet = 11 		
 
 try:
 
@@ -54,7 +54,7 @@ try:
 				#Write to the file name stored in file_name
 				with open(data_file_name, "ab") as csv_file:
 					file_writer = csv.writer(csv_file, delimiter = ",")
-					file_writer.writerow([timestamp, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]])
+					file_writer.writerow([timestamp, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]])
 	
 		#"T" indicates a timestamp packet. 
 		elif "T" in packet:

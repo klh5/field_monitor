@@ -49,9 +49,9 @@ void loop() {
 
   Serial.println("a b c d e f g h");
   delay(120);
-  Serial.println("28 200 4.5 100 200 300 400 500 600 700 800 -24");
+  Serial.println("28 200 100 200 300 400 500 600 700 800 -24");
   delay(120);
-  Serial.println("29 200 4.7 100 200 300 400 500 600 700 800 -56");
+  Serial.println("29 200 100 200 300 400 500 600 700 800 -56");
 
   //Send End flag
   Serial.println("E");

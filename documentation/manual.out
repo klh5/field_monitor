@@ -16,3 +16,7 @@
 \BOOKMARK [3][-]{subsubsection.2.4.2}{Connecting the controller to the Raspberry Pi}{subsection.2.4}% 16
 \BOOKMARK [3][-]{subsubsection.2.4.3}{Powering the base station}{subsection.2.4}% 17
 \BOOKMARK [3][-]{subsubsection.2.4.4}{Powering the logger}{subsection.2.4}% 18
+\BOOKMARK [2][-]{subsection.2.5}{Connecting the photodiodes}{section.2}% 19
+\BOOKMARK [1][-]{section.3}{RETRIEVING DATA}{}% 20
+\BOOKMARK [2][-]{subsection.3.1}{Copying from the SD card}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.2}{Understanding the data}{section.3}% 22
