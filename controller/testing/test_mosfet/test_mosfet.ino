@@ -1,4 +1,6 @@
-
+#include <TimeLib.h>
+#include <Wire.h>
+#include <DS1307RTC.h>
 #include <LowPower.h>
 
 //The pin used to control the MOSFET which turns power to the Raspberry Pi on and off
@@ -19,12 +21,17 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
+  setSyncProvider(RTC.get);
+
+  fetch_time();
+
 }
 
 void loop() {
 
   byte i;
-  char test_time[20] = "20-08-16_11:12:13";
+
+  fetch_time();
 
   //Turn on power to the pi
   digitalWrite(PI_PIN, HIGH);   
@@ -38,20 +45,20 @@ void loop() {
   }
 
   //Send fake data to the pi
-  Serial.print("T");
-  Serial.println(test_time);
+  send_timestamp();
 
   Serial.println("a b c d e f g h");
-  LowPower.powerDown(SLEEP_120MS, ADC_OFF, BOD_ON);
+  delay(120);
   Serial.println("28 200 4.5 100 200 300 400 500 600 700 800 -24");
-  LowPower.powerDown(SLEEP_120MS, ADC_OFF, BOD_ON);
+  delay(120);
   Serial.println("29 200 4.7 100 200 300 400 500 600 700 800 -56");
 
   //Send End flag
   Serial.println("E");
+  Serial.flush();
 
   //Sleep for a bit to let Pi shut down
-  for(i=0; i<3; i++) {
+  for(i=0; i<2; i++) {
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
   }
 
@@ -67,4 +74,37 @@ void loop() {
   }
   
 }
+
+void send_timestamp() {
+
+  fetch_time();
+  
+  time_t curr_time = now(); 
+  
+  Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
+  
+  Serial.print(hour(curr_time));
+  Serial.print(":");
+  Serial.print(minute(curr_time));
+  Serial.print(":");
+  Serial.print(second(curr_time));
+  Serial.print("_");
+  Serial.print(day(curr_time));
+  Serial.print("-");
+  Serial.print(month(curr_time));
+  Serial.print("-");
+  Serial.print(year(curr_time)); 
+  Serial.println();
+
+}
+
+/*
+ * Request the current time from the DS1307 real time clock.
+ */
+void fetch_time() {
+
+  setTime(RTC.get());
+}
+
+
 

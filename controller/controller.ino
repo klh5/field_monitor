@@ -94,6 +94,8 @@ void setup() {
   radio.promiscuous(false);
   radio.sleep();                                        //Sleep the radio to save power
 
+  setSyncProvider(RTC.get);                             //Set up the time source
+
   fetch_time();
 
   while(true) {
@@ -110,7 +112,7 @@ Loop() runs over and over again forever.
 */
 void loop() {
 
-  fetch_time();                                                 //Get an up to date time stamp from the Pi
+  fetch_time();                                                 //Get an up to date time stamp from the RTC
   time_t curr_time = now();                                     //Create variable curr_time to hold time so that it doesn't change during loop execution
 
   if(second(curr_time) == 0) {                                  //Check if second is 0             
@@ -198,9 +200,21 @@ void shut_down_pi() {
  */
 void send_timestamp() {
 
-  time_t timestamp = now();
+  time_t curr_time = now(); 
+  
   Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
-  Serial.println(timestamp);                        //RPi reads until end of line, so print the timestamp straight after the "T", followed by a new line
+  
+  Serial.print(hour(curr_time));
+  Serial.print(minute(curr_time));
+  Serial.print(second(curr_time));
+  Serial.print("_");
+  Serial.print(day(curr_time));
+  Serial.print("-");
+  Serial.print(month(curr_time));
+  Serial.print("-");
+  Serial.print(year(curr_time)); 
+  Serial.println();
+  Serial.flush();
 }
 
 /*
@@ -208,9 +222,7 @@ void send_timestamp() {
  */
 void fetch_time() {
 
-  while(timeStatus()!= timeSet) {
-    setSyncProvider(RTC.get);
-  }
+  setTime(RTC.get());
 }
 
 /*
