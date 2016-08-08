@@ -97,8 +97,7 @@ by the controller; it turns the Pi on, waits for it to complete its tasks, then 
 \subsubsection{Setting up the Pi: The Easy Way}
 All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, and the camera module.
 
-There is a file called \textit{pi\_logger.img} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi
-running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup. 
+There is a file called \textit{pi\_logger.img.zip} included in \textit{field\_monitor/raspberry\_pi}. This is an image file, and it's basically an ``image'' of a working Pi running our code and with our settings. If we flash this image to a new SD card, it will have everything we need for the Pi to work with no setup. It's compressed, so you need to unzip it first - this should result in a file called \textit{pi\_logger.img}.
 
 In Linux, use the \textit{dd} tool to flash the new SD card. The command is \textit{dd if=field\_monitor/raspberry\_pi/pi\_logger.iso of=/path/to/new/sdcard}. 
 
