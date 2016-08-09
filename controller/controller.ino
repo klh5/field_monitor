@@ -17,8 +17,8 @@
 
 /*******************************Things you might want to change*************************************************************/
 
- //Set the frequency of readings. This needs to be a 5 minute interval, so 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, or 00 for every hour.
-#define READ_FREQ   5
+ //Set the frequency of readings. This must be 5, 10, 20, 30 or 0 (for every 5 minutes, 10 minutes, 20 minutes, half and hour or every hour)
+#define READ_FREQ     5
 
 /*
  * These variables relate to the radio. 
@@ -42,7 +42,6 @@
 //Declare variables
 RFM69 radio;
 char take_reading[2] = "R";
-char init_nodes[2] = "I";
 char sleep_nodes[2] = "S";
 byte i;
 
@@ -54,12 +53,18 @@ typedef struct {
 Setup only runs once, when the logger starts up
 */
 void setup() {
+
+  Serial.begin(115200);
+  
+  Serial.println("Hi");
   
   //Set unused digital pins to OUTPUT and LOW, so that they don't float
   for(i=3; i<=9; i++) {
     pinMode(i, OUTPUT);
     digitalWrite(i, LOW);
   }
+
+  Serial.println("Pins set to low");
 
   /*
    * These checks result in LED flashes if they fail. The LED will flash a different number of times depending on the problem. In all cases, the LED will flash rapidly several
@@ -69,21 +74,27 @@ void setup() {
    * 4 flashes - the logger ID is too high (more than 253) or too low (less than 2)
    * 5 flashes - the maximum number of photodiodes has been changed, and does not equal 8
    */
-  if(NETWORK_ID < 1 || NETWORK_ID > 254) {                                //Check that the network ID is reasonable
+  if(NETWORK_ID < 1 || NETWORK_ID > 254) {                                                                  //Check that the network ID is reasonable
     while(1) {
       flash_led(3);
       LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
     }
   }
-  else if(LOGGER_ID < 2 || LOGGER_ID > 254) {                                  //Check that the logger ID is reasonable
+  else if(LOGGER_ID < 1 || LOGGER_ID > 254) {                                                               //Check that the logger ID is reasonable
     while(1) {
       flash_led(4);
       LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
     }
   }
-  else if(MAX_PHOTODIODES != 8) {                                             //Check that MAX_PHOTODIODES is 8
+  else if(MAX_PHOTODIODES != 8) {                                                                           //Check that MAX_PHOTODIODES is 8
     while(1) {
       flash_led(5);
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
+    }
+  }
+  else if(READ_FREQ != 0 && READ_FREQ != 5 &&  READ_FREQ != 10 && READ_FREQ !=20 && READ_FREQ != 30) {      //Check that the read frequency is OK
+    while(1) {
+      flash_led(6);
       LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
     }
   }
@@ -98,13 +109,9 @@ void setup() {
 
   fetch_time();
 
-  while(true) {
-    if(second() == 30 && minute() == (READ_FREQ-1)) {
-      break;
-    }
-  }
-
-  radio.send(255, init_nodes, strlen(init_nodes));  //Tell all of the loggers to reset
+  Serial.println("Setup done");
+  send_timestamp();
+  
 }
 
 /*
@@ -113,15 +120,19 @@ Loop() runs over and over again forever.
 void loop() {
 
   fetch_time();                                                 //Get an up to date time stamp from the RTC
+
+  send_timestamp();
+  
   time_t curr_time = now();                                     //Create variable curr_time to hold time so that it doesn't change during loop execution
 
   if(second(curr_time) == 0) {                                  //Check if second is 0             
-    if(minute(curr_time) == READ_FREQ) {                        //Check if the minute is the same as READ_FREQ
+    if((minute(curr_time)+READ_FREQ) % READ_FREQ == 0) {        //Check if the minute divides into READ_FREQ
       send_timestamp();
       radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read command
       waitForReadings();                                        //Wait for readings to come back from loggers
       radio.sleep();                                            //Sleep the radio to save power
       shut_down_pi();
+      Serial.flush();
       for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power. ~1 minute is already used waiting for data packets and the Pi
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
@@ -129,15 +140,17 @@ void loop() {
     else if((minute(curr_time)+5) % 5 == 0) {                   //Check if the minute is a multiple of 5 - loggers wake up every five minutes, and need to be told to sleep again
       radio.send(255, sleep_nodes, strlen(sleep_nodes));
       radio.sleep();
+      Serial.flush();
       for(i=0; i<33; i++) {                                     //Sleep for ~4 minutes to save power - need to wake at least 30 seconds before next 5 minute interval
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
     }
   }
   else if(second(curr_time) == 30) {
-    if(minute(curr_time) == READ_FREQ-1) {                      //Check if we are 30 seconds before readings need to be taken
+    if(((minute(curr_time)+1)+READ_FREQ) % READ_FREQ == 0 ) {     //Check if we are 30 seconds before readings need to be taken
       digitalWrite(PI_PIN, HIGH);                               //Turn on Raspberry Pi so that it has time to boot
     }
+    Serial.flush();
     for(i=0; i<3; i++) {                                        //Save power by sleeping for about 24 seconds
       LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
     }
@@ -187,6 +200,8 @@ void waitForReadings() {
 void shut_down_pi() {
 
   Serial.println("E");
+
+  Serial.flush();
   
   for(i=0; i<3; i++) {
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow ~24 seconds for the Pi to take a picture and shut down

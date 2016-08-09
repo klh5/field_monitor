@@ -108,30 +108,12 @@ void loop() {
     if(radio.DATALEN == 1) {
       sscanf((const char*)radio.DATA, "%s", radio_in);  //Copy contents of the radio packet into radio_in
 
-      //The packet contains an init command
-      if((strcmp(radio_in, "I") == 0) ) {
-        reset_data();
-        init_logger = true;
-        go_to_sleep();
-      }
-
       //The packet contains a read command
-      else if((strcmp(radio_in, "R") == 0) ) {
-
-        //The logger is already initialized
-        if(init_logger == true) {
-          take_readings();
-          send_packet();
-          reset_data();
-        }
-
-        //The logger isn't initialized yet
-        else {
-          reset_data();
-          init_logger = true;
-          go_to_sleep();
-        }
+      if((strcmp(radio_in, "R") == 0) ) {
         
+        take_readings();                      //Read from all sensors
+        send_packet();                        //Send the readings back to the controller
+        reset_data();                         //Reset all of the data
       }
 
       //The packet contains a sleep command
