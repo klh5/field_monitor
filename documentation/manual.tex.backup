@@ -49,16 +49,16 @@ You need to restart the Arduino IDE for it to find the libraries.
 You also need to make sure you have the right board selected. The Moteino is very similar to the Arduino Uno, so we can use that as our upload target:
 
 \begin{itemize}
- \item Open Arduino IDE 
- \item Go to Tools - Board
- \item Select ``Arduino Uno''
+ \item Open the Arduino IDE program
+ \item Go to \textit{Tools} - \textit{Board}
+ \item Select \textit{Arduino Uno} from the list
 \end{itemize}
 
 You also need to select the right port:
 
 \begin{itemize}
- \item Open Arduino IDE 
- \item Go to Tools - Port
+ \item Open the Arduino IDE 
+ \item Go to \textit{Tools} - \textit{Port}
  \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
 \end{itemize}
 
@@ -89,7 +89,7 @@ sure that when you plug it in, the black wire (ground) on the cable connects to 
 The SD card image provided has everything already set up, but there are some more details here if you need to change anything. If you just want to set up a new Pi with the
 provided image, go to \textbf{Setting up the Pi: The Easy Way}.
 
-The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local} run as the ``root'' user (similar to Administrators in Windows). You can look at this file by typing \textit{cat /etc/rc.local}. The Raspberry Pi is turned off and off by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off. If the Pi detects an Ethernet connection, it won't shut down after running its script. This gives us a useful way to download data without turning off the system.
+The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local} run as the ``root'' user (similar to Administrators in Windows). You can look at this file by typing \textit{cat /etc/rc.local}. The Raspberry Pi is turned off and off by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off. If the Pi detects an Ethernet connection, it won't shut down after running its script.
 
 \subsubsection{Setting up a new Pi: The Easy Way}
 All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, the camera module, and an Ethernet cable. \textbf{This part of the setup assumes that the Pi is not connected to the controller and is being powered through the micro USB port as normal}.
@@ -116,10 +116,10 @@ The Raspberry Pi image you just flashed is set up with a certain IP address. IP 
  \item Click on the network icon in the menu bar
  \item Go to \textit{Edit Connections}
  \item Click on \textit{Add}
- \item Select the ``Ethernet'' option
+ \item Select the \textit{Ethernet} option
  \item Give the connection a useful name, like ``Pi connect''
  \item Go to \textit{IPv4 settings}
- \item Change the \textit{Method} to ``Manual''
+ \item Change the \textit{Method} to \textit{Manual}
  \item Add an address - \textit{Address:} 178.122.1.50, \textit{Netmask:} 255.255.255.0, \textit{Gateway:} 178.122.1.1
  \item Connect your computer and the Pi with an Ethernet cable, then turn on the Pi
  \item Your computer should detect the wired connection and connect 
@@ -127,7 +127,7 @@ The Raspberry Pi image you just flashed is set up with a certain IP address. IP 
 
 You should now be able to log into the Pi by using:
 \begin{verbatim}
- ssh pi@178.122.100
+ ssh pi@178.122.200
 \end{verbatim}
 
 The password is \textit{gogerddan}. \newline
@@ -135,10 +135,30 @@ The password is \textit{gogerddan}. \newline
 \textbf{For Windows 7}:
 
 \begin{itemize}
- \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}
- \item 
- \item
- \item
+ \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html} - you'll need this later on as well, to download the data
+ \item Plug one end of the Ethernet cable into your computer, and the other end into the Pi
+ \item Turn on the Pi
+ \item On Windows, go to \textit{Control Panel} - \textit{Network and Internet} - \textit{Network and Sharing Center}
+ \item The connection to the Pi should show up as an ``Unidentified Network'' - usually there is a picture of a park bench
+ \item Click on \textit{Local Area Connection} on the right hand side
+ \item A new window should appear with some details. Click on \textit{Properties}
+ \item In the list, select \textit{Internet Protocol Version 4 (TCP/IPv4)}
+ \item With that selected, click \textit{Properties}
+ \item A new window will open. Select the \textit{Use the following IP address} option
+ \item Type in these settings - \textit{IP Address:} 178.122.1.50, \textit{Subnet:} 255.255.255.0, \textit{Gateway:} 178.122.1.1
+ \item Leave the DNS server section blank
+ \item Save and exit
+\end{itemize}
+
+Now you can use Putty to connect to the Pi:
+
+\begin{itemize}
+ \item Open \textit{Putty.exe}
+ \item In \textit{Host Name (or IP address):} type \textit{pi@178.122.1.200}
+ \item The \textit{Port} should be \textit{22}
+ \item Click \textit{Open}. If a warning box comes up, click \textit{Yes}
+ \item A black terminal will come up - when prompted, enter the password (\textit{gogerddan})
+ \item You are now logged in to the Pi
 \end{itemize}
 
 Now that you are logged in to the Pi, type 
@@ -157,23 +177,21 @@ Once you have the SD card flashed and expanded, install it in the Raspberry Pi, 
 \url{https://www.raspberrypi.org/documentation/usage/camera/} (just the physical ``Connecting the Camera'' part - the rest is already set up on the SD card). The software on the Pi is now ready to go. 
 
 \subsubsection{Setting up the Pi: The Harder Way}
-If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't
-even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section). This section assumes that you already
-have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system, and that you have root access. 
+If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section). This section assumes that you already have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system, and that you have root access. 
 
 The first thing to do is to set up the Ethernet connection so that your machine can communicate directly to the Pi. If your Pi is already connected to the internet, this
 isn't really necessary, but it does provide another avenue of data collection when the Pi is located remotely. To connect to the Pi this way, your machine and the Pi 
 need to be within the same subnet. The easiest way to do this is to set up static IP adresses on the Pi and on your machine.
 
 To set a static IP on the Pi , you need to mount the SD card in your machine and edit \textit{/etc/dhcpcd.conf}. Insert the following at the bottom of the file (you can 
-replace the IP address with whatever you prefer):
+replace the IP address with whatever you prefer, but this document assumes these settings):
 
 \begin{verbatim}
 interface eth0
 
-static ip_address=192.168.1.10/24
-static routers=192.168.1.1
-static domain_name_servers=192.168.1.1
+static ip_address=178.122.1.200/24
+static routers=178.122.1.1
+static domain_name_servers=178.122.1.1
 \end{verbatim}
 
 Now you need to set up a new ethernet connection on your machine with an IP address within the same subnet as the Raspberry Pi, and log in to the Pi using SSH. For this, you can follow the instruction in section 2.1.1 above.
@@ -195,7 +213,7 @@ and copy them into a suitable directory to install from (such as ~), or you can 
 command is:
 
 \begin{verbatim}
-scp path/to/file/being/copied pi@192.168.1.10:/home/pi
+scp path/to/file/being/copied pi@178.122.1.200:/home/pi
 \end{verbatim}
 
 The packages need to be installed in the right order, as some depend on others. The command to install the \textit{.deb} packages is:
@@ -301,7 +319,6 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 	\end{verbatim}
   \item If your Pi boots successfully, it has worked
 \end{itemize}
-
 
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
@@ -449,21 +466,27 @@ At some point you will want to see the data that the Pi has been collecting. It'
 
 \subsection{Copying from the SD card}
 
-The easiest way to retrieve the data is just to take out the Raspberry Pi's SD card and copy the data from it:
+The Pi's filesystem is a Linux filesystem. This means that Windows computers won't be able to read it. But, you can use a Linux computer to copy the data directly from the SD card:
 
 \begin{itemize}
  \item Wait until the Pi is off - when it's not logging, none of its LED's will be lit 
- \item Use the slide switch to turn off power to the controller and Pi - we don't want it turning on without an SD card
+ \item Remove the red jumper wire from the Raspberry Pi - we don't want it turning on without an SD card
  \item Remove the micro SD card from the Pi. It's located on the opposite side to the USB/Ethernet ports. If you depress it once (gently) it will pop out
  \item Insert the micro SD card into an SD card adapter or micro SD to USB (like this one \url{https://www.amazon.co.uk/Memwah-Micro-SD-Card-Reader/dp/B004WFT762}
  \item Plug the adapter into your computer/laptop
- \item The SD card will be mounted like a normal USB stick or external drive. It will probably appear as two drives - pick the largest one
+ \item The SD card will be mounted like a normal USB stick or external drive. It will appear as two drives - pick the largest one
  \item Find the directory called \textit{/home/pi/data}
  \item Copy the directory to your computer
- \item Unmount/eject the card, and put it back in the Pi. Switch the power back on and everything will carry on running
+ \item Unmount/eject the card, and put it back in the Pi. Replace the red power wire
 \end{itemize}
 
-The second method involves connecting to the Pi over SSH as described in section 2.1.1. If you haven't done this yet, you will need to follow the instructions for setting up a new connection within the same subnet as the Raspberry Pi. \textbf{This method will only work if the Pi can be powered seperately from the controller}. This is because the controller is set up to cut power to the Pi after a certain length of time. So, this method is best if you have retrieved the Pi and have it in the office, or if you can connect a portable power supply to the Pi (like a power pack for a mobile phone). A 5V, 2A power supply is best. \newline
+Note that this will \textbf{only} work with Linux. If you need to do this in Windows, you need to find a utility that can read \textit{ext4} formatted filesystems.
+
+\subsection{Copying over wired connection}
+
+The second method involves connecting to the Pi over SSH as described in section 2.1.1. If you haven't done this yet, you will need to follow the instructions for setting up a new connection within the same subnet as the Raspberry Pi. \textbf{This method will only work if the Pi can be powered seperately from the controller}. This is because the controller is set up to cut power to the Pi after a certain length of time. So, this method is best if you have retrieved the Pi and have it in the office, or if you can connect a portable power supply to the Pi (like a power pack for a mobile phone). A 5V, 2A power supply is best.
+
+The good thing about this system is that if you can do it between logging intervals, you won't lose any data. You can also use this method to quickly check that the Pi is logging, without having to remove the SD card or copy any data.
 
 \paragraph{If the system is still logging:}
 Wait until it is off first - no LED's should be lit. Remove the red jumper wire coming from the controller. You can leave the other three wires connected. Now connect your laptop to the Pi with the Ethernet cable, and connect the seperate power to the Pi through the micro USB port.
@@ -471,30 +494,55 @@ Wait until it is off first - no LED's should be lit. Remove the red jumper wire 
 \paragraph{If the system is not logging:}
 Make sure that the controller board is switched off with the slide switch. Now connect the Ethernet cable between your computer and the Pi, and connect the seperate power supply to the Pi through the micro USB port. \newline
 
-You should now be able to log in to the Pi using SSH. Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy):
+You should now be able to log in to the Pi using SSH. 
+
+\subsubsection{Copying the data}
+
+\textbf{For Linux:} \newline
+
+Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy):
 
 \begin{verbatim}
  scp -rp data user@your-ip-address:/place/to/put/data
 \end{verbatim}
 
-For \textbf{Linux}, this might look like this, if you have the IP address suggested in section 2.1.1 and your username is ``bob'':
-
-\begin{verbatim}
- scp -rp data bob@178.122.1.50:/home/bob
-\end{verbatim}
-
-For Windows, it would look something like this:
-
-\begin{verbatim}
- scp -rp data bob@178.122.1.50:C:\users\bob\Desktop
-\end{verbatim}
-
-You can now turn the Pi off with:
+Once you have downloaded the data, you can turn the Pi off with:
 \begin{verbatim}
  sudo halt
 \end{verbatim}
 
-If the system is still logging, disconnect the Ethernet cable, and replace the red jumper wire. 
+\textbf{For Windows 7:} \newline
+
+For Windows, you need to install a utility called WinSCP. This will allow you to easily download files from the Pi:
+
+\begin{itemize}
+ \item In \textit{field\_monitor/windows\_utils}, there is a file called \textit{WinSCP-5.9-Setup.exe}. Copy this to your computer and double click to run it. It will install a program called \textit{WinSCP} 
+ \item Once it has installed, open WinSCP
+ \item Click on \textit{New Site}
+ \item The \textit{File protocol} should be \textit{STFP}
+ \item The \textit{Host name} is the IP address of the Pi - \textit{178.122.1.200}
+ \item The \textit{Port number} should be \textit{22}
+ \item The \textit{User name} is \textit{pi} and the \textit{Password} is \textit{gogerddan}
+ \item Click \textit{Login}
+ \item If a warning pops up, click \textit{Yes}
+ \item The Raspberry Pi's file structure will appear in the right hand pane. Your computer's file structure is in the left hand pane
+ \item In the left hand pane, navigate to the directory on your computer that you want to download the data to (it defaults to \textit{My Documents}
+ \item Select the \textit{data} folder in the right hand (Pi) pane so that it's highlighted
+ \item Click \textit{Download} 
+ \item In the popup box, click \textit{OK}
+ \item The \textit{Data} folder will be downloaded to the location you selected
+\end{itemize}
+
+Once you have downloaded the data, you can turn off the Pi:
+
+\begin{itemize}
+ \item In WinSCP, go to \textit{Commands} - \textit{Open Terminal}
+ \item In the \textit{Enter command:} field, type \textit{sudo halt}
+ \item Click \textit{Execute}
+ \item The Pi will shut down
+\end{itemize}
+
+If the system is still logging, disconnect the Ethernet cable, remove the seperate micro USB power source and replace the red jumper wire. 
 
 \subsection{Understanding the data}
 

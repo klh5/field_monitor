@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  9 AUG 2016 10:27
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  9 AUG 2016 15:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -297,96 +297,114 @@ Underfull \hbox (badness 10000) in paragraph at lines 133--134
 
  []
 
-[6] [7]
-Overfull \hbox (18.80196pt too wide) in paragraph at lines 231--236
+[6] [7] [8]
+Overfull \hbox (18.80196pt too wide) in paragraph at lines 249--254
 \OT1/cmr/m/n/10 the Rasp-berry Pi. The script is lo-cated at \OT1/cmr/m/it/10 f
 ield[]monitor/raspberry[]pi/process[]data.py
  []
 
-[8]
-Overfull \hbox (97.02399pt too wide) in paragraph at lines 265--268
+[9]
+Overfull \hbox (97.02399pt too wide) in paragraph at lines 283--286
 \OT1/cmtt/m/n/10 stackexchange . com / questions / 24583 / ttyama0-[]disabled-[
 ]but-[]still-[]shows-[]one-[]boot-[]message$[]\OT1/cmr/m/n/10 .
  []
 
 
-Overfull \hbox (105.24632pt too wide) in paragraph at lines 294--294
+Overfull \hbox (105.24632pt too wide) in paragraph at lines 312--312
  [] \OT1/cmtt/m/n/10 dd if=/boot/kernel.img skip=1 bs=OFFSET | gzip -d >/boot/k
 ernel_uncompressed.img[] 
  []
 
-[9] [10] [11]
-Overfull \hbox (20.57336pt too wide) in paragraph at lines 368--369
+[10] [11] [12]
+Overfull \hbox (20.57336pt too wide) in paragraph at lines 385--386
 \OT1/cmr/m/n/10 log-ger. They will be read from in or-der, from ana-log pin 0 t
 o \OT1/cmr/m/it/10 NUM[]PHOTODIODES\OT1/cmr/m/n/10 -
  []
 
-[12]
-Underfull \hbox (badness 10000) in paragraph at lines 396--397
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 398--399
+Underfull \hbox (badness 10000) in paragraph at lines 415--416
 
  []
 
 
-Overfull \hbox (19.27467pt too wide) in paragraph at lines 402--403
+Overfull \hbox (19.27467pt too wide) in paragraph at lines 419--420
 \OT1/cmtt/m/n/10 adafruit . com / adding-[]a-[]real-[]time-[]clock-[]to-[]raspb
 erry-[]pi / wiring-[]the-[]rtc$[]\OT1/cmr/m/n/10 . 
  []
 
-[13] [14]
-Overfull \hbox (7.83223pt too wide) in paragraph at lines 432--433
+[14]
+Overfull \hbox (7.83223pt too wide) in paragraph at lines 449--450
 \OT1/cmtt/m/n/10 product / 390$[] \OT1/cmr/m/n/10 and in-for-ma-tion on the Pow
 er-Boost 500 at []$\OT1/cmtt/m/n/10 https : / / www . adafruit .
  []
 
-[15]
-Underfull \hbox (badness 10000) in paragraph at lines 474--475
-
- []
-
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 516--517
+[15] [16]
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 
  []
 
 [17]
-Overfull \hbox (122.24593pt too wide) in paragraph at lines 533--533
+Underfull \hbox (badness 10000) in paragraph at lines 501--502
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 514--515
+
+ []
+
+
+Overfull \hbox (51.46577pt too wide) in paragraph at lines 516--517
+\OT1/cmr/m/n/10 haven't in-stalled Putty, Win-SCP won't in-stall. In-stall \OT1
+/cmr/m/it/10 field[]monitor/windows[]utils/putty.exe
+ []
+
+
+Overfull \hbox (1.53658pt too wide) in paragraph at lines 519--520
+[]\OT1/cmr/m/n/10 In \OT1/cmr/m/it/10 field[]monitor/windows[]utils\OT1/cmr/m/n
+/10 , there is a file called \OT1/cmr/m/it/10 WinSCP-5.9-Setup.exe\OT1/cmr/m/n/
+10 .
+ []
+
+[18]
+Overfull \hbox (122.24593pt too wide) in paragraph at lines 555--555
 []\OT1/cmtt/m/n/10 SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5
  LIGHT_6 LIGHT_7 LIGHT_8 RSSI[] 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 539.
-[18]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 539.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 561.
+[19]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 561.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 539.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 539.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 561.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 561.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: D7FCFE51345FD4F29A53685859007E45;1762.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 539.
+(rerunfilecheck)             Checksum: 0D78ADA98A6E1148CE1198B812C50217;1764.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 561.
  ) 
 Here is how much of TeX's memory you used:
- 5192 strings out of 493304
- 77137 string characters out of 6139870
+ 5193 strings out of 493304
+ 77134 string characters out of 6139870
  162524 words of memory out of 5000000
  8580 multiletter control sequences out of 15000+600000
  5672 words of font info for 21 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,4n,28p,799b,500s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,5n,28p,723b,435s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on manual.pdf (18 pages, 154794 bytes).
+Output written on manual.pdf (19 pages, 158318 bytes).
 PDF statistics:
- 272 PDF objects out of 1000 (max. 8388607)
- 243 compressed objects within 3 object streams
- 54 named destinations out of 1000 (max. 500000)
+ 276 PDF objects out of 1000 (max. 8388607)
+ 246 compressed objects within 3 object streams
+ 55 named destinations out of 1000 (max. 500000)
  193 words of extra memory for PDF output out of 10000 (max. 10000000)
 
