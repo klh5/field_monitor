@@ -1,0 +1,30 @@
+This document gives you a very quick start guide to the field monitor. It assumes that you don't want to change anything, and just want to 
+set up the system and let it run. For the prototype of one base station and one logger, this will work with no problems, as they are all set
+up with default code and values (assuming nobody else has changed anything!). The system will log every hour.
+
+The Pi should already be attached to the controller, and the controller should already be attached to the PowerBoost. There should be four
+wires plugged in to the Pi - red, grey, orange and yellow. The blue board next to the Moteino is a clock - it should have a 3V battery in
+the battery holder. You will need a 3.7V Lithium Ion battery pack, which should be with the rest of the system, but not plugged in yet.
+
+For the logger, the battery pack should already be already connected, but turned off with the switch. You need to connect the photodiodes 
+to the terminal blocks on the board. They are marked with + and - so that you know which way around to plug them in (the positive leg of 
+the photodiode is the one closest to the little tab). The photodiodes will be read from in order, from 1 to 8, and this is how their 
+readings will appear in the CSV file.
+
+If any of these assumptions aren't true, refer to the documentation.
+
+SETUP
+Turn on the logger with the slide switch. You shouldn't see any activity - it's very low power, so the LED won't come on unless there is a 
+problem. If you're not sure if it's on, check the voltag between the VIN and GND pins with a multimeter - you should see 4.5-5V.
+
+Plug the blue Lithium Ion battery pack to the connector on the solar charger marked BATT. Plug in the solar panels to the DC barrell jack.
+You should see the red power LED come on, and either the orange charge LED or the green charged LED. If the panels aren't getting much 
+light, the LED's might be flashing. Turn on the slide switch to provide power to the controller and Pi.
+
+TO RETRIEVE THE DATA
+Turn off power to the controller and Pi using the slide switch. Remove the micro SD card from the Pi, and plug it into a computer using an
+adapter. Find the directory called /home/pi/data, and copy it to your computer.
+
+That's it - everything will start logging automatically. There is a lot more detail in the documentation if you need it.
+
+
