@@ -145,6 +145,7 @@ void go_to_sleep() {
  */
 void take_readings() {
 
+  radio.sleep();              //It takes ~8 seconds to read from sensors, so we don't need the radio on
   read_light_sensors();
   
 }
@@ -168,12 +169,14 @@ void read_light_sensors() {
     start_time = millis();
     
     while(millis() - start_time < 1000) {
-        total += analogRead(i);
+        total = total + analogRead(i);                      //Add each new reading to the total
+        num_readings++;                                     //Add one to the number of readings
     }
     
-    curr_reading = total / num_readings;
-    sensor_readings.light_readings[i] = curr_reading;
-    total = 0.0;
+    curr_reading = total / num_readings;                    //Find the average by dividing the total by the number of readings
+    sensor_readings.light_readings[i] = curr_reading;       //Store the result in the sensor_readings data structure
+    total = 0.0;                                            //Reset the total and number of readings, ready for the next sensor
+    num_readings = 0.0;
   }
 
   //Set TRANSISTOR_PIN back to low to save power
@@ -202,8 +205,8 @@ void send_packet() {
     LowPower.powerDown(SLEEP_120MS, ADC_OFF, BOD_ON);
   }
 
-  //Sleep until the next 5 minute interval. As the WDT is quite inaccurate (+/-10%), this sleeps for 240 seconds instead of 270
-  for(i=0; i<30; i++) {
+  //Sleep until the next 5 minute interval. As the WDT is quite inaccurate (+/-10%), this sleeps for ~240 seconds instead of 270. Plus it takes 8 seconds to read from sensors
+  for(i=0; i<29; i++) {
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
   }
 }

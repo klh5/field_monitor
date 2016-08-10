@@ -105,8 +105,7 @@ In Windows, follow the instruction from the Raspberry Pi Foundation at \url{http
 not as hard as it looks! You just need to install a program called Win32DiskImager, which will allow you to write to the SD card.
 
 If you use an SD card with a capacity greater than 8GB, you will still only have 8GB of storage unless you expand the partition so that the Pi can
-access the extra room. To do this, you will need to access the Pi over Ethernet. The image file is already set up to allow you to do this, but you will need to
-do some setting up on your own computer as well. 
+access the extra room. You also need to check that the camera module is enabled. To do this, you will need to access the Pi over Ethernet. The image file is already set up to allow you to do this, but you will need to do some setting up on your own computer as well. This process will also be useful later on for downloading data.
 
 The Raspberry Pi image you just flashed is set up with a certain IP address. IP addresses are how computers identify each other over network connections. You're computer needs to have an IP address which has the same subnet as the Raspberry Pi. IPv4 IP addresses are usually of the format \textit{192.168.1.1}. A subnet mask of \textit{255.255.255.0} means that the first three numbers need to match for the computers to talk to each other. The Pi by default has an IP address of \textbf{178.122.1.200}. So your IP address needs to be the same except for the last number (e.g. 178.122.1.50). The instructions below tell you how to set this up. \newline
 
@@ -135,7 +134,7 @@ The password is \textit{gogerddan}. \newline
 \textbf{For Windows 7}:
 
 \begin{itemize}
- \item Download and install Putty from \url{http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html} - you'll need this later on as well, to download the data
+ \item In \textit{field\_monitor/windows\_utils}, there is a file called \textit{putty.exe}. Copy this to your computer and double click to run it. It will install a program called \textit{Putty}
  \item Plug one end of the Ethernet cable into your computer, and the other end into the Pi
  \item Turn on the Pi
  \item On Windows, go to \textit{Control Panel} - \textit{Network and Internet} - \textit{Network and Sharing Center}
@@ -153,7 +152,7 @@ The password is \textit{gogerddan}. \newline
 Now you can use Putty to connect to the Pi:
 
 \begin{itemize}
- \item Open \textit{Putty.exe}
+ \item Start Putty
  \item In \textit{Host Name (or IP address):} type \textit{pi@178.122.1.200}
  \item The \textit{Port} should be \textit{22}
  \item Click \textit{Open}. If a warning box comes up, click \textit{Yes}
@@ -166,7 +165,14 @@ Now that you are logged in to the Pi, type
 sudo raspi-config
 \end{verbatim}
 
-Select the second option in the dialog box, labelled ``Expand root partition to fill SD card''. This will expand the available space to fill the SD card. To turn off the Pi (try not to just switch off the power, if you can - it can corrupt the SD card), you can type
+Select the second option in the dialog box, labelled ``Expand root partition to fill SD card''. This will expand the available space to fill the SD card. 
+
+********************************
+also enable camera
+********************************
+
+
+To turn off the Pi (try not to just switch off the power, if you can - it can corrupt the SD card), you can type
 \begin{verbatim}
  sudo halt
 \end{verbatim}
@@ -176,7 +182,7 @@ This will shut down the Pi. After about ten seconds, the Pi will be off, though 
 Once you have the SD card flashed and expanded, install it in the Raspberry Pi, and connect the camera. There are instructions on how to connect the camera at
 \url{https://www.raspberrypi.org/documentation/usage/camera/} (just the physical ``Connecting the Camera'' part - the rest is already set up on the SD card). The software on the Pi is now ready to go. 
 
-\subsubsection{Setting up the Pi: The Harder Way}
+\subsubsection{Setting up a new Pi: The Harder Way}
 If you're familiar with Linux, the command line and SSH, you can set everything up from scratch. We will set up the Pi to connect via Ethernet to your machine, so you don't even need an internet connection (this is also useful for downloading data from the Pi when it's in the field - see later section). This section assumes that you already have a Pi running Raspbian (Jessie or later) which you want to set up for use with this system, and that you have root access. 
 
 The first thing to do is to set up the Ethernet connection so that your machine can communicate directly to the Pi. If your Pi is already connected to the internet, this
@@ -391,14 +397,21 @@ Like the logger, the controller will flash to indicate any problems:
 
 \begin{itemize}
  \item \textbf{Three flashes}	- the network ID is too high (more than 253) or too low (less than 0)
- \item \textbf{Three flashes}	- the logger ID is too high (more than 253) or too low (less than 2)
- \item \textbf{Four flashes}	- the maximum number of photodiodes has been changed, and does not equal 8
+ \item \textbf{Four flashes}	- the logger ID is too high (more than 253) or too low (less than 2)
+ \item \textbf{Five flashes}	- the maximum number of photodiodes has been changed, and does not equal 8
+ \item \textbf{Six flashes}	- ************************************
 \end{itemize}
 
 \subsubsection{Logging parameters}
 
 \paragraph{READ\_FREQ}
-This is the frequency at which readings should be taken. It can be any multiple of five minutes up to an hour. So, the options are: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55. The logger has no real concept of time - it just wakes up every five minutes to check for any radio packets sent by the controller. So, the logging frequency is only set on the controller.
+This is the frequency at which readings should be taken. 
+
+*********************
+FIX THIS
+*********************
+
+The logger has no real concept of time - it just wakes up every five minutes to check for any radio packets sent by the controller. So, the logging frequency is only set on the controller.
 
 The controller constantly fetches the time from the RTC. When it sees that the correct logging interval has been reached, it turns the Raspberry Pi on, tells all the loggers to take readings, collects the readings, and sends them to the Pi. The Pi also receives a special flag that tells it when all of the data has been sent. After it receives this flag, it takes a picture, then shuts down. Everything can then sleep until the next logging interval.
 
@@ -513,16 +526,16 @@ Once you have downloaded the data, you can turn the Pi off with:
 
 \textbf{For Windows 7:} \newline
 
-For Windows, you need to install a utility called WinSCP. This will allow you to easily download files from the Pi:
+For Windows, you need to install a utility called WinSCP (\textbf{Note:} If you haven't installed Putty, WinSCP won't install. Install \textit{field\_monitor/windows\_utils/putty.exe} first). This will allow you to easily download files from the Pi:
 
 \begin{itemize}
- \item In \textit{field\_monitor/windows\_utils}, there is a file called \textit{WinSCP-5.9-Setup.exe}. Copy this to your computer and double click to run it. It will install a program called \textit{WinSCP} 
+ \item In \textit{field\_monitor/windows\_utils}, there is a file called \textit{WinSCP-5.9-Setup.exe}. Copy this to your computer and double click to run it. It will install a program called \textit{WinSCP}
  \item Once it has installed, open WinSCP
  \item Click on \textit{New Site}
  \item The \textit{File protocol} should be \textit{STFP}
- \item The \textit{Host name} is the IP address of the Pi - \textit{178.122.1.200}
+ \item In \textit{Host name} put \textit{178.122.1.200}
  \item The \textit{Port number} should be \textit{22}
- \item The \textit{User name} is \textit{pi} and the \textit{Password} is \textit{gogerddan}
+ \item In \textit{User name} type \textit{pi} and in \textit{Password} type \textit{gogerddan}
  \item Click \textit{Login}
  \item If a warning pops up, click \textit{Yes}
  \item The Raspberry Pi's file structure will appear in the right hand pane. Your computer's file structure is in the left hand pane

@@ -18,7 +18,7 @@
 /*******************************Things you might want to change*************************************************************/
 
  //Set the frequency of readings. This must be 5, 10, 20, 30 or 0 (for every 5 minutes, 10 minutes, 20 minutes, half and hour or every hour)
-#define READ_FREQ     5
+#define READ_FREQ     10
 
 /*
  * These variables relate to the radio. 
@@ -56,15 +56,11 @@ void setup() {
 
   Serial.begin(115200);
   
-  Serial.println("Hi");
-  
   //Set unused digital pins to OUTPUT and LOW, so that they don't float
   for(i=3; i<=9; i++) {
     pinMode(i, OUTPUT);
     digitalWrite(i, LOW);
   }
-
-  Serial.println("Pins set to low");
 
   /*
    * These checks result in LED flashes if they fail. The LED will flash a different number of times depending on the problem. In all cases, the LED will flash rapidly several
@@ -108,9 +104,6 @@ void setup() {
   setSyncProvider(RTC.get);                             //Set up the time source
 
   fetch_time();
-
-  Serial.println("Setup done");
-  send_timestamp();
   
 }
 
@@ -120,27 +113,22 @@ Loop() runs over and over again forever.
 void loop() {
 
   fetch_time();                                                 //Get an up to date time stamp from the RTC
-
-  send_timestamp();
-  
   time_t curr_time = now();                                     //Create variable curr_time to hold time so that it doesn't change during loop execution
 
-  if(second(curr_time) == 0) {                                  //Check if second is 0             
-    if((minute(curr_time)+READ_FREQ) % READ_FREQ == 0) {        //Check if the minute divides into READ_FREQ
+  if(second(curr_time) == 0) {                                                //Check if second is 0             
+    if(minute(curr_time) == 0 || minute(curr_time) % READ_FREQ == 0) {        //Check if the minute divides into READ_FREQ, or minute is 0
       send_timestamp();
-      radio.send(255, take_reading, strlen(take_reading));      //Broadcast a read command
-      waitForReadings();                                        //Wait for readings to come back from loggers
-      radio.sleep();                                            //Sleep the radio to save power
+      radio.send(255, take_reading, strlen(take_reading));                    //Broadcast a read command
+      wait_for_readings();                                                    //Wait for readings to come back from loggers
+      radio.sleep();                                                          //Sleep the radio to save power
       shut_down_pi();
-      Serial.flush();
-      for(i=0; i<25; i++) {                                     //Sleep for ~3.5 minutes to save power. ~1 minute is already used waiting for data packets and the Pi
+      for(i=0; i<24; i++) {                                     //Sleep for ~3.5 minutes to save power. ~1 minute is already used waiting for data packets and the Pi
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
     }
     else if((minute(curr_time)+5) % 5 == 0) {                   //Check if the minute is a multiple of 5 - loggers wake up every five minutes, and need to be told to sleep again
       radio.send(255, sleep_nodes, strlen(sleep_nodes));
       radio.sleep();
-      Serial.flush();
       for(i=0; i<33; i++) {                                     //Sleep for ~4 minutes to save power - need to wake at least 30 seconds before next 5 minute interval
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
@@ -148,10 +136,11 @@ void loop() {
   }
   else if(second(curr_time) == 30) {
     if(((minute(curr_time)+1)+READ_FREQ) % READ_FREQ == 0 ) {     //Check if we are 30 seconds before readings need to be taken
-      digitalWrite(PI_PIN, HIGH);                               //Turn on Raspberry Pi so that it has time to boot
+      Serial.println("Turning Pi on");
+      Serial.flush();
+      digitalWrite(PI_PIN, HIGH);                                 //Turn on Raspberry Pi so that it has time to boot
     }
-    Serial.flush();
-    for(i=0; i<3; i++) {                                        //Save power by sleeping for about 24 seconds
+    for(i=0; i<3; i++) {                                          //Save power by sleeping for about 24 seconds
       LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
     }
   }
@@ -161,10 +150,14 @@ void loop() {
  * After a read command is issued, the controller sets time aside to listen for returning data. This amount of time is based on the maximum number of loggers that can exist on one
  * network, which is 254. Because each logger has it's own window in which to send, it can take a long time for all of the data to be sent.
  */
-void waitForReadings() {
+void wait_for_readings() {
   
   unsigned long start_time = millis();
   data_packet data_in;
+
+  //It takes 8 seconds for the loggers to read, so we might as well sleep for a bit
+  LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_ON);
+  LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
 
   //Loop for the amount of time stated by WAIT_TIME
   while(millis() - start_time < WAIT_TIME) {
@@ -189,6 +182,9 @@ void waitForReadings() {
 
         //End with a newline character, so that the Python script knows that we are done printing this data
         Serial.println(sender_rssi);
+
+        //Flush the serial port in case there is data left in the buffer
+        Serial.flush();
       }
     }
   }
@@ -199,13 +195,12 @@ void waitForReadings() {
  */
 void shut_down_pi() {
 
-  Serial.println("E");
-
+  Serial.println("Turning Pi off");
+  Serial.println("E");                              //Send "E" to signal end of data 
   Serial.flush();
   
-  for(i=0; i<3; i++) {
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow ~24 seconds for the Pi to take a picture and shut down
-  }
+  LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);  //Allow ~10 seconds for the Pi to take a picture and shut down
+  LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_ON);
   
   digitalWrite(PI_PIN, LOW);                        //Turn off the Raspberry Pi
 }
@@ -220,7 +215,9 @@ void send_timestamp() {
   Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
   
   Serial.print(hour(curr_time));
+  Serial.print(":");
   Serial.print(minute(curr_time));
+  Serial.print(":");
   Serial.print(second(curr_time));
   Serial.print("_");
   Serial.print(day(curr_time));
@@ -229,6 +226,7 @@ void send_timestamp() {
   Serial.print("-");
   Serial.print(year(curr_time)); 
   Serial.println();
+  
   Serial.flush();
 }
 
