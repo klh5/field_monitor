@@ -11,8 +11,8 @@
 \contentsline {paragraph}{LOGGER\_ID}{12}{section*.2}
 \contentsline {paragraph}{NETWORK\_ID}{12}{section*.3}
 \contentsline {paragraph}{CONTROLLER\_ID}{12}{section*.4}
-\contentsline {paragraph}{FREQUENCY}{12}{section*.5}
-\contentsline {paragraph}{ENCRYPTKEY}{12}{section*.6}
+\contentsline {paragraph}{FREQUENCY}{13}{section*.5}
+\contentsline {paragraph}{ENCRYPTKEY}{13}{section*.6}
 \contentsline {subsubsection}{\numberline {2.2.2}Logging parameters}{13}{subsubsection.2.2.2}
 \contentsline {paragraph}{NUM\_PHOTODIODES}{13}{section*.7}
 \contentsline {subsection}{\numberline {2.3}Controller}{13}{subsection.2.3}
@@ -21,14 +21,15 @@
 \contentsline {paragraph}{MAX\_PHOTODIODES}{14}{section*.9}
 \contentsline {subsection}{\numberline {2.4}Putting everything together}{14}{subsection.2.4}
 \contentsline {subsubsection}{\numberline {2.4.1}Connecting the RTC to the controller}{14}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}Connecting the controller to the Raspberry Pi}{14}{subsubsection.2.4.2}
-\contentsline {subsubsection}{\numberline {2.4.3}Powering the base station}{15}{subsubsection.2.4.3}
-\contentsline {subsubsection}{\numberline {2.4.4}Powering the logger}{16}{subsubsection.2.4.4}
-\contentsline {subsection}{\numberline {2.5}Connecting the photodiodes}{16}{subsection.2.5}
-\contentsline {section}{\numberline {3}RETRIEVING DATA}{16}{section.3}
-\contentsline {subsection}{\numberline {3.1}Copying from the SD card}{16}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Copying over wired connection}{17}{subsection.3.2}
-\contentsline {paragraph}{If the system is still logging:}{17}{section*.10}
-\contentsline {paragraph}{If the system is not logging:}{18}{section*.11}
-\contentsline {subsubsection}{\numberline {3.2.1}Copying the data}{18}{subsubsection.3.2.1}
-\contentsline {subsection}{\numberline {3.3}Understanding the data}{19}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {2.4.2}Setting the time}{15}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}Connecting the controller to the Raspberry Pi}{15}{subsubsection.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}Powering the base station}{16}{subsubsection.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.5}Powering the logger}{16}{subsubsection.2.4.5}
+\contentsline {subsection}{\numberline {2.5}Connecting the photodiodes}{17}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}Placement}{17}{subsection.2.6}
+\contentsline {section}{\numberline {3}RETRIEVING DATA}{17}{section.3}
+\contentsline {subsection}{\numberline {3.1}Copying from the SD card}{17}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Copying over wired connection}{18}{subsection.3.2}
+\contentsline {paragraph}{If the system is still logging:}{18}{section*.10}
+\contentsline {paragraph}{If the system is not logging:}{19}{section*.11}
+\contentsline {subsection}{\numberline {3.3}Understanding the data}{20}{subsection.3.3}

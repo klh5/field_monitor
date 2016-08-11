@@ -13,12 +13,13 @@
 \BOOKMARK [3][-]{subsubsection.2.3.1}{Logging parameters}{subsection.2.3}% 13
 \BOOKMARK [2][-]{subsection.2.4}{Putting everything together}{section.2}% 14
 \BOOKMARK [3][-]{subsubsection.2.4.1}{Connecting the RTC to the controller}{subsection.2.4}% 15
-\BOOKMARK [3][-]{subsubsection.2.4.2}{Connecting the controller to the Raspberry Pi}{subsection.2.4}% 16
-\BOOKMARK [3][-]{subsubsection.2.4.3}{Powering the base station}{subsection.2.4}% 17
-\BOOKMARK [3][-]{subsubsection.2.4.4}{Powering the logger}{subsection.2.4}% 18
-\BOOKMARK [2][-]{subsection.2.5}{Connecting the photodiodes}{section.2}% 19
-\BOOKMARK [1][-]{section.3}{RETRIEVING DATA}{}% 20
-\BOOKMARK [2][-]{subsection.3.1}{Copying from the SD card}{section.3}% 21
-\BOOKMARK [2][-]{subsection.3.2}{Copying over wired connection}{section.3}% 22
-\BOOKMARK [3][-]{subsubsection.3.2.1}{Copying the data}{subsection.3.2}% 23
-\BOOKMARK [2][-]{subsection.3.3}{Understanding the data}{section.3}% 24
+\BOOKMARK [3][-]{subsubsection.2.4.2}{Setting the time}{subsection.2.4}% 16
+\BOOKMARK [3][-]{subsubsection.2.4.3}{Connecting the controller to the Raspberry Pi}{subsection.2.4}% 17
+\BOOKMARK [3][-]{subsubsection.2.4.4}{Powering the base station}{subsection.2.4}% 18
+\BOOKMARK [3][-]{subsubsection.2.4.5}{Powering the logger}{subsection.2.4}% 19
+\BOOKMARK [2][-]{subsection.2.5}{Connecting the photodiodes}{section.2}% 20
+\BOOKMARK [2][-]{subsection.2.6}{Placement}{section.2}% 21
+\BOOKMARK [1][-]{section.3}{RETRIEVING DATA}{}% 22
+\BOOKMARK [2][-]{subsection.3.1}{Copying from the SD card}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.2}{Copying over wired connection}{section.3}% 24
+\BOOKMARK [2][-]{subsection.3.3}{Understanding the data}{section.3}% 25

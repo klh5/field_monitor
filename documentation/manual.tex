@@ -19,10 +19,8 @@ August 2016
 This document describes how to set up and use the field monitoring system based on a Raspberry Pi base station and Moteino/Arduino based loggers. It provides a 
 description of the hardware used and how to set up specific parameters in software, such as logging frequency.
 
-
 In this document, the term ``controller'' refers to the Moteino which is attached to the Raspberry Pi. It receives data from ``loggers'', which are the independent
-Moteinos with photodiodes attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination
-of Raspberry Pi and Controller, because they work together.
+Moteinos with photodiodes (and/or other sensors) attached. The Raspberry Pi takes pictures and is turned off and off by the controller. The term ``base station'' refers to the combination of Raspberry Pi and Controller, because they work together.
 
 The network operates on a star topology, with individual battery powered loggers reporting back to a base station. Loggers read from their photodiode arrays only when
 they are told to by the controller. The controller tells the loggers when to read from their sensors, and also turns the Raspberry Pi on and off. Turning the Pi off when
@@ -30,7 +28,7 @@ it's not needed results in a dramatic power saving. Like the loggers, the contro
 parameters so that the right loggers are talking to the right controller. These parameters are set out and explained in this document.
 
 The Raspberry Pi acts as a data logger and camera operator. At each logging interval (which must be a multiple of 5 minutes) it is woken by the controller. The controller
-sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down.
+sends any data received from the loggers to the Raspberry Pi. Once this data has been received, the Pi captures and saves an image before automatically shutting down. If an ethernet cable is connected, it won't shut itself down, but power will be cut by the controller after about ten seconds. To work around this, the Pi needs to be powered seperately when retrieving data. This process is also set out in this document.
 
 \subsection{On Your Computer}
 
@@ -60,28 +58,23 @@ You also need to select the right port:
  \item Open the Arduino IDE 
  \item Go to \textit{Tools} - \textit{Port}
  \item Select the port that your Moteino is on. If you're not sure, unplug the Moteino, and see which one disappears
+ \item If you get a ``Not in sync'' error when uploading, you're probably connected to the wrong port
 \end{itemize}
 
-Once these are set up, you can use \textit{File - Open} to open the sketch you want to edit (in this case, \textit{field\_monitor/controller.ino} or \textit{field\_monitor/logger.ino}. The big tick at the top of the screen is used to \textbf{compile} to code; it should compile without errors. The arrow is used to upload the code to the target board.
+Once these are set up, you can use \textit{File - Open} to open the sketch you want to edit (in this case, \textit{field\_monitor/controller.ino} or \textit{field\_monitor/logger.ino}. The big tick at the top of the screen is used to \textbf{compile} to code; it should compile without errors. The arrow is used to upload the code to the target board. 
 
 When you upload to the Moteino, its onboard LED will flash a few times when uploading, then stop. If it carries on flashing, check out the error codes in section 2.2 to find out why.
 
 \subsection{Additional hardware}
-You will need an SD card reader and a computer that either has an SD card port or a USB adapter (Google ``usb sd card adapter'').
+You will need an SD card reader and a computer that either has an SD card port or a USB adapter (Google ``usb sd card adapter''). This will work fine for Linux, but not on Windows systems, because the Pi has a Linux filesystem type. If you're using Windows, you'll need to find a program that allows you to view \textit{ext4} filesystems.
 
 To connect the Moteino to your computer so that you can program it, you will need an FTDI cable like this one
 \url{http://uk.rs-online.com/web/p/interface-development-kits/0429307/}. The cable \textbf{must} have 5V power and 3.3V logic. The Moteino is designed to run at 3.3V,
 so 5V logic is too high (the power input can be 5V, because this goes through a regulator which lowers it to 3.3V). This connects to the 6-pin header on the Moteino. Make
 sure that when you plug it in, the black wire (ground) on the cable connects to the \textit{GND} pin of the header. \newline
 
-\textbf{Before plugging in the Moteino, it's a good idea to turn off power from any other sources. You'll probably get away with not doing this, but it's good practice.} \newline
-
-\begin{itemize}
- \item Pick up the cable and the Moteino
- \item Have a look at the 6-pin header on the Moteino. You can see that at one end, a pin is labelled \textbf{GND}, and at the other, a pin is labelled \textbf{DTR}
- \item Line up the FTDI header so that the black wire is lined up with \textbf{GND}, and the green wire is lined up with \textbf{DTR}
- \item Plug it in! Depending on what code the Moteino is already running, the LED might blink
-\end{itemize}
+\textbf{Before plugging in the Moteino, it's a good idea to turn off power from any other sources. You'll probably get away with not doing this, but it's good practice}. 
+Have a look at the 6-pin header on the Moteino. You can see that at one end, a pin is labelled \textbf{GND}, and at the other, a pin is labelled \textbf{DTR}. Line up the FTDI header so that the black wire is lined up with \textbf{GND}, and the green wire is lined up with \textbf{DTR}, and plug it in. Depending on what code the Moteino is already running, the LED might blink.
 
 \section{SETUP}
 
@@ -159,6 +152,8 @@ Now you can use Putty to connect to the Pi:
  \item A black terminal will come up - when prompted, enter the password (\textit{gogerddan})
  \item You are now logged in to the Pi
 \end{itemize}
+
+\textbf{Note: On Windows computers, doing this might stop your computer from connecting properly to other wired connections. If this happens, you will need to reset the settings to \textit{Obtain an IP address automatically} every time you use a different wired network. You can use something like NetSetMan (\url{http://www.netsetman.com/en/freeware}) to manage your connections.} \newline
 
 Now that you are logged in to the Pi, type 
 \begin{verbatim}
@@ -413,11 +408,16 @@ The controller has no way of knowing the time by itself. The Raspberry Pi can ke
 
 To solve this problem, the controller uses a Real Time Clock chip called the DS1307. This ticks away on its own 3V battery most of the time, and can last years on one coin cell. This allows us to shut down the Pi, and still keep time. The controller just sends the time to the Pi before it sends any data, so that the Pi can store data with the right timestamp. We are using a breakout board from Adafruit which allows easy interfacing with the controller. \newline
 
-\textbf{Note: The DS1307 needs 5V to wake it up from sleeping so that it can communicate with the controller. But the controller is a 3.3V device, and 5V would fry its I/O pins. When soldering the breakout board. leave out the two 2.2k resistors. This forces the board to communicate using 3.3V instead of 5V.} \newline
+\textbf{Note: The DS1307 needs 5V to wake it up from sleeping so that it can communicate with the controller. But the controller is a 3.3V device, and 5V would fry its I/O pins. When soldering the breakout board, leave out the two 2.2k resistors. This forces the board to communicate using 3.3V instead of 5V.} \newline
 
 Once the board is soldered, it needs to be connected to the controller. This is straighforward. Connect the \textit{SDA} pin of the board to pin A4 of the Moteino, and connect the \textit{SCL} pin to pin A5 of the Moteino. Connect the \textit{GND} pin to to the Moteino's \textit{GND}, or to circuit ground. The \textit{5V} pin needs to be connected to the same power input as the Moteino and Raspberry Pi - this is the 5V output from the PowerBoost, outlined below.
 
 For the full tutorial on soldering the RTC breakout, see \url{https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/wiring-the-rtc}.
+
+\subsubsection{Setting the time}
+The DS1307 is not a precision clock. It can drift by up to  +/-2 seconds a day, which is worsened if the temperature is very variable. So at the very least, you'll need to set the time just before deploying it. Ideally you would reset it every few weeks (there is a more accurate clock, called the ChronoDot, available - see \url{https://www.adafruit.com/product/255}).
+
+To set the clock, all you need to do is upload the \textit{field\_monitor/controller/testing/set\_time.ino} script onto the controller Moteino. It will automatically set the time to the time on your computer. If you press \textit{Ctrl+Shift+m}, a serial monitor will open and print the time. Remember to re-upload \textit{controller.ino} afterwards!
 
 \subsubsection{Connecting the controller to the Raspberry Pi}
 
@@ -443,7 +443,9 @@ The base station utilises a 3.7V Lithium Ion battery for power storage. This is 
 
 An Adafruit solar charger breakout (MCP73871) is used to control battery charging. This will maintain maximum current draw from the solar panels and will automatically stop charging when the battery is full. The solar charger is fairly straighforward: The solar panel output goes to \textit{DCIN}, the battery goes to \textit{BATT}, and the load (the Raspberry Pi/Moteino circuit) goes to \textit{B+} (Not \textit{L+} or \textit{LOAD}. This is so that it only sees the battery voltage, not the solar panel voltage. 6V would be too much for the PowerBoost). If you are soldering one of these from scratch, you will also need to solder in the capacitor.
 
-Because the battery is only 3.7V, it needs to be boosted up to 5V to power the Raspberry Pi and Moteino. The PowerBoost 500 does this. The output from the solar charger goes to \textit{Bat}, and the load is connected to \textit{5V}. There is a switch on the \textit{5V} output so that you can turn off the base station entirely if you need to. This is an optional addition if you are building from scratch, but it's useful.
+Because the battery is only 3.7V, it needs to be boosted up to 5V to power the Raspberry Pi and Moteino. The PowerBoost 500 does this. The output from the solar charger goes to \textit{Bat}, and the load is connected to \textit{5V}. In the current setup, two green screw terminals are used to connect the base station to \textit{5V} and the solar charger \textit{B+} output to \textit{Bat}. The negatives are marked with black.
+
+There is a switch on the \textit{5V} output so that you can turn off the base station entirely if you need to. This is an optional addition if you are building from scratch, but it's useful.
 
 Both the Moteino and the Pi are connected to the \textit{5V} output of the PowerBoost. However, to save power, the Moteino can turn off the Raspberry Pi. To achieve this, an N-channel MOSFET connects the Pi to ground only when its gate is activated by digital pin 4 of the Moteino. The Moteino can therefore turn the Pi on and off by setting pin 4 to \textit{OUTPUT}, then setting it \textit{HIGH} or \textit{LOW}.
 
@@ -457,9 +459,15 @@ The battery pack should last from one to six months depending on the logging fre
 
 \subsection{Connecting the photodiodes}
 
-The logger is part of a board which contains eight terminal blocks. Simply attached the positive and negative leads of the photodiodes to the right sides of the blocks (they are labelled). All of the circuitry needed to read from the photodiodes is on the board - don't worry if you plug them in the wrong way around by accident, they will be fine.
+The logger is part of a board which contains eight terminal blocks. Simply attached the positive and negative leads of the photodiodes to the right sides of the blocks (they are labelled). All of the circuitry needed to read from the photodiodes is on the board - don't worry if you plug them in the wrong way around by accident, they will be fine. The board contains 5.6k resistors. Photodiodes generate current when they detect light. This current flows through the resistor, creating a voltage drop. The logger measures the voltage coming from the resistor. The 5.6k resistor was chosen because it will prevent the output voltage going above the logger's maximum input of 3.3V, even in very bright sunlight.
 
 For the Hammamatsu G1115 photodiode, the positive leg can be identified as being the one closest to the little tab that sticks out horizontally from the bottom of the housing. There's also a black mark on that side if you look at the top of the photodiode.
+
+\subsection{Placement}
+
+The controller and loggers communicate best when their antennae are perpendicular to ground and as straight as possible. If they can't be straight (i.e. to fit inside an enclosure), the signal strength will be reduced. Also, the more material is between them, the weaker the signal (plants contain a lot of water, and water isn't good for radio signals). Anything that contains metal, such as vehicles, could easily block the signals. If you're frequently getting low RSSI readings (see section 3.3), you might need to move your logger and controller closer together. Raising them off the ground or just out of the plant canopy will help.
+
+As the base station is solar powered, make sure it's placed somewhere that will get good sunlight year round. You can always add another (6V, 2W) solar panel in parallel to produce more current. Remember to add a diode so that current can't leak back into the solar panel at night.
 
 \section{RETRIEVING DATA}
 
@@ -495,9 +503,7 @@ Wait until it is off first - no LED's should be lit. Remove the red jumper wire 
 \paragraph{If the system is not logging:}
 Make sure that the controller board is switched off with the slide switch. Now connect the Ethernet cable between your computer and the Pi, and connect the seperate power supply to the Pi through the micro USB port. \newline
 
-You should now be able to log in to the Pi using SSH. 
-
-\subsubsection{Copying the data}
+You can now log in to the Pi using SSH, and proceed to fetch the data:
 
 \textbf{For Linux:} \newline
 
@@ -538,7 +544,7 @@ Once you have downloaded the data, you can turn off the Pi:
 
 \begin{itemize}
  \item In WinSCP, go to \textit{Commands} - \textit{Open Terminal}
- \item In the \textit{Enter command:} field, type \textit{sudo halt}
+ \item In the \textit{Enter command} field, type \textit{sudo halt}
  \item Click \textit{Execute}
  \item The Pi will shut down
 \end{itemize}
@@ -557,6 +563,6 @@ SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5 LIGHT_6 LIGHT_7 LIG
 
 The \textit{SENDER\_ID} identifies which logger the data is from - it's the ID you would have set in the code when you uploaded \textit{logger.txt} to the logger. The \textit{NETWORK\_ID} identifies which network the logger is on. This is followed by the eight light readings: The photodiodes are read from in order, from pin A0 to pin A7. So, the reading from the photodiode attached to pin A7 will be at \textit{LIGHT\_8}. 
 
-The final value, \textit{RSSI}, is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25).
+The final value, \textit{RSSI}, is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25). If this number is really low, below -90, the logger might be struggling to send data back to the controller.
 
 \end{document}

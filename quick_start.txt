@@ -14,17 +14,18 @@ readings will appear in the CSV file.
 If any of these assumptions aren't true, refer to the documentation.
 
 SETUP
+You need to connect the solar charger to the PowerBoost. There are two green screw terminals on the PowerBoost. If you look underneath, 
+you'll see that one is above the pin labelled "Bat" and one is above the pin labelled "5V". The leads coming from the solar charger need
+to go into the "Bat" connector, and the leads going to the controller/Raspberry Pi need to go into the "5V" connector. The negatives are 
+marked with black.
+
+Plug the blue Lithium Ion battery pack to the connector on the solar charger marked BATT. Plug in the solar panels to the DC barrell jack.
+You should see the red power LED on the solar charger come on, and either the orange charge LED or the green charged LED. The green LED on
+the PowerBoost will also turn on. If the panels aren't getting much light, the LED's might be flashing. Turn on the slide switch to provide
+power to the controller and Pi. It's important to turn on the controller BEFORE turning on the logger.
+
 Turn on the logger with the slide switch. You shouldn't see any activity - it's very low power, so the LED won't come on unless there is a 
 problem. If you're not sure if it's on, check the voltag between the VIN and GND pins with a multimeter - you should see 4.5-5V.
 
-Plug the blue Lithium Ion battery pack to the connector on the solar charger marked BATT. Plug in the solar panels to the DC barrell jack.
-You should see the red power LED come on, and either the orange charge LED or the green charged LED. If the panels aren't getting much 
-light, the LED's might be flashing. Turn on the slide switch to provide power to the controller and Pi.
-
-TO RETRIEVE THE DATA
-Turn off power to the controller and Pi using the slide switch. Remove the micro SD card from the Pi, and plug it into a computer using an
-adapter. Find the directory called /home/pi/data, and copy it to your computer.
-
-That's it - everything will start logging automatically. There is a lot more detail in the documentation if you need it.
 
 
