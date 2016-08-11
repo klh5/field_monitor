@@ -415,7 +415,7 @@ Once the board is soldered, it needs to be connected to the controller. This is 
 For the full tutorial on soldering the RTC breakout, see \url{https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/wiring-the-rtc}.
 
 \subsubsection{Setting the time}
-The DS1307 is not a precision clock. It can drift by up to  +/-2 seconds a day, which is worsened if the temperature is very variable. So at the very least, you'll need to set the time just before deploying it. Ideally you would reset it every few weeks (there is a more accurate clock, called the ChronoDot, available - see \url{https://www.adafruit.com/product/255}).
+The DS1307 is not a precision clock. It can drift by up to  +/-2 seconds a day (or about a minute a month), which is worsened if the temperature is very variable. So at the very least, you'll need to set the time just before deploying it. Ideally you would reset it every few weeks (there is a more accurate clock, called the ChronoDot, available - see \url{https://www.adafruit.com/product/255}).
 
 To set the clock, all you need to do is upload the \textit{field\_monitor/controller/testing/set\_time.ino} script onto the controller Moteino. It will automatically set the time to the time on your computer. If you press \textit{Ctrl+Shift+m}, a serial monitor will open and print the time. Remember to re-upload \textit{controller.ino} afterwards!
 

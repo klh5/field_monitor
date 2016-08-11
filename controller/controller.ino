@@ -100,11 +100,6 @@ void setup() {
   radio.encrypt(ENCRYPTKEY);                            //Encrypt transmissions
   radio.promiscuous(false);
   radio.sleep();                                        //Sleep the radio to save power
-
-  setSyncProvider(RTC.get);                             //Set up the time source
-
-  fetch_time();
-  
 }
 
 /*
@@ -129,15 +124,13 @@ void loop() {
     else if((minute(curr_time)+5) % 5 == 0) {                   //Check if the minute is a multiple of 5 - loggers wake up every five minutes, and need to be told to sleep again
       radio.send(255, sleep_nodes, strlen(sleep_nodes));
       radio.sleep();
-      for(i=0; i<33; i++) {                                     //Sleep for ~4 minutes to save power - need to wake at least 30 seconds before next 5 minute interval
+      for(i=0; i<31; i++) {                                     //Sleep for ~4 minutes to save power - need to wake at least 30 seconds before next 5 minute interval
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_ON);
       }
     }
   }
   else if(second(curr_time) == 30) {
     if(((minute(curr_time)+1)+READ_FREQ) % READ_FREQ == 0 ) {     //Check if we are 30 seconds before readings need to be taken
-      Serial.println("Turning Pi on");
-      Serial.flush();
       digitalWrite(PI_PIN, HIGH);                                 //Turn on Raspberry Pi so that it has time to boot
     }
     for(i=0; i<3; i++) {                                          //Save power by sleeping for about 24 seconds
@@ -195,7 +188,6 @@ void wait_for_readings() {
  */
 void shut_down_pi() {
 
-  Serial.println("Turning Pi off");
   Serial.println("E");                              //Send "E" to signal end of data 
   Serial.flush();
   
