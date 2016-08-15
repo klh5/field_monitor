@@ -1,6 +1,6 @@
 This document gives you a very quick start guide to the field monitor. It assumes that you don't want to change anything, and just want to 
 set up the system and let it run. For the prototype of one base station and one logger, this will work with no problems, as they are all set
-up with default code and values (assuming nobody else has changed anything!). The system will log every 10 minutes.
+up with default code and values (assuming nobody else has changed anything!). The system will log every 30 minutes by default.
 
 The Pi should already be attached to the controller, and the controller should already be attached to the PowerBoost. There should be four
 wires plugged in to the Pi - red, grey, orange and yellow. The blue board next to the Moteino is a clock - it should have a 3V battery in

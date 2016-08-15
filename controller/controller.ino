@@ -18,7 +18,7 @@
 /*******************************Things you might want to change*************************************************************/
 
  //Set the frequency of readings. This must be 5, 10, 20, 30 or 0 (for every 5 minutes, 10 minutes, 20 minutes, half and hour or every hour)
-#define READ_FREQ     10
+#define READ_FREQ     30
 
 /*
  * These variables relate to the radio. 

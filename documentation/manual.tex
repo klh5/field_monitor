@@ -441,6 +441,8 @@ The base station utilises a 3.7V Lithium Ion battery for power storage. This is 
 
 An Adafruit solar charger breakout (MCP73871) is used to control battery charging. This will maintain maximum current draw from the solar panels and will automatically stop charging when the battery is full. The solar charger is fairly straighforward: The solar panel output goes to \textit{DCIN}, the battery goes to \textit{BATT}, and the load (the Raspberry Pi/Moteino circuit) goes to \textit{B+} (Not \textit{L+} or \textit{LOAD}. This is so that it only sees the battery voltage, not the solar panel voltage. 6V would be too much for the PowerBoost). If you are soldering one of these from scratch, you will also need to solder in the capacitor.
 
+As well as solar, you can recharge the LiPo with a normal 5V wall plug charger that can output at least 500mA. Unplug the solar panel DC jack and plug the charger into the mini USB port on the solar charger. The green LED will light up when the battery is charged. 
+
 Because the battery is only 3.7V, it needs to be boosted up to 5V to power the Raspberry Pi and Moteino. The PowerBoost 500 does this. The output from the solar charger goes to \textit{Bat}, and the load is connected to \textit{5V}. In the current setup, two green screw terminals are used to connect the base station to \textit{5V} and the solar charger \textit{B+} output to \textit{Bat}. The negatives are marked with black.
 
 There is a switch on the \textit{5V} output so that you can turn off the base station entirely if you need to. This is an optional addition if you are building from scratch, but it's useful.
@@ -451,9 +453,11 @@ There is information on the solar charger at \url{https://www.adafruit.com/produ
 
 \subsubsection{Powering the logger}
 
-The logger is powered by 4 x AA LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
+The logger is powered by 4 x AA NiMH LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
 
 The battery pack should last from one to six months depending on the logging frequency. You can add a 6V, 0.6W solar panel in parallel with the battery pack to charge the batteries (remember to use a diode so that current doesn't leak back into the solar panel during the night). This solar panel is small enough that it should trickle charge the batteries without overcharging them.
+
+The batteries can be recharged in a standard NiMH (Nickel Metal Hydride) AA battery charger.
 
 \subsection{Connecting the photodiodes}
 
