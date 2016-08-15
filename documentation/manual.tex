@@ -244,9 +244,7 @@ The installation order is:
 
 Once all of the packages are installed, you need to upload a Python script to the Raspberry Pi. The script is located at
 \textit{field\_monitor/raspberry\_pi/process\_data.py} and controls everything relevant to the Pi's field monitoring. As with the packages, you can upload this by
-mounting the SD card or by using SCP. It's recommended to place it in a directory called \textit{/home/pi/scripts}. You also need to create a directory called
-\textit{/home/pi/data} for the CSV files to be stored, and another called \textit{/home/pi/data/images} for the images captured by the camera. If you have a different
-setup, change the \textit{data\_file\_name} and \textit{image\_file\_name} variables in \textit{process\_data.py} to the paths that you want to use.
+mounting the SD card or by using SCP. It's recommended to place it in a directory called \textit{/home/pi/scripts}. The script will create the directories it needs to store the data, so don't worry about that unless you are setting up a custom directory structure. If you're using custom directories, make sure you change all of the paths in \textit{process\_data.py} so that your data gets stored properly.
 
 The \textit{process\_data.py} script needs execute permissions, so make sure to run:
 
@@ -471,10 +469,11 @@ As the base station is solar powered, make sure it's placed somewhere that will 
 
 \section{RETRIEVING DATA}
 
-At some point you will want to see the data that the Pi has been collecting. It's a good idea to do this at least once during setup, to check that everything is working properly (i.e. if you want to log every 15 minutes, check after 15 minutes that at least one set of data has been recorded). There are two ways to fetch the data from the Pi. Both involve some disruption of data logging.
+At some point you will want to see the data that the Pi has been collecting. It's a good idea to do this at least once during setup, to check that everything is working properly (i.e. if you want to log every 15 minutes, check after 15 minutes that at least one set of data has been recorded). There are two ways to fetch the data from the Pi. Both involve some disruption of data logging. \newline
+
+\textbf{If you accidentally delete the \textit{data} folder, your data will be lost - there's no Recycle Bin. The folder structure will be recreated by the script the next time it runs.}
 
 \subsection{Copying from the SD card}
-
 The Pi's filesystem is a Linux filesystem. This means that Windows computers won't be able to read it. But, you can use a Linux computer to copy the data directly from the SD card:
 
 \begin{itemize}

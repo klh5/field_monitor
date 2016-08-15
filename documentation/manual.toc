@@ -28,8 +28,8 @@
 \contentsline {subsection}{\numberline {2.5}Connecting the photodiodes}{17}{subsection.2.5}
 \contentsline {subsection}{\numberline {2.6}Placement}{17}{subsection.2.6}
 \contentsline {section}{\numberline {3}RETRIEVING DATA}{17}{section.3}
-\contentsline {subsection}{\numberline {3.1}Copying from the SD card}{17}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.1}Copying from the SD card}{18}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Copying over wired connection}{18}{subsection.3.2}
-\contentsline {paragraph}{If the system is still logging:}{18}{section*.10}
+\contentsline {paragraph}{If the system is still logging:}{19}{section*.10}
 \contentsline {paragraph}{If the system is not logging:}{19}{section*.11}
 \contentsline {subsection}{\numberline {3.3}Understanding the data}{20}{subsection.3.3}

@@ -17,6 +17,18 @@ process_data.py	-	Python 2.7 script which runs on the Raspberry Pi. It takes the
 #Packets are in this format:
 #SENDER_ID NETWORK_ID LIGHT_1...LIGHT_8 RSSI
 
+#The path to the directory where all of the data is stored. If you change this, remember to change the other file paths as well.
+data_store = "/home/pi/data/images"
+
+#Check that the data directory exists, and create it if not. If it can't be created, shut down, since data can't be stored
+if not os.path.exists(data_store):
+		try:
+			os.makedirs("/home/pi/data/images")
+			os.chmod("/home/pi/data/images", 0o755)
+			os.chmod("/home/pi/data", 0o755)
+		except OSError as e:
+			os.system("sudo shutdown -h now")
+
 #This is the name of the data output file. Change this to change where data gets saved to. It needs to be the full path to the file, including the file name.
 data_file_name = "/home/pi/data/data.csv"
 
