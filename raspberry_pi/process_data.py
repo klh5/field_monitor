@@ -23,9 +23,7 @@ data_store = "/home/pi/data/images"
 #Check that the data directory exists, and create it if not. If it can't be created, shut down, since data can't be stored
 if not os.path.exists(data_store):
 		try:
-			os.makedirs("/home/pi/data/images")
-			os.chmod("/home/pi/data/images", 0o755)
-			os.chmod("/home/pi/data", 0o755)
+			os.makedirs(data_store)
 		except OSError as e:
 			os.system("sudo shutdown -h now")
 
