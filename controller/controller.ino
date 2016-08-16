@@ -69,6 +69,7 @@ void setup() {
    * 3 flashes - the network ID is too high (more than 253) or too low (less than 1)
    * 4 flashes - the logger ID is too high (more than 253) or too low (less than 2)
    * 5 flashes - the maximum number of photodiodes has been changed, and does not equal 8
+   * 6 flashes - the READ_FREQ is not 5, 10, 20, 30 or 0
    */
   if(NETWORK_ID < 1 || NETWORK_ID > 254) {                                                                  //Check that the network ID is reasonable
     while(1) {

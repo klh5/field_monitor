@@ -467,7 +467,7 @@ For the Hammamatsu G1115 photodiode, the positive leg can be identified as being
 
 \subsection{Placement}
 
-The controller and loggers communicate best when their antennae are perpendicular to ground and as straight as possible. If they can't be straight (i.e. to fit inside an enclosure), the signal strength will be reduced. Also, the more material is between them, the weaker the signal (plants contain a lot of water, and water isn't good for radio signals). Anything that contains metal, such as vehicles, could easily block the signals. If you're frequently getting low RSSI readings (see section 3.3), you might need to move your logger and controller closer together. Raising them off the ground or just out of the plant canopy will help.
+The controller and loggers communicate best when their antennae are perpendicular to ground and as straight as possible. If they can't be straight (i.e. to fit inside an enclosure), the signal strength will be reduced. Also, the more material is between them, the weaker the signal (plants contain a lot of water, and water isn't good for radio signals). Anything that contains metal, such as vehicles, could easily block the signals. If you're frequently getting a low RSSI (see section 3.3), you might need to move your logger and controller closer together. Raising them off the ground or just out of the plant canopy will help.
 
 As the base station is solar powered, make sure it's placed somewhere that will get good sunlight year round. You can always add another (6V, 2W) solar panel in parallel to produce more current. Remember to add a diode so that current can't leak back into the solar panel at night.
 
@@ -506,7 +506,7 @@ Wait until it is off first - no LED's should be lit. Remove the red jumper wire 
 \paragraph{If the system is not logging:}
 Make sure that the controller board is switched off with the slide switch. Now connect the Ethernet cable between your computer and the Pi, and connect the seperate power supply to the Pi through the micro USB port. \newline
 
-You can now log in to the Pi using SSH, and proceed to fetch the data:
+You can now log in to the Pi using SSH, and proceed to fetch the data: \newline
 
 \textbf{For Linux:} \newline
 
@@ -566,6 +566,6 @@ SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5 LIGHT_6 LIGHT_7 LIG
 
 The \textit{SENDER\_ID} identifies which logger the data is from - it's the ID you would have set in the code when you uploaded \textit{logger.txt} to the logger. The \textit{NETWORK\_ID} identifies which network the logger is on. This is followed by the eight light readings: The photodiodes are read from in order, from pin A0 to pin A7. So, the reading from the photodiode attached to pin A7 will be at \textit{LIGHT\_8}. 
 
-The final value, \textit{RSSI}, is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25). If this number is really low, below -90, the logger might be struggling to send data back to the controller.
+The final value, \textit{RSSI} (Received Signal Strength Indicator), is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25). If this number is really low, below -90, the logger might be struggling to send data back to the controller.
 
 \end{document}

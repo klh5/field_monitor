@@ -86,9 +86,6 @@ void setup() {
     }
   }
 
-  //All loggers start off uninitialized
-  init_logger = false;
-
   //Setup radio
   radio.initialize(FREQUENCY, LOGGER_ID, NETWORK_ID);   //Initialize the radio with the above settings
   radio.encrypt(ENCRYPTKEY);                            //Encrypt transmissions
