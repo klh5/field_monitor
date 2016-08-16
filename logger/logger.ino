@@ -45,13 +45,13 @@ Setup only runs once, when the logger starts up
 void setup() {
 
   byte i;
-
+  
   //Set unused digital pins to OUTPUT and LOW, so that they don't float
   for(i=3; i<=9; i++) {
     pinMode(i, OUTPUT);
     digitalWrite(i, LOW);
   }
-
+  
   /*
    * These checks result in LED flashes if they fail. The LED will flash a different number of times depending on the problem. In all cases, the LED will flash rapidly several
    * times followed by a one second gap.
@@ -102,20 +102,21 @@ void loop() {
   LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_ON);   //Sleep the Moteino 
   
   if(radio.receiveDone()) {
-    if(radio.DATALEN == 1) {
+    
+    if(radio.DATALEN == 1) {                            //Check that the recieved transmission was the right length
       sscanf((const char*)radio.DATA, "%s", radio_in);  //Copy contents of the radio packet into radio_in
 
       //The packet contains a read command
-      if((strcmp(radio_in, "R") == 0) ) {
-        
-        take_readings();                      //Read from all sensors
-        send_packet();                        //Send the readings back to the controller
-        reset_data();                         //Reset all of the data
+      if((strcmp(radio_in, "R") == 0)) {
+
+        take_readings();                                //Read from all sensors
+        send_packet();                                  //Send the readings back to the controller
       }
 
       //The packet contains a sleep command
-      else if(radio_in == "S") {
-        go_to_sleep();
+      else if(strcmp(radio_in, "S") == 0) {
+        
+        go_to_sleep();                                  //Sleep for another 5 minutes
       }
     
     }
@@ -196,6 +197,9 @@ void send_packet() {
   
   radio.send(CONTROLLER_ID, (const void*)(&sensor_readings), sizeof(sensor_readings));
   radio.sleep();
+
+  //Reset all of the data
+  reset_data();                         
 
   //Sleep for up to another 30240 seconds. This is how long it would take for all of the loggers to send on a full network of 254 loggers
   for(i=0; i<num_sleeps; i++) {
