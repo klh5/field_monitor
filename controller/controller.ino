@@ -206,18 +206,19 @@ void send_timestamp() {
   time_t curr_time = now(); 
   
   Serial.print("T");                                //RPi looks for the "T" to know that it's a timestamp
-  
-  Serial.print(hour(curr_time));
-  Serial.print(":");
-  Serial.print(minute(curr_time));
-  Serial.print(":");
-  Serial.print(second(curr_time));
-  Serial.print("_");
+
   Serial.print(day(curr_time));
   Serial.print("-");
   Serial.print(month(curr_time));
   Serial.print("-");
   Serial.print(year(curr_time)); 
+  Serial.print("_");
+  Serial.print(hour(curr_time));
+  Serial.print(":");
+  Serial.print(minute(curr_time));
+  Serial.print(":");
+  Serial.print(second(curr_time));
+  
   Serial.println();
   
   Serial.flush();
