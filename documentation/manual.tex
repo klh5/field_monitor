@@ -509,10 +509,10 @@ You can now log in to the Pi using SSH, and proceed to fetch the data: \newline
 
 \textbf{For Linux:} \newline
 
-Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy):
+Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy, and assuming you are using the IP address suggested in section 2.1.1):
 
 \begin{verbatim}
- scp -rp data user@your-ip-address:/place/to/put/data
+ scp -rp data user@178.122.1.50:/place/to/put/data
 \end{verbatim}
 
 Once you have downloaded the data, you can turn the Pi off with:

@@ -80,6 +80,9 @@ try:
 	
 				#Try and create a camera object
 				camera = picamera.PiCamera()
+
+				#Set camera resolution
+				camera.resolution = (1080, 720)
 		
 				#Build camera image path	
 				camera_path = image_file_name + timestamp + ".jpg"
