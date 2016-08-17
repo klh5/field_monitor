@@ -316,6 +316,11 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
+\subsubsection{Images and space}
+The Raspberry Pi will capture images with a default resolution of 1080x720. These images are about 500kB in size. A 16GB SD card will have about 11GB of free space, so you have room for 20,000 images. If you're capturing an image every half an hour, that gives you enough space to save images for several years. If you're capturing an image every five minutes, you only have enough room for a couple of months. Bear in mind that you might need to delete images fairly frequently to make room if you're using a higher logging frequency (see section 3.4).
+
+You can change the resolution of the images in the \textit{process\_data.py} script (line 85).
+
 \subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 4 x AA batteries and has a low power radio to send data back to the controller. The controller
 that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate.
@@ -566,5 +571,28 @@ SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5 LIGHT_6 LIGHT_7 LIG
 The \textit{SENDER\_ID} identifies which logger the data is from - it's the ID you would have set in the code when you uploaded \textit{logger.txt} to the logger. The \textit{NETWORK\_ID} identifies which network the logger is on. This is followed by the eight light readings: The photodiodes are read from in order, from pin A0 to pin A7. So, the reading from the photodiode attached to pin A7 will be at \textit{LIGHT\_8}. 
 
 The final value, \textit{RSSI} (Received Signal Strength Indicator), is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25). If this number is really low, below -90, the logger might be struggling to send data back to the controller.
+
+\subsection{Deleting data}
+
+At some point you'll probably need to delete some of the data on the Raspberry Pi. This is easy to do with an Ethernet connection. To remove all of the data (don't worry, the Python script will recreate the \textit{data} directory next time it runs), you can type:
+
+\begin{verbatim}
+  rm -r data
+\end{verbatim}
+
+To remove just one file:
+
+\begin{verbatim}
+  rm file_name
+\end{verbatim}
+
+To navigate to the \textit{images} directory and delete all images:
+
+\begin{verbatim}
+  cd data/images
+  rm *.jpg
+\end{verbatim}
+
+You can also use WinSCP to delete files and folders, if you're using Windows.
 
 \end{document}

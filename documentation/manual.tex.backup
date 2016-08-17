@@ -84,6 +84,9 @@ provided image, go to \textbf{Setting up the Pi: The Easy Way}.
 
 The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local} run as the ``root'' user (similar to Administrators in Windows). You can look at this file by typing \textit{cat /etc/rc.local}. The Raspberry Pi is turned off and off by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off. If the Pi detects an Ethernet connection, it won't shut down after running its script.
 
+\subsubsection{Image sizing}
+
+
 \subsubsection{Setting up a new Pi: The Easy Way}
 All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, the camera module, and an Ethernet cable. \textbf{This part of the setup assumes that the Pi is not connected to the controller and is being powered through the micro USB port as normal}.
 
@@ -244,9 +247,7 @@ The installation order is:
 
 Once all of the packages are installed, you need to upload a Python script to the Raspberry Pi. The script is located at
 \textit{field\_monitor/raspberry\_pi/process\_data.py} and controls everything relevant to the Pi's field monitoring. As with the packages, you can upload this by
-mounting the SD card or by using SCP. It's recommended to place it in a directory called \textit{/home/pi/scripts}. You also need to create a directory called
-\textit{/home/pi/data} for the CSV files to be stored, and another called \textit{/home/pi/data/images} for the images captured by the camera. If you have a different
-setup, change the \textit{data\_file\_name} and \textit{image\_file\_name} variables in \textit{process\_data.py} to the paths that you want to use.
+mounting the SD card or by using SCP. It's recommended to place it in a directory called \textit{/home/pi/scripts}. The script will create the directories it needs to store the data, so don't worry about that unless you are setting up a custom directory structure. If you're using custom directories, make sure you change all of the paths in \textit{process\_data.py} so that your data gets stored properly.
 
 The \textit{process\_data.py} script needs execute permissions, so make sure to run:
 
@@ -366,8 +367,7 @@ The \textit{CONTROLLER\_ID} is used to identify the controller, which acts as a 
 sure that you put the right textit{CONTROLLER\_ID} for the controller that the logger is sending to.
 
 \paragraph{FREQUENCY}
-This is just the frequency of the radio chip - 433MHz is within the Industry, Scientific and Medical frequency band, which means it is a legal frequency for low power
-radio communications. Don't change this unless you know what you are doing.
+This is just the frequency of the radio chip - 433MHz is within the ISM (Industry, Scientific and Medical) frequency band, which means it is a legal frequency for low power radio communications.
 
 \paragraph{ENCRYPTKEY}
 This is an encryption key - only loggers with the same key can undertsand each other's transmissions. For this reason, like the \textit{NETWORK\_ID}, all loggers that
@@ -415,7 +415,7 @@ Once the board is soldered, it needs to be connected to the controller. This is 
 For the full tutorial on soldering the RTC breakout, see \url{https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/wiring-the-rtc}.
 
 \subsubsection{Setting the time}
-The DS1307 is not a precision clock. It can drift by up to  +/-2 seconds a day, which is worsened if the temperature is very variable. So at the very least, you'll need to set the time just before deploying it. Ideally you would reset it every few weeks (there is a more accurate clock, called the ChronoDot, available - see \url{https://www.adafruit.com/product/255}).
+The DS1307 is not a precision clock. It can drift by up to  +/-2 seconds a day (or about a minute a month), which is worsened if the temperature is very variable. So at the very least, you'll need to set the time just before deploying it. Ideally you would reset it every few weeks (there is a more accurate clock, called the ChronoDot, available - see \url{https://www.adafruit.com/product/255}).
 
 To set the clock, all you need to do is upload the \textit{field\_monitor/controller/testing/set\_time.ino} script onto the controller Moteino. It will automatically set the time to the time on your computer. If you press \textit{Ctrl+Shift+m}, a serial monitor will open and print the time. Remember to re-upload \textit{controller.ino} afterwards!
 
@@ -443,6 +443,8 @@ The base station utilises a 3.7V Lithium Ion battery for power storage. This is 
 
 An Adafruit solar charger breakout (MCP73871) is used to control battery charging. This will maintain maximum current draw from the solar panels and will automatically stop charging when the battery is full. The solar charger is fairly straighforward: The solar panel output goes to \textit{DCIN}, the battery goes to \textit{BATT}, and the load (the Raspberry Pi/Moteino circuit) goes to \textit{B+} (Not \textit{L+} or \textit{LOAD}. This is so that it only sees the battery voltage, not the solar panel voltage. 6V would be too much for the PowerBoost). If you are soldering one of these from scratch, you will also need to solder in the capacitor.
 
+As well as solar, you can recharge the LiPo with a normal 5V wall plug charger that can output at least 500mA. Unplug the solar panel DC jack and plug the charger into the mini USB port on the solar charger. The green LED will light up when the battery is charged. 
+
 Because the battery is only 3.7V, it needs to be boosted up to 5V to power the Raspberry Pi and Moteino. The PowerBoost 500 does this. The output from the solar charger goes to \textit{Bat}, and the load is connected to \textit{5V}. In the current setup, two green screw terminals are used to connect the base station to \textit{5V} and the solar charger \textit{B+} output to \textit{Bat}. The negatives are marked with black.
 
 There is a switch on the \textit{5V} output so that you can turn off the base station entirely if you need to. This is an optional addition if you are building from scratch, but it's useful.
@@ -453,26 +455,31 @@ There is information on the solar charger at \url{https://www.adafruit.com/produ
 
 \subsubsection{Powering the logger}
 
-The logger is powered by 4 x AA LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
+The logger is powered by 4 x AA NiMH LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
 
 The battery pack should last from one to six months depending on the logging frequency. You can add a 6V, 0.6W solar panel in parallel with the battery pack to charge the batteries (remember to use a diode so that current doesn't leak back into the solar panel during the night). This solar panel is small enough that it should trickle charge the batteries without overcharging them.
 
+The batteries can be recharged in a standard NiMH (Nickel Metal Hydride) AA battery charger.
+
 \subsection{Connecting the photodiodes}
 
-The logger is part of a board which contains eight terminal blocks. Simply attached the positive and negative leads of the photodiodes to the right sides of the blocks (they are labelled). All of the circuitry needed to read from the photodiodes is on the board - don't worry if you plug them in the wrong way around by accident, they will be fine. The board contains 5.6k resistors. Photodiodes generate current when they detect light. This current flows through the resistor, creating a voltage drop. The logger measures the voltage coming from the resistor. The 5.6k resistor was chosen because it will prevent the output voltage going above the logger's maximum input of 3.3V, even in very bright sunlight.
+The logger is part of a board which contains eight terminal blocks. Simply attached the positive and negative leads of the photodiodes to the right sides of the blocks (the negative side of the block has a black mark). All of the circuitry needed to read from the photodiodes is on the board - don't worry if you plug them in the wrong way around by accident, they will be fine. The board contains 5.6k resistors. Photodiodes generate current when they detect light. This current flows through the resistor, creating a voltage drop. The logger measures the voltage coming from the resistor. The 5.6k resistor was chosen because it will prevent the output voltage going above the logger's maximum input of 3.3V, even in very bright sunlight.
 
 For the Hammamatsu G1115 photodiode, the positive leg can be identified as being the one closest to the little tab that sticks out horizontally from the bottom of the housing. There's also a black mark on that side if you look at the top of the photodiode.
 
 \subsection{Placement}
 
-The controller and loggers communicate best when their antennae are perpendicular to ground and as straight as possible. If they can't be straight (i.e. to fit inside an enclosure), the signal strength will be reduced. Also, the more material is between them, the weaker the signal (plants contain a lot of water, and water isn't good for radio signals). Anything that contains metal, such as vehicles, could easily block the signals. If you're frequently getting low RSSI readings (see section 3.3), you might need to move your logger and controller closer together. Raising them off the ground or just out of the plant canopy will help.
+The controller and loggers communicate best when their antennae are perpendicular to ground and as straight as possible. If they can't be straight (i.e. to fit inside an enclosure), the signal strength will be reduced. Also, the more material is between them, the weaker the signal (plants contain a lot of water, and water isn't good for radio signals). Anything that contains metal, such as vehicles, could easily block the signals. If you're frequently getting a low RSSI (see section 3.3), you might need to move your logger and controller closer together. Raising them off the ground or just out of the plant canopy will help.
+
+As the base station is solar powered, make sure it's placed somewhere that will get good sunlight year round. You can always add another (6V, 2W) solar panel in parallel to produce more current. Remember to add a diode so that current can't leak back into the solar panel at night.
 
 \section{RETRIEVING DATA}
 
-At some point you will want to see the data that the Pi has been collecting. It's a good idea to do this at least once during setup, to check that everything is working properly (i.e. if you want to log every 15 minutes, check after 15 minutes that at least one set of data has been recorded). There are two ways to fetch the data from the Pi. Both involve some disruption of data logging.
+At some point you will want to see the data that the Pi has been collecting. It's a good idea to do this at least once during setup, to check that everything is working properly (i.e. if you want to log every 15 minutes, check after 15 minutes that at least one set of data has been recorded). There are two ways to fetch the data from the Pi. Both involve some disruption of data logging. \newline
+
+\textbf{If you accidentally delete the \textit{data} folder, your data will be lost - there's no Recycle Bin. The folder structure will be recreated by the script the next time it runs.}
 
 \subsection{Copying from the SD card}
-
 The Pi's filesystem is a Linux filesystem. This means that Windows computers won't be able to read it. But, you can use a Linux computer to copy the data directly from the SD card:
 
 \begin{itemize}
@@ -501,14 +508,14 @@ Wait until it is off first - no LED's should be lit. Remove the red jumper wire 
 \paragraph{If the system is not logging:}
 Make sure that the controller board is switched off with the slide switch. Now connect the Ethernet cable between your computer and the Pi, and connect the seperate power supply to the Pi through the micro USB port. \newline
 
-You can now log in to the Pi using SSH, and proceed to fetch the data:
+You can now log in to the Pi using SSH, and proceed to fetch the data: \newline
 
 \textbf{For Linux:} \newline
 
-Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy):
+Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy, and assuming you are using the IP address suggested in section 2.1.1):
 
 \begin{verbatim}
- scp -rp data user@your-ip-address:/place/to/put/data
+ scp -rp data user@178.122.1.50:/place/to/put/data
 \end{verbatim}
 
 Once you have downloaded the data, you can turn the Pi off with:
@@ -561,6 +568,29 @@ SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5 LIGHT_6 LIGHT_7 LIG
 
 The \textit{SENDER\_ID} identifies which logger the data is from - it's the ID you would have set in the code when you uploaded \textit{logger.txt} to the logger. The \textit{NETWORK\_ID} identifies which network the logger is on. This is followed by the eight light readings: The photodiodes are read from in order, from pin A0 to pin A7. So, the reading from the photodiode attached to pin A7 will be at \textit{LIGHT\_8}. 
 
-The final value, \textit{RSSI}, is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25). If this number is really low, below -90, the logger might be struggling to send data back to the controller.
+The final value, \textit{RSSI} (Received Signal Strength Indicator), is a number that shows the strength of the signal from the logger. The higher the number the better the signal (it will always be negative - usually never higher than -25). If this number is really low, below -90, the logger might be struggling to send data back to the controller.
+
+\subsection{Deleting data}
+
+At some point you'll probably need to delete some of the data on the Raspberry Pi. This is easy to do with an Ethernet connection. To remove all of the data (don't worry, the Python script will recreate the \textit{data} directory next time it runs), you can type:
+
+\begin{verbatim}
+  rm -r data
+\end{verbatim}
+
+To remove just one file:
+
+\begin{verbatim}
+  rm file_name
+\end{verbatim}
+
+To navigate to the \textit{images} directory and delete all images:
+
+\begin{verbatim}
+  cd data/images
+  rm *.jpg
+\end{verbatim}
+
+You can also use WinSCP to delete files and folders, if you're using Windows.
 
 \end{document}
