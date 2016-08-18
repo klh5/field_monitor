@@ -500,7 +500,7 @@ Note that this will \textbf{only} work with Linux. If you need to do this in Win
 
 \subsection{Copying over wired connection}
 
-The second method involves connecting to the Pi over SSH as described in section 2.1.1. If you haven't done this yet, you will need to follow the instructions for setting up a new connection within the same subnet as the Raspberry Pi. \textbf{This method will only work if the Pi can be powered seperately from the controller}. This is because the controller is set up to cut power to the Pi after a certain length of time. So, this method is best if you have retrieved the Pi and have it in the office, or if you can connect a portable power supply to the Pi (like a power pack for a mobile phone). A 5V, 2A power supply is best.
+The second method involves connecting to the Pi over SSH as described in section 2.1.1. If you haven't done this yet, you will need to follow the instructions for setting up a new connection within the same subnet as the Raspberry Pi. \textbf{This method will only work if the Pi can be powered seperately from the controller}. This is because the controller is set up to cut power to the Pi after a certain length of time. So, this method is best if you have retrieved the Pi and have it in the office, or if you can connect a portable power supply to the Pi (like a power pack for a mobile phone). A 5V, 2A power supply is best (such as \url{http://uk.rs-online.com/web/p/power-banks/7757517/}).
 
 The good thing about this system is that if you can do it between logging intervals, you won't lose any data. You can also use this method to quickly check that the Pi is logging, without having to remove the SD card or copy any data.
 
@@ -524,6 +524,8 @@ Once you have downloaded the data, you can turn the Pi off with:
 \begin{verbatim}
  sudo halt
 \end{verbatim}
+
+\textbf{It's important to always turn off the Pi after the data transfer, or logging won't restart.} \newline
 
 \textbf{For Windows 7:} \newline
 
@@ -556,7 +558,7 @@ Once you have downloaded the data, you can turn off the Pi:
  \item The Pi will shut down
 \end{itemize}
 
-If the system is still logging, disconnect the Ethernet cable, remove the seperate micro USB power source and replace the red jumper wire. 
+If the system is still logging, disconnect the Ethernet cable, remove the seperate micro USB power source and replace the red jumper wire.
 
 \subsection{Understanding the data}
 
