@@ -84,9 +84,6 @@ provided image, go to \textbf{Setting up the Pi: The Easy Way}.
 
 The Raspberry Pi is set up so that it automatically runs a script when it starts. This script listens for any input from the controller and then captures and saves an image using the camera. Then it shuts down the pi. This script is located in \textit{/home/pi/scripts} and it runs from \textit{/etc/rc.local}. Scripts run from \textit{rc.local} run as the ``root'' user (similar to Administrators in Windows). You can look at this file by typing \textit{cat /etc/rc.local}. The Raspberry Pi is turned off and off by the controller; it turns the Pi on, waits for it to complete its tasks, then turns it off. If the Pi detects an Ethernet connection, it won't shut down after running its script.
 
-\subsubsection{Image sizing}
-
-
 \subsubsection{Setting up a new Pi: The Easy Way}
 All you need to set up a Raspberry Pi this way is the Pi itself, an SD card (preferably class 10, 8GB or greater) and card reader, the camera module, and an Ethernet cable. \textbf{This part of the setup assumes that the Pi is not connected to the controller and is being powered through the micro USB port as normal}.
 
@@ -319,6 +316,11 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
+\subsubsection{Images and space}
+The Raspberry Pi will capture images with a default resolution of 1080x720. These images are about 500kB in size. A 16GB SD card will have about 11GB of free space, so you have room for 20,000 images. If you're capturing an image every half an hour, that gives you enough space to save images for several years. If you're capturing an image every five minutes, you only have enough room for a couple of months. Bear in mind that you might need to delete images fairly frequently to make room if you're using a higher logging frequency (see section 3.4).
+
+You can change the resolution of the images in the \textit{process\_data.py} script (line 85).
+
 \subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 4 x AA batteries and has a low power radio to send data back to the controller. The controller
 that the logger is sending data back to must have the same \textit{NETWORK\_ID} as the logger, or they can't communicate.
@@ -455,7 +457,7 @@ There is information on the solar charger at \url{https://www.adafruit.com/produ
 
 \subsubsection{Powering the logger}
 
-The logger is powered by 4 x AA NiMH LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
+The logger is powered by 4 x AA NiMH LSD (Low Self Discharge) batteries. This battery pack provides a nominal 4.8V. The Moteino's regulator needs at least 3.6V, so this gives us plenty of headroom (even when fully discharged at 1V each, the overall voltage will still be high enough at 4V). There is a switch to enable the logger to be turned off.
 
 The battery pack should last from one to six months depending on the logging frequency. You can add a 6V, 0.6W solar panel in parallel with the battery pack to charge the batteries (remember to use a diode so that current doesn't leak back into the solar panel during the night). This solar panel is small enough that it should trickle charge the batteries without overcharging them.
 
@@ -498,7 +500,7 @@ Note that this will \textbf{only} work with Linux. If you need to do this in Win
 
 \subsection{Copying over wired connection}
 
-The second method involves connecting to the Pi over SSH as described in section 2.1.1. If you haven't done this yet, you will need to follow the instructions for setting up a new connection within the same subnet as the Raspberry Pi. \textbf{This method will only work if the Pi can be powered seperately from the controller}. This is because the controller is set up to cut power to the Pi after a certain length of time. So, this method is best if you have retrieved the Pi and have it in the office, or if you can connect a portable power supply to the Pi (like a power pack for a mobile phone). A 5V, 2A power supply is best.
+The second method involves connecting to the Pi over SSH as described in section 2.1.1. If you haven't done this yet, you will need to follow the instructions for setting up a new connection within the same subnet as the Raspberry Pi. \textbf{This method will only work if the Pi can be powered seperately from the controller}. This is because the controller is set up to cut power to the Pi after a certain length of time. So, this method is best if you have retrieved the Pi and have it in the office, or if you can connect a portable power supply to the Pi (like a power pack for a mobile phone). A 5V, 2A power supply is best (such as \url{http://uk.rs-online.com/web/p/power-banks/7757517/}).
 
 The good thing about this system is that if you can do it between logging intervals, you won't lose any data. You can also use this method to quickly check that the Pi is logging, without having to remove the SD card or copy any data.
 
@@ -515,13 +517,15 @@ You can now log in to the Pi using SSH, and proceed to fetch the data: \newline
 Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy, and assuming you are using the IP address suggested in section 2.1.1):
 
 \begin{verbatim}
- scp -rp data user@178.122.1.50:/place/to/put/data
+ sudo scp -rp data user@178.122.1.50:/place/to/put/data
 \end{verbatim}
 
 Once you have downloaded the data, you can turn the Pi off with:
 \begin{verbatim}
  sudo halt
 \end{verbatim}
+
+\textbf{It's important to always turn off the Pi after the data transfer, or logging won't restart.} \newline
 
 \textbf{For Windows 7:} \newline
 
@@ -554,7 +558,7 @@ Once you have downloaded the data, you can turn off the Pi:
  \item The Pi will shut down
 \end{itemize}
 
-If the system is still logging, disconnect the Ethernet cable, remove the seperate micro USB power source and replace the red jumper wire. 
+If the system is still logging, disconnect the Ethernet cable, remove the seperate micro USB power source and replace the red jumper wire.
 
 \subsection{Understanding the data}
 
@@ -575,20 +579,20 @@ The final value, \textit{RSSI} (Received Signal Strength Indicator), is a number
 At some point you'll probably need to delete some of the data on the Raspberry Pi. This is easy to do with an Ethernet connection. To remove all of the data (don't worry, the Python script will recreate the \textit{data} directory next time it runs), you can type:
 
 \begin{verbatim}
-  rm -r data
+  sudo rm -r data
 \end{verbatim}
 
 To remove just one file:
 
 \begin{verbatim}
-  rm file_name
+  sudo rm file_name
 \end{verbatim}
 
 To navigate to the \textit{images} directory and delete all images:
 
 \begin{verbatim}
   cd data/images
-  rm *.jpg
+  sudo rm *.jpg
 \end{verbatim}
 
 You can also use WinSCP to delete files and folders, if you're using Windows.

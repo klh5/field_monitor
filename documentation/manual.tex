@@ -455,9 +455,15 @@ Both the Moteino and the Pi are connected to the \textit{5V} output of the Power
 
 There is information on the solar charger at \url{https://www.adafruit.com/product/390} and information on the PowerBoost 500 at \url{https://www.adafruit.com/product/1944}.
 
+\subsection{Monitoring battery temperature}
+
+There is a 10k thermistor (resistance at 25$^{\circ}$C is 10k) attached to the Solar Charger (the long black wire soldered to the \textit{THERM} pads). This should be placed or secured onto the battery to monitor the battery temperature. If the battery gets too cold (below 0$^{\circ}$C) or too hot (above 50$^{\circ}$C), the charger will stop charging the battery to prevent any damage.
+
+The thermistor is ordered seperately from the Solar Charger so it needs to be soldered in (it's not polarized). Any 10k thermistor will do, though there is one recommended in the BOM (Bill of Materials).
+
 \subsubsection{Powering the logger}
 
-The logger is powered by 4 x AA NiMH LSD (Low Self Discharge) batteries. There is a switch to enable the logger to be turned off.
+The logger is powered by 4 x AA NiMH LSD (Low Self Discharge) batteries. This battery pack provides a nominal 4.8V. The Moteino's regulator needs at least 3.6V, so this gives us plenty of headroom (even when fully discharged at 1V each, the overall voltage will still be high enough at 4V). There is a switch to enable the logger to be turned off.
 
 The battery pack should last from one to six months depending on the logging frequency. You can add a 6V, 0.6W solar panel in parallel with the battery pack to charge the batteries (remember to use a diode so that current doesn't leak back into the solar panel during the night). This solar panel is small enough that it should trickle charge the batteries without overcharging them.
 
@@ -517,7 +523,7 @@ You can now log in to the Pi using SSH, and proceed to fetch the data: \newline
 Once you are logged in, you can fetch the data with the following command (\textit{data} is the directory we want to copy, and assuming you are using the IP address suggested in section 2.1.1):
 
 \begin{verbatim}
- scp -rp data user@178.122.1.50:/place/to/put/data
+ sudo scp -rp data user@178.122.1.50:/place/to/put/data
 \end{verbatim}
 
 Once you have downloaded the data, you can turn the Pi off with:
@@ -579,20 +585,20 @@ The final value, \textit{RSSI} (Received Signal Strength Indicator), is a number
 At some point you'll probably need to delete some of the data on the Raspberry Pi. This is easy to do with an Ethernet connection. To remove all of the data (don't worry, the Python script will recreate the \textit{data} directory next time it runs), you can type:
 
 \begin{verbatim}
-  rm -r data
+  sudo rm -r data
 \end{verbatim}
 
 To remove just one file:
 
 \begin{verbatim}
-  rm file_name
+  sudo rm file_name
 \end{verbatim}
 
 To navigate to the \textit{images} directory and delete all images:
 
 \begin{verbatim}
   cd data/images
-  rm *.jpg
+  sudo rm *.jpg
 \end{verbatim}
 
 You can also use WinSCP to delete files and folders, if you're using Windows.
