@@ -317,9 +317,25 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
 \subsubsection{Images and space}
+
 The Raspberry Pi will capture images with a default resolution of 1080x720. These images are about 500kB in size. A 16GB SD card will have about 11GB of free space, so you have room for 20,000 images. If you're capturing an image every half an hour, that gives you enough space to save images for several years. If you're capturing an image every five minutes, you only have enough room for a couple of months. Bear in mind that you might need to delete images fairly frequently to make room if you're using a higher logging frequency (see section 3.4).
 
-You can change the resolution of the images in the \textit{process\_data.py} script (line 85).
+\subsection{Editing the Python script}
+
+\subsubsection{Camera parameters}
+
+You can change the resolution of the images in the \textit{process\_data.py} script (line 85). You might also need to change the shutter speed of the camera. By default, this is automatic depending on the amount of light available. You can change it by adding a line of code to \textit{field\_monitor/raspberry\_pi/process\_data.py}, straight after the line that sets the resolution, like this:
+
+\begin{verbatim}
+ #Set camera resolution
+ camera.resolution = (1080, 720)
+ 
+ #Set shutter speed
+ camera.shutter_speed(10000)
+\end{verbatim}
+
+The number you provide needs to be in \textbf{microseconds} (so 10000 is 0.1 seconds).
+
 
 \subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 4 x AA batteries and has a low power radio to send data back to the controller. The controller
@@ -454,6 +470,12 @@ There is a switch on the \textit{5V} output so that you can turn off the base st
 Both the Moteino and the Pi are connected to the \textit{5V} output of the PowerBoost. However, to save power, the Moteino can turn off the Raspberry Pi. To achieve this, an N-channel MOSFET connects the Pi to ground only when its gate is activated by digital pin 4 of the Moteino. The Moteino can therefore turn the Pi on and off by setting pin 4 to \textit{OUTPUT}, then setting it \textit{HIGH} or \textit{LOW}.
 
 There is information on the solar charger at \url{https://www.adafruit.com/product/390} and information on the PowerBoost 500 at \url{https://www.adafruit.com/product/1944}.
+
+\subsection{Monitoring battery temperature}
+
+There is a 10k thermistor (resistance at 25$^{\circ}$C is 10k) attached to the Solar Charger (the long black wire soldered to the \textit{THERM} pads). This should be placed or secured onto the battery to monitor the battery temperature. If the battery gets too cold (below 0$^{\circ}$C) or too hot (above 50$^{\circ}$C), the charger will stop charging the battery to prevent any damage.
+
+The thermistor is ordered seperately from the Solar Charger so it needs to be soldered in (it's not polarized). Any 10k thermistor will do, though there is one recommended in the BOM (Bill of Materials).
 
 \subsubsection{Powering the logger}
 

@@ -317,9 +317,34 @@ get Raspbian to boot from an uncompressed image. This is a little tricky, and yo
 That's it! Your Pi should now be able to run everything it needs for the field monitor.
 
 \subsubsection{Images and space}
+
 The Raspberry Pi will capture images with a default resolution of 1080x720. These images are about 500kB in size. A 16GB SD card will have about 11GB of free space, so you have room for 20,000 images. If you're capturing an image every half an hour, that gives you enough space to save images for several years. If you're capturing an image every five minutes, you only have enough room for a couple of months. Bear in mind that you might need to delete images fairly frequently to make room if you're using a higher logging frequency (see section 3.4).
 
-You can change the resolution of the images in the \textit{process\_data.py} script (line 85).
+\subsubsection{Editing the Python script}
+
+While logged in to the Pi over SSH, you can edit \textit{process\_data.py} using a simple text editor called \textit{Nano}. This is useful if you want to alter any of the parameters used by the Raspberry Pi. The command to edit the file is:
+
+\begin{verbatim}
+ nano scripts/process_data.py
+\end{verbatim}
+
+The file will be opened. This is a command line utility, so you can't use your mouse to move around and select things. Instead you need to use the arrow keys to navigate to where you want to be. You can press \textit{CTRL+o} to save, and \textit{CTRL+x} to exit.
+
+Alternatively you can edit the script by inserting the SD card into your computer and navigating to the \textit{/home/pi/scripts} directory. The process of accessing the SD card is explained in section 3.1.
+
+\subsubsection{Camera parameters}
+
+Using the methods in section 2.1.4, you can edit some of the parameters in the Python script running on the Raspberry Pi. You can change the resolution of the images by editing line 85 in the \textit{process\_data.py} script. You might also need to change the shutter speed of the camera. By default, this is automatic depending on the amount of light available. You can change it by adding a line of code to \textit{field\_monitor/raspberry\_pi/process\_data.py}, straight after the line that sets the resolution, like this:
+
+\begin{verbatim}
+ #Set camera resolution
+ camera.resolution = (1080, 720)
+ 
+ #Set shutter speed
+ camera.shutter_speed(10000)
+\end{verbatim}
+
+The number you provide needs to be in \textbf{microseconds} (so 10000 is 0.1 seconds). To set it back to automatic, put a value of 0.
 
 \subsection{Logger}
 The logger is the Moteino with the light sensor array attached. It runs from 4 x AA batteries and has a low power radio to send data back to the controller. The controller

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  19 AUG 2016 09:28
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.26)  19 AUG 2016 10:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -319,105 +319,104 @@ Overfull \hbox (105.24632pt too wide) in paragraph at lines 306--306
 ernel_uncompressed.img[] 
  []
 
-[10] [11] [12]
-Overfull \hbox (20.57336pt too wide) in paragraph at lines 382--383
+[10] [11] [12] [13]
+Overfull \hbox (20.57336pt too wide) in paragraph at lines 407--408
 \OT1/cmr/m/n/10 log-ger. They will be read from in or-der, from ana-log pin 0 t
 o \OT1/cmr/m/it/10 NUM[]PHOTODIODES\OT1/cmr/m/n/10 -
  []
 
-[13]
-Underfull \hbox (badness 10000) in paragraph at lines 411--412
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 413--414
-
- []
-
 [14]
-Overfull \hbox (19.27467pt too wide) in paragraph at lines 417--418
+Underfull \hbox (badness 10000) in paragraph at lines 436--437
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 438--439
+
+ []
+
+
+Overfull \hbox (19.27467pt too wide) in paragraph at lines 442--443
 \OT1/cmtt/m/n/10 adafruit . com / adding-[]a-[]real-[]time-[]clock-[]to-[]raspb
 erry-[]pi / wiring-[]the-[]rtc$[]\OT1/cmr/m/n/10 . 
  []
 
-
-Overfull \hbox (68.05344pt too wide) in paragraph at lines 422--423
+[15]
+Overfull \hbox (68.05344pt too wide) in paragraph at lines 447--448
 []\OT1/cmr/m/n/10 To set the clock, all you need to do is up-load the \OT1/cmr/
 m/it/10 field[]monitor/controller/testing/set[]time.ino
  []
 
-[15]
-Overfull \hbox (7.83223pt too wide) in paragraph at lines 456--457
+[16]
+Overfull \hbox (7.83223pt too wide) in paragraph at lines 481--482
 \OT1/cmtt/m/n/10 product / 390$[] \OT1/cmr/m/n/10 and in-for-ma-tion on the Pow
 er-Boost 500 at []$\OT1/cmtt/m/n/10 https : / / www . adafruit .
  []
 
-[16] [17]
-Underfull \hbox (badness 10000) in paragraph at lines 486--487
+[17]
+Underfull \hbox (badness 10000) in paragraph at lines 511--512
 
  []
 
-[18]
-Underfull \hbox (badness 10000) in paragraph at lines 517--518
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 519--520
+[18] [19]
+Underfull \hbox (badness 10000) in paragraph at lines 542--543
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 521--522
-
- []
-
-[19]
-Underfull \hbox (badness 10000) in paragraph at lines 534--535
+Underfull \hbox (badness 10000) in paragraph at lines 544--545
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 536--537
+Underfull \hbox (badness 10000) in paragraph at lines 546--547
 
  []
 
 
-Overfull \hbox (51.46577pt too wide) in paragraph at lines 538--539
+Underfull \hbox (badness 10000) in paragraph at lines 559--560
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 561--562
+
+ []
+
+
+Overfull \hbox (51.46577pt too wide) in paragraph at lines 563--564
 \OT1/cmr/m/n/10 haven't in-stalled Putty, Win-SCP won't in-stall. In-stall \OT1
 /cmr/m/it/10 field[]monitor/windows[]utils/putty.exe
  []
 
-
-Overfull \hbox (1.53658pt too wide) in paragraph at lines 541--542
+[20]
+Overfull \hbox (1.53658pt too wide) in paragraph at lines 566--567
 []\OT1/cmr/m/n/10 In \OT1/cmr/m/it/10 field[]monitor/windows[]utils\OT1/cmr/m/n
 /10 , there is a file called \OT1/cmr/m/it/10 WinSCP-5.9-Setup.exe\OT1/cmr/m/n/
 10 .
  []
 
-[20]
-Overfull \hbox (122.24593pt too wide) in paragraph at lines 577--577
+[21]
+Overfull \hbox (122.24593pt too wide) in paragraph at lines 602--602
 []\OT1/cmtt/m/n/10 SENDER_ID NETWORK_ID LIGHT_1 LIGHT_2 LIGHT_3 LIGHT_4 LIGHT_5
  LIGHT_6 LIGHT_7 LIGHT_8 RSSI[] 
  []
 
-[21]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 606.
- [22]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 606.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 631.
+[22]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 631.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 606.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 606.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 631.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 631.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 63DA2A78E86CFA7A382BC93F0FE927CD;2044.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 606.
+(rerunfilecheck)             Checksum: 1FE491233D5A0D7BF4AEB5762F85E0C0;2206.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 631.
  ) 
 Here is how much of TeX's memory you used:
- 5207 strings out of 493304
- 77325 string characters out of 6139870
- 162524 words of memory out of 5000000
- 8586 multiletter control sequences out of 15000+600000
+ 5211 strings out of 493304
+ 77405 string characters out of 6139870
+ 163524 words of memory out of 5000000
+ 8588 multiletter control sequences out of 15000+600000
  6031 words of font info for 22 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  29i,5n,28p,753b,500s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -429,10 +428,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmtt10.pfb>
-Output written on manual.pdf (22 pages, 185334 bytes).
+Output written on manual.pdf (22 pages, 187633 bytes).
 PDF statistics:
- 321 PDF objects out of 1000 (max. 8388607)
- 286 compressed objects within 3 object streams
- 62 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 331 PDF objects out of 1000 (max. 8388607)
+ 296 compressed objects within 3 object streams
+ 64 named destinations out of 1000 (max. 500000)
+ 241 words of extra memory for PDF output out of 10000 (max. 10000000)
 
